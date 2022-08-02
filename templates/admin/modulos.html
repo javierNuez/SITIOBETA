@@ -1,0 +1,40 @@
+{% include 'admin/cabecera.html' %}
+
+		<br>
+		<div class="row">
+		<div class="col-1">
+		</div>
+		
+				<div class="col-10">
+					<h2>Módulos</h2>
+					<table id="tblContact" class="table table-sm">
+						<thead>
+							<tr>
+							<!--<th scope="col" class="table-info">#</th>-->
+								<th scope="col" class="table-info">ID</th>
+								<th scope="col" class="table-info">Nombre</th>
+								<th scope="col" class="table-info">Titulo</th>
+                                <th scope="col" class="table-info">Desde</th>
+                                <th scope="col" class="table-info">Hasta</th>
+                            
+							</tr>
+						</thead>
+						<tbody id="rowsUsuarios">
+							<tr>
+							<!--<th scope="row">0</th>-->
+								<td id="id_m">051</td>
+								<td id="m_nombre">El Nombre</td>
+								<td id= "m_titulo">EL Titulo</td>
+                                <td id= "m_desde">2021-01-12</td>
+                                <td id= "m_hasta">2022-01-02</td>
+                           
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-1">
+				</div>
+			
+		</div>
+
+{% include 'admin/pie.html' %}

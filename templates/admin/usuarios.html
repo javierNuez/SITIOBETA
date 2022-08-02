@@ -1,0 +1,42 @@
+{% include 'admin/cabecera.html' %}
+
+		<br>
+		<div class="row">
+		<div class="col-1">
+		</div>
+		
+				<div class="col-10">
+					<h2>Usuarios</h2>
+					<table id="tblContact" class="table table-sm">
+						<thead>
+							<tr>
+							<!--<th scope="col" class="table-info">#</th>-->
+								<th scope="col" class="table-info">ID</th>
+								<th scope="col" class="table-info">Nombre</th>
+								<th scope="col" class="table-info">Apellido</th>
+                                <th scope="col" class="table-info">Rrdzz</th>
+                                <th scope="col" class="table-info">E-mail</th>
+                                <th scope="col" class="table-info">Desde</th>
+                                <th scope="col" class="table-info">Hasta</th>
+							</tr>
+						</thead>
+						<tbody id="rowsUsuarios">
+							<tr>
+							<!--<th scope="row">0</th>-->
+								<td id="id_u">010</td>
+								<td id="u_nombre">José</td>
+								<td id= "u_apellido">Pérez</td>
+                                <td id= "u_rrdzz">10102</td>
+                                <td id= "u_mail">30-3232332-1</td>
+                                <td id= "u_fecha_i">2022-05-01</td>
+                                <td id= "u_fecha_f">9999-12-31</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-1">
+				</div>
+			
+		</div>
+
+{% include 'admin/pie.html' %}
