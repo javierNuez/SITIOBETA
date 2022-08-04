@@ -40,7 +40,13 @@ def admin_clientes():
 
 @app.route('/admin/productos')
 def admin_productos():
-    return render_template('admin/productos.html')
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `productos`;")
+    productos = cursor.fetchall()
+    conexion.commit()
+    
+    return render_template('admin/productos.html', productos=productos)
 
 
 @app.route('/admin/droguerias')
@@ -97,9 +103,38 @@ def admin_usuarios_guardar():
     cursor.execute(sql,datos)
     conexion.commit()
 
+
     return redirect('/admin/usuarios')
 
+@app.route('/admin/productos/guardar' , methods=['POST'])
+def admin_productos_guardar():
 
+    
+    _codigo=request.form['p_cod']
+    _desc=request.form['p_descripcion']
+
+
+    sql="INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`) VALUES (NULL, %s,%s);"
+    datos=(_codigo,_desc)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+
+    return redirect('/admin/productos')
+
+@app.route('/admin/productos/borrar' , methods=['POST'])
+def admin_productos_borrar():
+    _id=request.form['txtID']
+        
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("DELETE FROM productos where id_p=%s;",(_id))
+    usuario = cursor.fetchall()
+    conexion.commit()
+    return redirect('/admin/productos')
 
 if __name__ == '__main__':
     app.run(debug=True)
