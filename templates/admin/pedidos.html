@@ -3,7 +3,7 @@
 		<br>
 		
 					
-			<div class="card-body">
+			<div class="card-body" style="min-height: 300px;">
 				
 					<div class="card">
 						<div class="card-header">
@@ -15,21 +15,36 @@
 								<thead>
 									<tr>
 									<!--<th scope="col" class="table-info">#</th>-->
-										
-										
-										<th style="text-align: center;" scope="col" class="table-info">Cod.Pedido</th>
-										<th style="text-align: center;" scope="col" class="table-info">Descripción</th>
+										<th style="text-align: center;" scope="col" class="table-info">Drogueria</th>
+										<th style="text-align: center;" scope="col" class="table-info">Nro. Cuenta</th>
+										<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
+										<th style="text-align: center;" scope="col" class="table-info">Cuit</th>
+										<th style="text-align: center;" scope="col" class="table-info">Domicilio</th>
+										<th style="text-align: center;" scope="col" class="table-info">Localidad</th>
+										<th style="text-align: center;" scope="col" class="table-info">Cód. Postal</th>
 										<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
 									</tr>
 								</thead>
 								<tbody id="rowsPedidos">
 									
 									<tr>
-									<!--<th scope="row">0</th>-->
+										<td id= "pe_drogueria" name="pe_drogueria">
+											
+											<select class="form-select" aria-label="Default select example">
+												<option selected>Droguerias</option>
+												{% for drogueria in droguerias %}
+												<option value="{{drogueria[2]}}">{{drogueria[2]}}</option>
+												{% endfor %}
+											</select>
+											
+										</td>
+										<td id= "pe_cuenta" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "pe_nombre" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "pe_cuit" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "pe_domicilio" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "pe_localidades" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "pe_postal" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
 										
-										
-										<td id= "pe_cod" ><input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId" placeholder=""></td>
-										<td id= "pe_descripcion" ><input type="text" class="form-control" name="pe_descripcion" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "acciones" >
 											<div class="d-grid gap-2 col-6 mx-auto">
 												<button type="submit" class="btn btn-dark">Agregar</button>

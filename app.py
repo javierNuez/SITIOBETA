@@ -34,9 +34,12 @@ def admin_pedidos():
     cursor=conexion.cursor()
     cursor.execute("SELECT * FROM `pedidos`;")
     pedidos = cursor.fetchall()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
     conexion.commit()
     
-    return render_template('admin/pedidos.html', pedidos=pedidos)
+    return render_template('admin/pedidos.html', pedidos=pedidos, droguerias=droguerias)
 
 
 @app.route('/admin/clientes')
@@ -63,7 +66,13 @@ def admin_productos():
 
 @app.route('/admin/droguerias')
 def admin_droguerias():
-    return render_template('admin/droguerias.html')
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+    conexion.commit()
+    
+    return render_template('admin/droguerias.html', droguerias=droguerias)
 
 
 @app.route('/admin/usuarios')
@@ -79,8 +88,14 @@ def admin_usuarios():
 
 @app.route('/admin/modulos')
 def admin_modulos():
-    return render_template('admin/modulos.html')
-
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos`;")
+    modulos = cursor.fetchall()
+    conexion.commit()
+    
+    return render_template('admin/modulos.html', modulos=modulos)
+#funciones de usuarios:
 @app.route('/admin/usuarios/borrar' , methods=['POST'])
 def admin_usuarios_borrar():
     _id=request.form['txtID']
@@ -118,7 +133,7 @@ def admin_usuarios_guardar():
 
 
     return redirect('/admin/usuarios')
-
+#funciones de productos:
 @app.route('/admin/productos/guardar' , methods=['POST'])
 def admin_productos_guardar():
 
@@ -214,6 +229,71 @@ def admin_clientes_borrar():
     cliente = cursor.fetchall()
     conexion.commit()
     return redirect('/admin/clientes')
+
+#funciones de droguerias:
+@app.route('/admin/droguerias/guardar' , methods=['POST'])
+def admin_droguerias_guardar():
+
+    
+    _codigo=request.form['d_cod']
+    _desc=request.form['d_descripcion']
+
+
+    sql="INSERT INTO `droguerias` (`id_d`, `d_cod`, `d_descripcion`) VALUES (NULL, %s,%s);"
+    datos=(_codigo,_desc)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+
+    return redirect('/admin/droguerias')
+
+@app.route('/admin/droguerias/borrar' , methods=['POST'])
+def admin_droguerias_borrar():
+    _id=request.form['txtID']
+        
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("DELETE FROM droguerias where id_d=%s;",(_id))
+    droguerias = cursor.fetchall()
+    conexion.commit()
+    return redirect('/admin/droguerias')
+
+#funciones de módulos:
+@app.route('/admin/modulos/guardar' , methods=['POST'])
+def admin_modulos_guardar():
+
+    
+    _nombre=request.form['m_nombre']
+    _titulo=request.form['m_titulo']
+    _pie=request.form['m_pie']
+    _desde=request.form['m_desde']
+    _hasta=request.form['m_hasta']
+
+
+    sql="INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
+    datos=(_nombre,_titulo,_pie,_desde,_hasta)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+
+    return redirect('/admin/modulos')
+
+@app.route('/admin/modulos/borrar' , methods=['POST'])
+def admin_modulos_borrar():
+    _id=request.form['txtID']
+        
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("DELETE FROM modulos where id_m=%s;",(_id))
+    modulos = cursor.fetchall()
+    conexion.commit()
+    return redirect('/admin/modulos')
 
 if __name__ == '__main__':
     app.run(debug=True)
