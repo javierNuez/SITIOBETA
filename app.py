@@ -30,12 +30,24 @@ def admin_loguin():
 
 @app.route('/admin/pedidos')
 def admin_pedidos():
-    return render_template('admin/pedidos.html')
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `pedidos`;")
+    pedidos = cursor.fetchall()
+    conexion.commit()
+    
+    return render_template('admin/pedidos.html', pedidos=pedidos)
 
 
 @app.route('/admin/clientes')
 def admin_clientes():
-    return render_template('admin/clientes.html')
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    clientes = cursor.fetchall()
+    conexion.commit()
+    
+    return render_template('admin/clientes.html', clientes=clientes)
 
 
 @app.route('/admin/productos')
@@ -68,6 +80,7 @@ def admin_usuarios():
 @app.route('/admin/modulos')
 def admin_modulos():
     return render_template('admin/modulos.html')
+
 @app.route('/admin/usuarios/borrar' , methods=['POST'])
 def admin_usuarios_borrar():
     _id=request.form['txtID']
@@ -135,6 +148,72 @@ def admin_productos_borrar():
     usuario = cursor.fetchall()
     conexion.commit()
     return redirect('/admin/productos')
+
+#funciones de pedidos:
+@app.route('/admin/pedidos/guardar' , methods=['POST'])
+def admin_pedidos_guardar():
+
+    
+    _codigo=request.form['pe_cod']
+    _desc=request.form['pe_descripcion']
+
+
+    sql="INSERT INTO `pedidos` (`id_pe`, `pe_cod`, `pe_descripcion`) VALUES (NULL, %s,%s);"
+    datos=(_codigo,_desc)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+
+    return redirect('/admin/pedidos')
+
+@app.route('/admin/pedidos/borrar' , methods=['POST'])
+def admin_pedidos_borrar():
+    _id=request.form['txtID']
+        
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("DELETE FROM pedidos where id_pe=%s;",(_id))
+    pedido = cursor.fetchall()
+    conexion.commit()
+    return redirect('/admin/pedidos')
+
+#funciones de clientes:
+@app.route('/admin/clientes/guardar' , methods=['POST'])
+def admin_clientes_guardar():
+
+    
+    _codigo=request.form['c_cod']
+    _cuenta=request.form['c_cuenta']
+    _nombre=request.form['c_nombre']
+    _cuit=request.form['c_cuit']
+    _localidad=request.form['c_localidad']
+    _postal=request.form['c_postal']
+
+
+    sql="INSERT INTO `clientes` (`id_c`, `c_cod`, `c_cuenta`, c_nombre, c_cuit, c_localidad, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+    datos=(_codigo,_cuenta,_nombre,_cuit, _localidad,_postal)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+
+    return redirect('/admin/clientes')
+
+@app.route('/admin/clientes/borrar' , methods=['POST'])
+def admin_clientes_borrar():
+    _id=request.form['txtID']
+        
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("DELETE FROM clientes where id_c=%s;",(_id))
+    cliente = cursor.fetchall()
+    conexion.commit()
+    return redirect('/admin/clientes')
 
 if __name__ == '__main__':
     app.run(debug=True)
