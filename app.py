@@ -132,17 +132,18 @@ def admin_usuarios_editar():
     _mail=request.form['txtMail']
     _desde=request.form['txtDesde']
     _hasta=request.form['txtHasta']
+    _pass=request.form['txtPass']
     _id=request.form['txtID']
     
-    sql="UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s WHERE id_u=%s;"
-    datos=(_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _id)
+    sql="UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s, u_pass=%s WHERE id_u=%s;"
+    datos=(_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _id)
 
     conexion=mysql.connect()
     cursor=conexion.cursor()
     cursor.execute(sql,datos)
     conexion.commit()
 
-    return admin_usuarios()
+    return redirect('/admin/usuarios')
 
 @app.route('/admin/usuarios/guardar' , methods=['POST'])
 def admin_usuarios_guardar():
@@ -153,9 +154,9 @@ def admin_usuarios_guardar():
     _mail=request.form['txtMail']
     _desde=request.form['txtDesde']
     _hasta=request.form['txtHasta']
-
-    sql="INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
-    datos=(_nombre,_apellido,_rrdzz,_mail,_desde,_hasta)
+    _pass=request.form['txtPass']
+    sql="INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
+    datos=(_nombre,_apellido,_rrdzz,_mail,_desde,_hasta,_pass)
 
     conexion=mysql.connect()
     cursor=conexion.cursor()

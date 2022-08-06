@@ -22,6 +22,7 @@
 										<th style="text-align: center;" scope="col" class="table-info">E-mail</th>
 										<th style="text-align: center;" scope="col" class="table-info">Desde</th>
 										<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
+										<th style="text-align: center;" scope="col" class="table-info">Contraseña</th>
 										<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
 									</tr>
 								</thead>
@@ -33,9 +34,10 @@
 										<td id="u_nombre" ><input type="text" class="form-control" name="txtNombre" id="#" aria-describedby="helpId" placeholder="" ></td>
 										<td id= "u_apellido" ><input type="text" class="form-control" name="txtApellido" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "u_rrdzz" ><input type="text" class="form-control" name="txtRrdzz" id="#" aria-describedby="helpId" placeholder=""></td>
-										<td id= "u_mail" ><input type="text" class="form-control" name="txtMail" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "u_mail" ><input type="email" class="form-control" name="txtMail" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "u_fecha_i" ><input type="date" class="form-control" name="txtDesde" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "u_fecha_f" ><input type="date" class="form-control" name="txtHasta" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "u_pass" ><input type="password" class="form-control" name="txtPass" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "acciones" >
 											<div class="d-grid gap-2 col-6 mx-auto">
 												<button type="submit" class="btn btn-dark">Agregar</button>
@@ -55,6 +57,7 @@
 										<td id= "u_mail" align="center">{{usuario[4]}}</td>
 										<td id= "u_fecha_i" align="center">{{usuario[5]}}</td>
 										<td id= "u_fecha_f" align="center">{{usuario[6]}}</td>
+										<td id= "u_pass" ><input type="password" class="form-control" name="txtPass" value="{{usuario[7]}}" aria-describedby="helpId" placeholder="" disabled></td>
 										<td id= "acciones" align="center">
 											
 											<div class="row">
@@ -64,7 +67,7 @@
 												<div class="col-6">
 													<form action="/admin/usuarios/borrar" method="post">
 													<input value="{{usuario[0]}}" type="text" name="txtID" id="txtID" hidden>
-														<button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+														<button onclick="return confirm('¿Desea borrar el usuario? {{usuario[2]}} {{usuario[1]}}')" type="submit" class="btn btn-danger btn-sm">Borrar</button>
 													</form>
 												</div>
 											</div>
