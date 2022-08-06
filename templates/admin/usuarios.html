@@ -3,7 +3,7 @@
 		<br>
 		
 					
-			<div class="card-body" style="min-height: 300px;">
+			<div class="card-body" style="min-height: 500px;">
 				
 					<div class="card">
 						<div class="card-header">
@@ -59,9 +59,7 @@
 											
 											<div class="row">
 												<div class="col-6">
-													<form action="/admin/usuarios/editar" method="post">
-														<button type="" class="btn btn-info btn-sm">Editar</button>
-													</form>
+													<a class="btn btn-info btn-sm" href="/admin/editarUsuarios/{{usuario[0]}}" role="button" style="display:center;">Editar</a>
 												</div>
 												<div class="col-6">
 													<form action="/admin/usuarios/borrar" method="post">

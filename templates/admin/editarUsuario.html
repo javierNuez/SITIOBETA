@@ -1,0 +1,48 @@
+{% include 'admin/cabecera.html' %}
+<div class="card-body">
+<div class="row">
+    <div class="col-2"></div>
+        <div class="col-8" style="max-width: 800px;">
+        {%for usuario in usuarios %}
+            <form action="/admin/editarUsuario/editar" method="post" enctype="multipart/form-data">
+                <div id="" name="">
+                    
+                        <div class="mb-3">
+                            <label for="txtID" class="form-label">ID:</label>
+                            <input value="{{usuario[0]}}" type="text" name="txtID" id="txtID">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtNombre" class="form-label">Nombre:</label>
+                            <input value="{{usuario[1]}}" type="text" name="txtNombre" id="txtNombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtApellido" class="form-label">Apellido:</label>
+                            <input value="{{usuario[2]}}" type="text" name="txtApellido" id="txtApellido">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtRrdzz" class="form-label">Rrdzz:</label>
+                            <input value="{{usuario[3]}}" type="text" name="txtRrdzz" id="txtRrdzz">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="txtMail" class="form-label">E-mail:</label>
+                            <input value="{{usuario[4]}}" type="text" name="txtMail" id="txtMail">
+                        </div>   
+                        <div class="mb-3">
+                            <label for="txtDesde" class="form-label">Desde:</label>
+	                        <input value="{{usuario[5]}}" type="date" name="txtDesde" id="txtNombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtHasta" class="form-label">Hasta:</label>
+	                        <input value="{{usuario[6]}}" type="date" name="txtHasta" id="txtHasta">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-sm">Guardar</button>
+                    
+            </form>
+        </div>
+    {% endfor %}
+    <div class="col-2"></div>
+</div>
+</div>
+{% include 'admin/pie.html' %}

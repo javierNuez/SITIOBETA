@@ -27,7 +27,6 @@ def admin_index():
 def admin_loguin():
     return render_template('admin/loguin.html')
 
-
 @app.route('/admin/pedidos')
 def admin_pedidos():
     conexion = mysql.connect()
@@ -85,6 +84,18 @@ def admin_usuarios():
     
     return render_template('admin/usuarios.html', usuarios=usuarios)
 
+@app.route('/admin/editarUsuarios/<int:id>')
+def admin_usuarios_update(id):
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `usuarios` WHERE id_u=%s;",(id))
+    usuarios = cursor.fetchall()
+    conexion.commit()
+    
+    
+    return render_template('admin/editarUsuario.html', usuarios=usuarios)
+
+
 
 @app.route('/admin/modulos')
 def admin_modulos():
@@ -112,7 +123,27 @@ def admin_usuarios_borrar():
     usuario = cursor.fetchall()
     conexion.commit()
     return redirect('/admin/usuarios')
+@app.route('/admin/editarUsuario/editar' , methods=['POST'])
+def admin_usuarios_editar():
     
+    _nombre=request.form['txtNombre']
+    _apellido=request.form['txtApellido']
+    _rrdzz=request.form['txtRrdzz']
+    _mail=request.form['txtMail']
+    _desde=request.form['txtDesde']
+    _hasta=request.form['txtHasta']
+    _id=request.form['txtID']
+    
+    sql="UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s WHERE id_u=%s;"
+    datos=(_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _id)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+    return admin_usuarios()
+
 @app.route('/admin/usuarios/guardar' , methods=['POST'])
 def admin_usuarios_guardar():
 
@@ -168,13 +199,17 @@ def admin_productos_borrar():
 @app.route('/admin/pedidos/guardar' , methods=['POST'])
 def admin_pedidos_guardar():
 
-    
+    _droguerias=request.form['pe_droguerias']
     _codigo=request.form['pe_cod']
-    _desc=request.form['pe_descripcion']
+    _cuit=request.form['pe_cuit']
+    _postal=request.form['pe_postal']
+    _nombre=request.form['pe_nombre']
+    _localidades=request.form['pe_localidades']
+    _domicilio=request.form['pe_domicilio']
 
 
-    sql="INSERT INTO `pedidos` (`id_pe`, `pe_cod`, `pe_descripcion`) VALUES (NULL, %s,%s);"
-    datos=(_codigo,_desc)
+    sql="INSERT INTO `pedidos` (`id_pe`, `pe_droguerias`, `pe_cod`, `pe_cuit`,`pe_postal`, `pe_nombre`,`pe_localidades`,`pe_domicilio`) VALUES (NULL, %s,%s, %s,%s, %s,%s, %s);"
+    datos=(_droguerias,_codigo,_cuit,_postal,_nombre,_localidades,_domicilio)
 
     conexion=mysql.connect()
     cursor=conexion.cursor()
