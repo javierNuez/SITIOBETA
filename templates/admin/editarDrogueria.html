@@ -18,7 +18,7 @@
     
     <nav class="navbar navbar-expand navbar-light bg-light">
         <div style="margin:auto;">
-            <h1 style="display:center;">Usuarios</h1>
+            <h1 style="display:center;">Droguerias</h1>
         </div>
         
     </nav>
@@ -28,45 +28,25 @@
 <div class="row">
     <div class="col-2"></div>
         <div class="col-8" style="max-width: 800px;">
-        {%for usuario in usuarios %}
-            <form action="/admin/editarUsuario/editar" method="post" enctype="multipart/form-data">
+        {%for drogueria in droguerias %}
+            <form action="/admin/editarDrogueria/editar" method="post" enctype="multipart/form-data">
                 <div id="" name="">
                     <div class="card-header">
-                        <h4>Editar Usuario:</h4>
+                        <h4>Editar Drogueria:</h4>
                     </div>
                         <div class="card-group">
                             <div class="card">
                                 <div class="card-body" hidden>
                                     <label for="txtID" class="form-label">ID:</label>
-                                    <input class="form-control" value="{{usuario[0]}}" type="text" name="txtID" id="txtID">
+                                    <input class="form-control" value="{{drogueria[0]}}" type="text" name="txtID" id="txtID">
                                 </div>
                                 <div class="card-body">
-                                    <label for="txtNombre" class="form-label">Nombre:</label>
-                                    <input class="form-control" value="{{usuario[1]}}" type="text" name="txtNombre" id="txtNombre">
+                                    <label for="txtCodigo" class="form-label">Código:</label>
+                                    <input class="form-control" value="{{drogueria[1]}}" type="text" name="txtCodigo" id="txtCodigo">
                                 </div>
                                 <div class="card-body">
-                                    <label for="txtApellido" class="form-label">Apellido:</label>
-                                    <input class="form-control" value="{{usuario[2]}}" type="text" name="txtApellido" id="txtApellido">
-                                </div>
-                                <div class="card-body">
-                                    <label for="txtRrdzz" class="form-label">Rrdzz:</label>
-                                    <input class="form-control" value="{{usuario[3]}}" type="text" name="txtRrdzz" id="txtRrdzz">
-                                </div>
-                                <div class="card-body">
-                                    <label for="txtMail" class="form-label">E-Mail:</label>
-                                    <input class="form-control" value="{{usuario[4]}}" type="email" name="txtMail" id="txtMail">
-                                </div>
-                                <div class="card-body">
-                                    <label for="txtDesde" class="form-label">Desde:</label>
-                                    <input class="form-control" value="{{usuario[5]}}" type="date" name="txtDesde" id="txtDesde">
-                                </div>
-                                <div class="card-body">
-                                    <label for="txtHasta" class="form-label">Hasta:</label>
-                                    <input class="form-control" value="{{usuario[6]}}" type="date" name="txtHasta" id="txtHasta">
-                                </div>
-                                <div class="card-body">
-                                    <label for="txtPass" class="form-label">Contraseña:</label>
-                                    <input class="form-control" value="{{usuario[7]}}" type="password" name="txtPass" id="txtPass">
+                                    <label for="txtDescripcion" class="form-label">Descripción:</label>
+                                    <input class="form-control" value="{{drogueria[2]}}" type="text" name="txtDescripcion" id="txtDescripcion">
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -77,7 +57,7 @@
                                         </div>
                                         <div class="col-2">
                                             <p class="lead">
-                                                <a class="btn btn-info secondary" href="/admin/usuarios" role="button" style="display:center;">Volver</a>
+                                                <a class="btn btn-secondary btn-mg" href="/admin/droguerias" role="button" style="display:center;">Volver</a>
                                             </p>
                                         </div>
                                         <div class="col-4">

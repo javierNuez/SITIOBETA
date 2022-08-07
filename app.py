@@ -95,7 +95,16 @@ def admin_usuarios_update(id):
     
     return render_template('admin/editarUsuario.html', usuarios=usuarios)
 
-
+@app.route('/admin/editarDroguerias/<int:id>')
+def admin_droguerias_update(id):
+    conexion = mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias` WHERE id_d=%s;",(id))
+    droguerias = cursor.fetchall()
+    conexion.commit()
+    
+    
+    return render_template('admin/editarDrogueria.html', droguerias=droguerias)
 
 @app.route('/admin/modulos')
 def admin_modulos():
@@ -297,6 +306,22 @@ def admin_droguerias_borrar():
     conexion.commit()
     return redirect('/admin/droguerias')
 
+@app.route('/admin/editarDrogueria/editar' , methods=['POST'])
+def admin_droguerias_editar():
+    
+    _cod=request.form['txtCodigo']
+    _desc=request.form['txtDescripcion']
+    _id=request.form['txtID']
+    
+    sql="UPDATE droguerias SET d_cod=%s, d_descripcion=%s WHERE id_d=%s;"
+    datos=(_cod, _desc, _id)
+
+    conexion=mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,datos)
+    conexion.commit()
+
+    return redirect('/admin/droguerias')
 #funciones de módulos:
 @app.route('/admin/modulos/guardar' , methods=['POST'])
 def admin_modulos_guardar():

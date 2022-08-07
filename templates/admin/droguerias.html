@@ -49,15 +49,15 @@
 											
 											<div class="row">
 												<div class="col-6">
-													<form action="/admin/drogueria/editar" method="post">
-														<button type="" class="btn btn-info btn-sm">Editar</button>
-													</form>
+													<div class="col-6">
+														<a class="btn btn-info btn-sm" href="/admin/editarDroguerias/{{drogueria[0]}}" role="button" style="display:center;">Editar</a>
+													</div>
 												</div>
 												<div class="col-6">
 													<form action="/admin/droguerias/borrar" method="post">
-													<input value="{{drogueria[0]}}" type="text" name="txtID" id="txtID" hidden>
-														<button type="submit" class="btn btn-danger btn-sm">Borrar</button>
-													</form>
+														<input value="{{drogueria[0]}}" type="number" name="txtID" id="txtID" hidden>
+															<button onclick="return confirm('¿Desea borrar la drogueria? {{drogueria[2]}}')"type="submit" class="btn btn-danger btn-sm">Borrar</button>
+														</form>
 												</div>
 											</div>
 										</td>
