@@ -4,13 +4,13 @@ from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 
 app = Flask(__name__)
-<<<<<<< HEAD
+
 
 app.secret_key="vigoray"
 mysql=MySQL()
-=======
+
 mysql = MySQL()
->>>>>>> 601d78e56dd7f3f74dfd1c6cdb43e720e678f5f0
+
 
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -164,7 +164,7 @@ def admin_usuarios_editar():
 @app.route('/admin/usuarios/guardar', methods=['POST'])
 def admin_usuarios_guardar():
 
-<<<<<<< HEAD
+
     _nombre=request.form['txtNombre']
     _apellido=request.form['txtApellido']
     _rrdzz=request.form['txtRrdzz']
@@ -183,7 +183,7 @@ def admin_usuarios_guardar():
     cursor=conexion.cursor()
     cursor.execute(sql,datos)
     conexion.commit()
-=======
+
     _nombre = request.form['txtNombre']
     _apellido = request.form['txtApellido']
     _rrdzz = request.form['txtRrdzz']
@@ -193,7 +193,7 @@ def admin_usuarios_guardar():
     _pass = request.form['txtPass']
     sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
     datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass)
->>>>>>> 601d78e56dd7f3f74dfd1c6cdb43e720e678f5f0
+
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
