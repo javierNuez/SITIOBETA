@@ -1,9 +1,11 @@
 
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 
 app = Flask(__name__)
+
+app.secret_key="vigoray"
 mysql=MySQL()
 
 app.config['MYSQL_DATABASE_HOST']='localhost'
@@ -164,6 +166,10 @@ def admin_usuarios_guardar():
     _desde=request.form['txtDesde']
     _hasta=request.form['txtHasta']
     _pass=request.form['txtPass']
+
+    if _nombre=='' or _apellido=='' or _rrdzz=='' or _mail=='' or _desde=='' or _hasta=='' or _pass=='':
+        flash('¡Por favor llenar todos los campos!')
+        return redirect('/admin/usuarios')
     sql="INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
     datos=(_nombre,_apellido,_rrdzz,_mail,_desde,_hasta,_pass)
 
