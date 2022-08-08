@@ -6,8 +6,8 @@ from flaskext.mysql import MySQL
 app = Flask(__name__)
 
 
-app.secret_key="vigoray"
-mysql=MySQL()
+app.secret_key = "vigoray"
+mysql = MySQL()
 
 mysql = MySQL()
 
@@ -68,6 +68,17 @@ def admin_productos():
     conexion.commit()
 
     return render_template('admin/productos.html', productos=productos)
+
+
+@app.route('/admin/editarProducto/<int:id>')
+def admin_producto_update(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `productos` WHERE id_p=%s;", (id))
+    productos = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('admin/editarProducto.html', productos=productos)
 
 
 @app.route('/admin/droguerias')
@@ -164,26 +175,6 @@ def admin_usuarios_editar():
 @app.route('/admin/usuarios/guardar', methods=['POST'])
 def admin_usuarios_guardar():
 
-
-    _nombre=request.form['txtNombre']
-    _apellido=request.form['txtApellido']
-    _rrdzz=request.form['txtRrdzz']
-    _mail=request.form['txtMail']
-    _desde=request.form['txtDesde']
-    _hasta=request.form['txtHasta']
-    _pass=request.form['txtPass']
-
-    if _nombre=='' or _apellido=='' or _rrdzz=='' or _mail=='' or _desde=='' or _hasta=='' or _pass=='':
-        flash('¡Por favor llenar todos los campos!')
-        return redirect('/admin/usuarios')
-    sql="INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
-    datos=(_nombre,_apellido,_rrdzz,_mail,_desde,_hasta,_pass)
-
-    conexion=mysql.connect()
-    cursor=conexion.cursor()
-    cursor.execute(sql,datos)
-    conexion.commit()
-
     _nombre = request.form['txtNombre']
     _apellido = request.form['txtApellido']
     _rrdzz = request.form['txtRrdzz']
@@ -191,9 +182,12 @@ def admin_usuarios_guardar():
     _desde = request.form['txtDesde']
     _hasta = request.form['txtHasta']
     _pass = request.form['txtPass']
+
+    if _nombre == '' or _apellido == '' or _rrdzz == '' or _mail == '' or _desde == '' or _hasta == '' or _pass == '':
+        flash('¡Por favor llenar todos los campos!')
+        return redirect('/admin/usuarios')
     sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
     datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass)
-
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -209,9 +203,11 @@ def admin_productos_guardar():
 
     _codigo = request.form['p_cod']
     _desc = request.form['p_descripcion']
+    _desde = request.form['p_desde']
+    _hasta = request.form['p_hasta']
 
-    sql = "INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`) VALUES (NULL, %s,%s);"
-    datos = (_codigo, _desc)
+    sql = "INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`, p_desde, p_hasta) VALUES (NULL, %s,%s,%s,%s);"
+    datos = (_codigo, _desc, _desde, _hasta)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -232,6 +228,25 @@ def admin_productos_borrar():
     conexion.commit()
     return redirect('/admin/productos')
 
+
+@app.route('/admin/editarProducto/editar', methods=['POST'])
+def admin_productos_editar():
+
+    _cod = request.form['p_cod']
+    _desc = request.form['p_descripcion']
+    _desde = request.form['p_desde']
+    _hasta = request.form['p_hasta']
+    _id = request.form['txtID']
+
+    sql = "UPDATE productos SET p_cod=%s, p_descripcion=%s, p_desde =%s, p_hasta=%s WHERE id_d=%s;"
+    datos = (_cod, _desc, _desde, _hasta, _id)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/admin/productos')
 # funciones de pedidos:
 
 
@@ -270,6 +285,39 @@ def admin_pedidos_borrar():
     return redirect('/admin/pedidos')
 
 # funciones de clientes:
+
+
+@app.route('/admin/editarCliente/<int:id>')
+def admin_cliente_update(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes` WHERE id_c=%s;", (id))
+    clientes = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('admin/editarClientes.html', clientes=clientes)
+
+
+@app.route('/admin/editarCliente/editar', methods=['POST'])
+def admin_cliente_editar():
+
+    _cod = request.form['c_cod']
+    _cuenta = request.form['c_cuenta']
+    _nombre = request.form['c_nombre']
+    _cuit = request.form['c_cuit']
+    _postal = request.form['c_postal']
+    _localidad = request.form['c_localidad']
+    _id = request.form['txtID']
+
+    sql = "UPDATE clientes SET c_cod=%s, c_cuenta=%s, c_nombre =%s, c_cuit=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_cod, _cuenta, _nombre, _cuit, _localidad, _postal, _id)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/admin/clientes')
 
 
 @app.route('/admin/clientes/guardar', methods=['POST'])

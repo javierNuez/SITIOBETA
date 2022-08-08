@@ -19,6 +19,8 @@
 										
 										<th style="text-align: center;" scope="col" class="table-info">Cód.Producto</th>
 										<th style="text-align: center;" scope="col" class="table-info">Descripción</th>
+										<th style="text-align: center;" scope="col" class="table-info">desde</th>
+										<th style="text-align: center;" scope="col" class="table-info">hasta</th>
 										<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
 									</tr>
 								</thead>
@@ -30,6 +32,8 @@
 										
 										<td id= "p_cod" ><input type="text" class="form-control" name="p_cod" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "p_descripcion" ><input type="text" class="form-control" name="p_descripcion" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "p_desde" ><input type="date" class="form-control" name="p_desde" id="#" aria-describedby="helpId" placeholder=""></td>
+										<td id= "p_hasta" ><input type="date" class="form-control" name="p_hasta" id="#" aria-describedby="helpId" placeholder=""></td>
 										<td id= "acciones" >
 											<div class="d-grid gap-2 col-6 mx-auto">
 												<button type="submit" class="btn btn-dark">Agregar</button>
@@ -46,15 +50,16 @@
 										
 										<td id= "p_cod" align="center">{{producto[1]}}</td>
 										<td id= "p_descripcion" align="center">{{producto[2]}}</td>
+										<td id= "p_descripcion" align="center">{{producto[3]}}</td>
+										<td id= "p_descripcion" align="center">{{producto[4]}}</td>
 										
 										<td id= "acciones" align="center">
 											
 											<div class="row">
 												<div class="col-6">
-													<form action="/admin/productos/editar" method="post">
-														<button type="" class="btn btn-info btn-sm">Editar</button>
-													</form>
+													<a class="btn btn-info btn-sm" href="/admin/editarProducto/{{producto[0]}}" role="button" style="display:center;">Editar</a>
 												</div>
+												
 												<div class="col-6">
 													<form action="/admin/productos/borrar" method="post">
 													<input value="{{producto[0]}}" type="text" name="txtID" id="txtID" hidden>
