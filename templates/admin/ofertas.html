@@ -1,0 +1,161 @@
+{% include 'admin/cabecera.html' %}
+
+{% with messages= get_flashed_messages() %}
+
+{% if messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<br>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8" style="max-width: 1280px;min-width: 480px;">
+        <form action="/admin/ofertas/guardar" method="post" enctype="multipart/form-data">
+            <div id="" name="">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-2">
+
+                        </div>
+                        <div class="col-8">
+                            <label for="" class="form-label">Oferta Comercial:</label>
+                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtModulo">
+                                <option selected>Modulos</option>
+                                {% for modulo in modulos %}
+                                <option value="{{modulo[1]}}">{{modulo[1]}}: {{modulo[4]}} al {{modulo[5]}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-2">
+
+                        </div>
+                        <div class="col-8">
+                            <label for="" class="form-label">Producto:</label>
+                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtProducto">
+                                <option selected>Productos</option>
+                                {% for producto in productos %}
+                                <option value="{{producto[1]}}
+                                {{producto[2]}}">
+                                    {{producto[2]}}: {{producto[3]}} {{producto[4]}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-4">
+                            <label for="cantidadM" class="form-label">Cantidad minima:</label>
+                            <input type="text" class="form-control" name="txtMinima" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                        <div class="col-4">
+                            <label for="cantidadM" class="form-label">Descuento:</label>
+                            <input type="text" class="form-control" name="txtDescuento" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-5">
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-dark" style="margin:auto ;">Agregar</button>
+                        </div>
+                        <div class="col-5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+<br>
+<div class="card-body">
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Oferta:</h4>
+        </div>
+        <div class="card-body">
+
+            <table id="tblContact" class="table table-sm">
+                <thead>
+                    <tr>
+                        <!--<th scope="col" class="table-info">#</th>-->
+                        <th style="text-align: center;" scope="col" class="table-info">Id</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Módulo</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Producto</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Cantidad minima</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Descuento %</th>
+                    </tr>
+                </thead>
+
+                <tbody id="rowsPedidos">
+                    {% for oferta in ofertas %}
+                    <tr>
+                        <!--<th scope="row">0</th>-->
+
+
+                        <td id="" align="center">{{oferta[0]}}</td>
+                        <td id="" align="center">{{oferta[1]}}</td>
+                        <td id="" align="center">{{oferta[2]}}</td>
+                        <td id="" align="center">{{oferta[3]}}</td>
+                        <td id="" align="center">{{oferta[4]}}%</td>
+
+
+
+                        <td id="acciones" align="center">
+
+                            <div class="row">
+                                <div class="col-2"></div>
+                                <div class="col-4">
+                                    <a class="btn btn-info btn-sm" href="/admin/editarOfertas/{{oferta[0]}}"
+                                        role="button" style="display:center;">Editar</a>
+                                </div>
+                                <div class="col-4">
+                                    <form action="/admin/ofertas/borrar" method="post">
+                                        <input value="{{oferta[0]}}" type="text" name="txtID" id="txtID" hidden>
+                                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                                    </form>
+                                </div>
+                                <div class="col-2"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <div class="card-footer text-muted">
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% include 'admin/pie.html' %}

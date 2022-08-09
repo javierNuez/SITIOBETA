@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Oces</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.0-beta1 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="col" style="padding-top: 30px">
+        <img src="http://www.laboratoriosbeta.com.ar/wp-content/uploads/2013/04/Logo-Beta1.png"
+            alt="laboratoriosbeta.com">
+    </div>
+
+    <nav class="navbar navbar-expand navbar-light bg-light">
+        <div style="margin:auto;">
+            <h1 style="display:center;">Oferta comercial editar:</h1>
+        </div>
+    </nav>
+    <div class="container">
+        <br />
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8" style="max-width: 800px;">
+                    {%for oferta in ofertas %}
+                    <form action="/admin/ofertas/guardar" method="post" enctype="multipart/form-data">
+                        <div id="" name="">
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-2">
+
+                                    </div>
+                                    <div class="col-8">
+                                        <label for="" class="form-label">Oferta Comercial:</label>
+                                        <select class="form-select" aria-label="Oferta comercial vigente" name="">
+                                            <option selected>Modulos</option>
+                                            {% for modulo in modulos %}
+                                            <option value="{{modulo[1]}}">{{modulo[1]}} vigencia: {{modulo[4]}} al
+                                                {{modulo[5]}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-2">
+
+                                    </div>
+                                    <div class="col-8">
+                                        <label for="" class="form-label">Producto:</label>
+                                        <select class="form-select" aria-label="Oferta comercial vigente" name="">
+                                            <option selected>Productos</option>
+                                            {% for producto in productos %}
+                                            <option value="{{producto[1]}}">
+                                                <h6>{{producto[1]}}</h6>
+                                                <h5>{{producto[2]}} vigencia: {{producto[3]}} al {{producto[4]}}</h5>
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-4">
+                                        <label for="cantidadM" class="form-label">Cantidad minima:</label>
+                                        <input type="text" class="form-control" name="cantidadM" id="#"
+                                            aria-describedby="helpId" placeholder="">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="cantidadM" class="form-label">Descuento:</label>
+                                        <input type="text" class="form-control" name="cantidadM" id="#"
+                                            aria-describedby="helpId" placeholder="">
+                                    </div>
+                                    <div class="col-2"></div>
+                                </div>
+
+                            </div>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-3">
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="submit" class="btn btn-dark"
+                                            style="margin:auto ;">Agregar</button>
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="lead">
+                                            <a class="btn btn-secondary btn-mg" href="/admin/ofertas" role="button"
+                                                style="display:center;">Volver</a>
+                                        </p>
+                                    </div>
+                                    <div class="col-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+                <div class="col-2"></div>
+            </div>
+        </div>
+        {% include 'admin/pie.html' %}
