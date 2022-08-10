@@ -1,4 +1,6 @@
 
+from audioop import add
+from lib2to3.pytree import convert
 from flask import Flask
 from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
@@ -54,12 +56,15 @@ def admin_ofertas_guardar():
     _producto = request.form['txtProducto']
     _minima = request.form['txtMinima']
     _descuento = request.form['txtDescuento']
-
+    datos_modulo = [_modulo.split('#')]
+    datos_producto = [_producto.split('#')]
     if _modulo == '' or _producto == '' or _minima == '' or _descuento == '':
         flash('¡Por favor llenar todos los campos!')
         return redirect('/admin/ofertas')
-    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`, `o_producto`, `o_minima`, `o_descuento`) VALUES (NULL, %s,%s,%s,%s);"
-    datos = (_modulo, _producto, _minima, _descuento)
+    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5],
+             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento)
+    print(datos)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -76,13 +81,11 @@ def admin_ofertas():
     cursor.execute("SELECT * FROM `ofertas`;")
     ofertas = cursor.fetchall()
     conexion.commit()
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
+
     cursor.execute("SELECT * FROM `modulos`;")
     modulos = cursor.fetchall()
     conexion.commit()
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
+
     cursor.execute("SELECT * FROM `productos`;")
     productos = cursor.fetchall()
     conexion.commit()
@@ -94,11 +97,22 @@ def admin_ofertas():
 def admin_ofertas_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `ofertas` WHERE id_o=%s;", (id))
+    cursor.execute(
+        "SELECT o_modulo, o_producto, o_minima, o_descuento FROM `ofertas` WHERE id_o=%s;", (id))
     ofertas = cursor.fetchall()
     conexion.commit()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos` WHERE id_m=%s;", (id))
+    modulos = cursor.fetchall()
+    conexion.commit()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `productos` WHERE id_p=%s;", (id))
+    productos = cursor.fetchall()
+    conexion.commit()
 
-    return render_template('admin/editarOferta.html', ofertas=ofertas)
+    return render_template('admin/editarOferta.html', ofertas=ofertas, modulos=modulos, productos=productos)
 
 
 # funciones de usuarios:
@@ -539,4 +553,4 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)

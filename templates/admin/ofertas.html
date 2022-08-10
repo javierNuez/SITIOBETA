@@ -21,11 +21,13 @@
 
                         </div>
                         <div class="col-8">
-                            <label for="" class="form-label">Oferta Comercial:</label>
+                            <label for="" class="form-label">Conformacion de oferta:</label>
                             <select class="form-select" aria-label="Oferta comercial vigente" name="txtModulo">
-                                <option selected>Modulos</option>
+                                <option selected>Seleccione</option>
                                 {% for modulo in modulos %}
-                                <option value="{{modulo[1]}}">{{modulo[1]}}: {{modulo[4]}} al {{modulo[5]}}
+                                <option
+                                    value="{{modulo[0]}}#{{modulo[1]}}#{{modulo[2]}}#{{modulo[3]}}#{{modulo[4]}}#{{modulo[5]}}">
+                                    {{modulo[1]}}
                                 </option>
                                 {% endfor %}
                             </select>
@@ -41,13 +43,13 @@
 
                         </div>
                         <div class="col-8">
-                            <label for="" class="form-label">Producto:</label>
-                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtProducto">
-                                <option selected>Productos</option>
+                            <label for="txtProducto" class="form-label">Productos:</label>
+                            <select class="form-select" aria-label="txtProducto" name="txtProducto">
+                                <option selected>Seleccione</option>
                                 {% for producto in productos %}
-                                <option value="{{producto[1]}}
-                                {{producto[2]}}">
-                                    {{producto[2]}}: {{producto[3]}} {{producto[4]}}
+                                <option
+                                    value="{{producto[0]}}#{{producto[1]}}#{{producto[2]}}#{{producto[3]}}#{{producto[4]}}">
+                                    {{producto[2]}}
                                 </option>
                                 {% endfor %}
                             </select>
@@ -57,103 +59,121 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-2"></div>
-                        <div class="col-4">
-                            <label for="cantidadM" class="form-label">Cantidad minima:</label>
-                            <input type="text" class="form-control" name="txtMinima" id="#" aria-describedby="helpId"
-                                placeholder="">
-                        </div>
-                        <div class="col-4">
-                            <label for="cantidadM" class="form-label">Descuento:</label>
-                            <input type="text" class="form-control" name="txtDescuento" id="#" aria-describedby="helpId"
-                                placeholder="">
-                        </div>
-                        <div class="col-2"></div>
+            </div>
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-4">
+                        <label for="cantidadM" class="form-label">Cantidad minima:</label>
+                        <input type="text" class="form-control" name="txtMinima" id="#" aria-describedby="helpId"
+                            placeholder="">
                     </div>
-
+                    <div class="col-4">
+                        <label for="cantidadM" class="form-label">Descuento:</label>
+                        <input type="text" class="form-control" name="txtDescuento" id="#" aria-describedby="helpId"
+                            placeholder="">
+                    </div>
+                    <div class="col-2"></div>
                 </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-5">
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-dark" style="margin:auto ;">Agregar</button>
-                        </div>
-                        <div class="col-5">
-                        </div>
+
+            </div>
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-5">
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-dark" style="margin:auto ;">Agregar</button>
+                    </div>
+                    <div class="col-5">
                     </div>
                 </div>
             </div>
         </form>
     </div>
+
+
     <div class="col-2"></div>
 </div>
 <br>
+
+<div class="card-header">
+    <h4>Oferta comercial:</h4>
+</div>
 <div class="card-body">
 
-    <div class="card">
-        <div class="card-header">
-            <h4>Oferta:</h4>
-        </div>
-        <div class="card-body">
+    <table id="tblContact" class="table table-sm">
+        <thead>
+            <tr>
+                <!--<th scope="col" class="table-info">#</th>-->
+                <th style="text-align: center;" scope="col" class="table-info">Id</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. ID</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. Nombre</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. Titulo</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. Pie</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. Desde</th>
+                <th style="text-align: center;" scope="col" class="table-info">Mód. Hasta</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. ID</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Cód.</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Descripción</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Desde</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Hasta</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Minimo</th>
+                <th style="text-align: center;" scope="col" class="table-info">Prod. Descuento</th>
+            </tr>
+        </thead>
 
-            <table id="tblContact" class="table table-sm">
-                <thead>
-                    <tr>
-                        <!--<th scope="col" class="table-info">#</th>-->
-                        <th style="text-align: center;" scope="col" class="table-info">Id</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Módulo</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Producto</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Cantidad minima</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Descuento %</th>
-                    </tr>
-                </thead>
-
-                <tbody id="rowsPedidos">
-                    {% for oferta in ofertas %}
-                    <tr>
-                        <!--<th scope="row">0</th>-->
-
-
-                        <td id="" align="center">{{oferta[0]}}</td>
-                        <td id="" align="center">{{oferta[1]}}</td>
-                        <td id="" align="center">{{oferta[2]}}</td>
-                        <td id="" align="center">{{oferta[3]}}</td>
-                        <td id="" align="center">{{oferta[4]}}%</td>
+        <tbody id="rowsPedidos">
+            {% for oferta in ofertas %}
+            <tr>
+                <!--<th scope="row">0</th>-->
 
 
+                <td id="" align="center">{{oferta[0]}}</td>
+                <td id="" align="center">{{oferta[1]}}</td>
+                <td id="" align="center">{{oferta[2]}}</td>
+                <td id="" align="center">{{oferta[3]}}</td>
+                <td id="" align="center">{{oferta[4]}}</td>
+                <td id="" align="center">{{oferta[5]}}</td>
+                <td id="" align="center">{{oferta[6]}}</td>
+                <td id="" align="center">{{oferta[7]}}</td>
+                <td id="" align="center">{{oferta[8]}}</td>
+                <td id="" align="center">{{oferta[9]}}</td>
+                <td id="" align="center">{{oferta[10]}}</td>
+                <td id="" align="center">{{oferta[11]}}</td>
+                <td id="" align="center">{{oferta[12]}}</td>
+                <td id="" align="center">{{oferta[13]}}%</td>
 
-                        <td id="acciones" align="center">
 
-                            <div class="row">
-                                <div class="col-2"></div>
-                                <div class="col-4">
-                                    <a class="btn btn-info btn-sm" href="/admin/editarOfertas/{{oferta[0]}}"
-                                        role="button" style="display:center;">Editar</a>
-                                </div>
-                                <div class="col-4">
-                                    <form action="/admin/ofertas/borrar" method="post">
-                                        <input value="{{oferta[0]}}" type="text" name="txtID" id="txtID" hidden>
-                                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
-                                    </form>
-                                </div>
-                                <div class="col-2"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
 
-        </div>
-        <div class="card-footer text-muted">
+                <td id="acciones" align="center">
 
-        </div>
-    </div>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-4">
+                            <a class="btn btn-info btn-sm" href="/admin/editarOfertas/{{oferta[0]}}" role="button"
+                                style="display:center;">Editar</a>
+                        </div>
+                        <div class="col-4">
+                            <form action="/admin/ofertas/borrar" method="post">
+                                <input value="{{oferta[0]}}" type="text" name="txtID" id="txtID" hidden>
+                                <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                            </form>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 </div>
+<div class="card-footer text-muted">
+
+</div>
+
+
+
 
 
 
