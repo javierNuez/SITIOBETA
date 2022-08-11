@@ -1,6 +1,7 @@
 
 from audioop import add
 from lib2to3.pytree import convert
+from unicodedata import numeric
 from flask import Flask
 from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
@@ -26,28 +27,35 @@ def inicio():
     return render_template('sitio/index.html')
 
 
-@app.route('/admin' , methods=['POST'])
+@app.route('/admin/')
+def open():
+    return render_template('admin/index.html')
+
+
+@app.route('/admin/', methods=['POST'])
 def admin_index():
     usuario = request.form['txtUsuario']
     contraseña = request.form['txtPassword']
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("select * FROM usuarios where u_rrdzz =%s and u_pass =%s",(usuario,contraseña))
+    cursor.execute(
+        "select * FROM usuarios where u_rrdzz =%s and u_pass =%s", (usuario, contraseña))
     _usuario = cursor.fetchall()
     conexion.commit()
-    print(_usuario)
+
     if _usuario:
         login = True
+
         return render_template('/admin/index.html')
     else:
         login = False
+
         return redirect('/')
-    
 
 
-@app.route('/admin/loguin')
+@app.route('/sitio/loguin')
 def admin_loguin():
-    return render_template('admin/loguin.html')
+    return render_template('sitio/loguin.html')
 # funciones de oferta comercial:
 
 
@@ -201,8 +209,16 @@ def admin_usuarios_guardar():
     _pass = request.form['txtPass']
 
 # condicional para usar mensajes
-    if _nombre == '' or _apellido == '' or _rrdzz == '' or _mail == '' or _desde == '' or _hasta == '' or _pass == '':
-        flash('¡Por favor llenar todos los campos!')
+    sql = "SELECT * FROM usuarios WHERE u_rrdzz=%s or u_mail=%s;"
+    datos = (_rrdzz, _mail)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    _existe = cursor.fetchall()
+    conexion.commit()
+
+    if _existe:
+        flash('Rrdzz o Correo, ya registrado')
         return redirect('/admin/usuarios')
 
     sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
@@ -567,4 +583,4 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=8000, debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
