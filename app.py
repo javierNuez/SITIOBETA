@@ -113,14 +113,10 @@ def admin_ofertas():
 
     cursor.execute("SELECT * FROM `productos`;")
     productos = cursor.fetchall()
-    diviciones = []
-    for i in range(0, len(modulos)):
-        tabla = modulos[i][1]
-        cursor.execute("SELECT * FROM ofertas where o_mod_nom=%s;", (tabla))
-        diviciones.append(cursor.fetchall())
+
     conexion.commit()
 
-    return render_template('admin/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos, diviciones=diviciones)
+    return render_template('admin/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos)
 
 
 @ app.route('/admin/editarOfertas/<int:id>')
