@@ -1,13 +1,18 @@
 
 from audioop import add
+from datetime import datetime
 from lib2to3.pytree import convert
 from unicodedata import numeric
 from flask import Flask
 from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
+from datetime import date
 
 app = Flask(__name__)
 
+
+today = date.today()
+print(today)
 
 app.secret_key = "vigoray"
 mysql = MySQL()
@@ -100,22 +105,25 @@ def admin_ofertas_guardar():
 def admin_ofertas():
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `ofertas`;")
+    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
     ofertas = cursor.fetchall()
-    conexion.commit()
 
     cursor.execute("SELECT * FROM `modulos`;")
     modulos = cursor.fetchall()
-    conexion.commit()
 
     cursor.execute("SELECT * FROM `productos`;")
     productos = cursor.fetchall()
+    diviciones = []
+    for i in range(0, len(modulos)):
+        tabla = modulos[i][1]
+        cursor.execute("SELECT * FROM ofertas where o_mod_nom=%s;", (tabla))
+        diviciones.append(cursor.fetchall())
     conexion.commit()
 
-    return render_template('admin/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos)
+    return render_template('admin/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos, diviciones=diviciones)
 
 
-@app.route('/admin/editarOfertas/<int:id>')
+@ app.route('/admin/editarOfertas/<int:id>')
 def admin_ofertas_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -140,7 +148,7 @@ def admin_ofertas_update(id):
 # funciones de usuarios:
 
 
-@app.route('/admin/usuarios')
+@ app.route('/admin/usuarios')
 def admin_usuarios():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -151,7 +159,7 @@ def admin_usuarios():
     return render_template('admin/usuarios.html', usuarios=usuarios)
 
 
-@app.route('/admin/editarUsuarios/<int:id>')
+@ app.route('/admin/editarUsuarios/<int:id>')
 def admin_usuarios_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -162,7 +170,7 @@ def admin_usuarios_update(id):
     return render_template('admin/editarUsuario.html', usuarios=usuarios)
 
 
-@app.route('/admin/usuarios/borrar/<int:id>')
+@ app.route('/admin/usuarios/borrar/<int:id>')
 def admin_usuarios_borrar(id):
 
     conexion = mysql.connect()
@@ -174,7 +182,7 @@ def admin_usuarios_borrar(id):
     return redirect('/admin/usuarios')
 
 
-@app.route('/admin/editarUsuario/editar', methods=['POST'])
+@ app.route('/admin/editarUsuario/editar', methods=['POST'])
 def admin_usuarios_editar():
 
     _nombre = request.form['txtNombre']
@@ -197,7 +205,7 @@ def admin_usuarios_editar():
     return redirect('/admin/usuarios')
 
 
-@app.route('/admin/usuarios/guardar', methods=['POST'])
+@ app.route('/admin/usuarios/guardar', methods=['POST'])
 def admin_usuarios_guardar():
 
     _nombre = request.form['txtNombre']
@@ -233,7 +241,7 @@ def admin_usuarios_guardar():
 # funciones de productos:
 
 
-@app.route('/admin/productos')
+@ app.route('/admin/productos')
 def admin_productos():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -244,7 +252,7 @@ def admin_productos():
     return render_template('admin/productos.html', productos=productos)
 
 
-@app.route('/admin/editarProducto/<int:id>')
+@ app.route('/admin/editarProducto/<int:id>')
 def admin_producto_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -255,7 +263,7 @@ def admin_producto_update(id):
     return render_template('admin/editarProducto.html', productos=productos)
 
 
-@app.route('/admin/productos/guardar', methods=['POST'])
+@ app.route('/admin/productos/guardar', methods=['POST'])
 def admin_productos_guardar():
 
     _codigo = request.form['p_cod']
@@ -274,7 +282,7 @@ def admin_productos_guardar():
     return redirect('/admin/productos')
 
 
-@app.route('/admin/productos/borrar/<int:id>')
+@ app.route('/admin/productos/borrar/<int:id>')
 def admin_productos_borrar(id):
 
     conexion = mysql.connect()
@@ -286,7 +294,7 @@ def admin_productos_borrar(id):
     return redirect('/admin/productos')
 
 
-@app.route('/admin/editarProducto/editar', methods=['POST'])
+@ app.route('/admin/editarProducto/editar', methods=['POST'])
 def admin_productos_editar():
 
     _cod = request.form['p_cod']
@@ -307,7 +315,7 @@ def admin_productos_editar():
 # funciones de pedidos:
 
 
-@app.route('/admin/pedidos')
+@ app.route('/admin/pedidos')
 def admin_pedidos():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -321,7 +329,7 @@ def admin_pedidos():
     return render_template('admin/pedidos.html', pedidos=pedidos, droguerias=droguerias)
 
 
-@app.route('/admin/pedidos/guardar', methods=['POST'])
+@ app.route('/admin/pedidos/guardar', methods=['POST'])
 def admin_pedidos_guardar():
 
     _droguerias = request.form['pe_droguerias']
@@ -344,7 +352,7 @@ def admin_pedidos_guardar():
     return redirect('/admin/pedidos')
 
 
-@app.route('/admin/pedidos/borrar', methods=['POST'])
+@ app.route('/admin/pedidos/borrar', methods=['POST'])
 def admin_pedidos_borrar():
     _id = request.form['txtID']
 
@@ -358,7 +366,7 @@ def admin_pedidos_borrar():
 # funciones de clientes:
 
 
-@app.route('/admin/clientes')
+@ app.route('/admin/clientes')
 def admin_clientes():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -369,7 +377,7 @@ def admin_clientes():
     return render_template('admin/clientes.html', clientes=clientes)
 
 
-@app.route('/admin/editarCliente/<int:id>')
+@ app.route('/admin/editarCliente/<int:id>')
 def admin_cliente_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -380,7 +388,7 @@ def admin_cliente_update(id):
     return render_template('admin/editarClientes.html', clientes=clientes)
 
 
-@app.route('/admin/editarCliente/editar', methods=['POST'])
+@ app.route('/admin/editarCliente/editar', methods=['POST'])
 def admin_cliente_editar():
 
     _cod = request.form['c_cod']
@@ -402,7 +410,7 @@ def admin_cliente_editar():
     return redirect('/admin/clientes')
 
 
-@app.route('/admin/clientes/guardar', methods=['POST'])
+@ app.route('/admin/clientes/guardar', methods=['POST'])
 def admin_clientes_guardar():
 
     _codigo = request.form['c_cod']
@@ -423,7 +431,7 @@ def admin_clientes_guardar():
     return redirect('/admin/clientes')
 
 
-@app.route('/admin/clientes/borrar/<int:id>')
+@ app.route('/admin/clientes/borrar/<int:id>')
 def admin_clientes_borrar(id):
 
     conexion = mysql.connect()
@@ -437,7 +445,7 @@ def admin_clientes_borrar(id):
 # funciones de droguerias:
 
 
-@app.route('/admin/editarDroguerias/<int:id>')
+@ app.route('/admin/editarDroguerias/<int:id>')
 def admin_droguerias_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -448,7 +456,7 @@ def admin_droguerias_update(id):
     return render_template('admin/editarDrogueria.html', droguerias=droguerias)
 
 
-@app.route('/admin/droguerias')
+@ app.route('/admin/droguerias')
 def admin_droguerias():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -459,7 +467,7 @@ def admin_droguerias():
     return render_template('admin/droguerias.html', droguerias=droguerias)
 
 
-@app.route('/admin/droguerias/guardar', methods=['POST'])
+@ app.route('/admin/droguerias/guardar', methods=['POST'])
 def admin_droguerias_guardar():
 
     _codigo = request.form['d_cod']
@@ -476,7 +484,7 @@ def admin_droguerias_guardar():
     return redirect('/admin/droguerias')
 
 
-@app.route('/admin/droguerias/borrar/<int:id>')
+@ app.route('/admin/droguerias/borrar/<int:id>')
 def admin_droguerias_borrar(id):
 
     conexion = mysql.connect()
@@ -488,7 +496,7 @@ def admin_droguerias_borrar(id):
     return redirect('/admin/droguerias')
 
 
-@app.route('/admin/editarDrogueria/editar', methods=['POST'])
+@ app.route('/admin/editarDrogueria/editar', methods=['POST'])
 def admin_droguerias_editar():
 
     _cod = request.form['txtCodigo']
@@ -507,7 +515,7 @@ def admin_droguerias_editar():
 # funciones de módulos:
 
 
-@app.route('/admin/modulos')
+@ app.route('/admin/modulos')
 def admin_modulos():
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -518,7 +526,7 @@ def admin_modulos():
     return render_template('admin/modulos.html', modulos=modulos)
 
 
-@app.route('/admin/editarModulos/editar', methods=['POST'])
+@ app.route('/admin/editarModulos/editar', methods=['POST'])
 def admin_modulo_editar():
 
     _nombre = request.form['txtNombre']
@@ -539,7 +547,7 @@ def admin_modulo_editar():
     return redirect('/admin/modulos')
 
 
-@app.route('/admin/modulos/guardar', methods=['POST'])
+@ app.route('/admin/modulos/guardar', methods=['POST'])
 def admin_modulos_guardar():
 
     _nombre = request.form['m_nombre']
@@ -559,7 +567,7 @@ def admin_modulos_guardar():
     return redirect('/admin/modulos')
 
 
-@app.route('/admin/modulos/borrar/<int:id>')
+@ app.route('/admin/modulos/borrar/<int:id>')
 def admin_modulos_borrar(id):
 
     conexion = mysql.connect()
@@ -571,7 +579,7 @@ def admin_modulos_borrar(id):
     return redirect('/admin/modulos')
 
 
-@app.route('/admin/editarModulos/<int:id>')
+@ app.route('/admin/editarModulos/<int:id>')
 def admin_modulos_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()

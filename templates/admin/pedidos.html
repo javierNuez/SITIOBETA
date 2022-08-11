@@ -2,7 +2,7 @@
 <br>
 <div class="row">
     <div class="col-2"></div>
-    <div class="col-8" style="max-width: 1280px;min-width: 480px;">
+    <div class="col-8">
         <form action="/admin/pedidos/guardar" method="post" enctype="multipart/form-data">
             <div id="pe_drogueria" name="pe_drogueria">
                 <div class="mb-3">
@@ -69,11 +69,10 @@
     <div class="col-2"></div>
 </div>
 <br>
-<div class="card-body">
-
-    <div class="card">
+<div class="card-body" style="min-height: 500px;">
+    <div class="card border-info">
         <div class="card-header">
-            <h4>Pedidos</h4>
+            <h4>Pedidos:</h4>
         </div>
         <div class="card-body">
 
@@ -109,11 +108,11 @@
                         <td id="acciones" align="center">
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col">
                                     <a class="btn btn-info btn-sm" href="/admin/editarPedidos/{{pedido[0]}}"
                                         role="button" style="display:center;">Editar</a>
                                 </div>
-                                <div class="col-6">
+                                <div class="col">
                                     <a class="btn btn-danger btn-sm" href="/admin/pedidos/borrar/{{pedido[0]}}"
                                         role="button" style="display:center;">Borrar</a>
                                 </div>

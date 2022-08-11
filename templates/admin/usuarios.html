@@ -12,11 +12,11 @@
 <br>
 
 
-<div class="card-body" style="min-height: 500px;">
 
-	<div class="card">
+<div class="card-body" style="min-height: 500px;">
+	<div class="card border-info">
 		<div class="card-header">
-			<h4>Usuarios</h4>
+			<h4>Usuarios:</h4>
 		</div>
 		<div class="card-body">
 			<form action="/admin/usuarios/guardar" method="post" enctype="multipart/form-data">
@@ -72,6 +72,7 @@
 							<td id="u_rrdzz" align="center">{{usuario[3]}}</td>
 							<td id="u_mail" align="center">{{usuario[4]}}</td>
 							<td id="u_fecha_i" align="center">{{usuario[5]}}</td>
+
 							<td id="u_fecha_f" align="center">{{usuario[6]}}</td>
 							<td id="u_pass"><input type="password" class="form-control" name="txtPass"
 									value="{{usuario[7]}}" aria-describedby="helpId" placeholder="" disabled></td>
@@ -92,8 +93,6 @@
 						{% endfor %}
 					</tbody>
 				</table>
-				<!-- -------------------------------------------------------------->
-
 
 			</form>
 
@@ -101,9 +100,10 @@
 		<div class="card-footer text-muted">
 
 		</div>
-	</div>
 
+	</div>
 </div>
+
 
 
 
