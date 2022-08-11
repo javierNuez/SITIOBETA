@@ -26,9 +26,23 @@ def inicio():
     return render_template('sitio/index.html')
 
 
-@app.route('/admin/')
+@app.route('/admin' , methods=['POST'])
 def admin_index():
-    return render_template('admin/index.html')
+    usuario = request.form['txtUsuario']
+    contraseña = request.form['txtPassword']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("select * FROM usuarios where u_rrdzz =%s and u_pass =%s",(usuario,contraseña))
+    _usuario = cursor.fetchall()
+    conexion.commit()
+    print(_usuario)
+    if _usuario:
+        login = True
+        return render_template('/admin/index.html')
+    else:
+        login = False
+        return redirect('/')
+    
 
 
 @app.route('/admin/loguin')
@@ -553,4 +567,4 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(host="localhost", port=8000, debug=True)
