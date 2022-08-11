@@ -127,18 +127,8 @@ def admin_ofertas_update(id):
         "SELECT o_modulo, o_producto, o_minima, o_descuento FROM `ofertas` WHERE id_o=%s;", (id))
     ofertas = cursor.fetchall()
     conexion.commit()
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `modulos` WHERE id_m=%s;", (id))
-    modulos = cursor.fetchall()
-    conexion.commit()
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `productos` WHERE id_p=%s;", (id))
-    productos = cursor.fetchall()
-    conexion.commit()
 
-    return render_template('admin/editarOferta.html', ofertas=ofertas, modulos=modulos, productos=productos)
+    return render_template('admin/editarOferta.html', ofertas=ofertas)
 
 
 # funciones de usuarios:

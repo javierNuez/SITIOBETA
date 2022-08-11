@@ -40,14 +40,8 @@
                                     </div>
                                     <div class="col-8">
                                         <label for="" class="form-label">Oferta Comercial:</label>
-                                        <select class="form-select" aria-label="Oferta comercial vigente" name="">
-                                            <option selected>Modulos</option>
-                                            {% for modulo in modulos %}
-                                            <option value="{{modulo[1]}}">{{modulo[1]}} vigencia: {{modulo[4]}} al
-                                                {{modulo[5]}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="text" class="form-control" name="cantidadM" id="#"
+                                            aria-describedby="helpId" placeholder="" value="{{oferta[2]}}">
                                     </div>
                                     <div class="col-2">
 
@@ -61,15 +55,8 @@
                                     </div>
                                     <div class="col-8">
                                         <label for="" class="form-label">Producto:</label>
-                                        <select class="form-select" aria-label="Oferta comercial vigente" name="">
-                                            <option selected>Productos</option>
-                                            {% for producto in productos %}
-                                            <option value="{{producto[1]}}">
-                                                <h6>{{producto[1]}}</h6>
-                                                <h5>{{producto[2]}} vigencia: {{producto[3]}} al {{producto[4]}}</h5>
-                                            </option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="text" class="form-control" name="cantidadM" id="#"
+                                            aria-describedby="helpId" placeholder="" value="{{oferta[9]}}">
                                     </div>
                                     <div class="col-2">
 
