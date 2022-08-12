@@ -47,11 +47,8 @@ def admin_index():
     conexion.commit()
 
     if _usuario:
-        login = True
-        print(usuario)
         return render_template('/admin/index.html')
     else:
-        login = False
         flash('Error')
         return redirect('/sitio/loguin')
 
@@ -274,7 +271,7 @@ def admin_productos_borrar(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM productos where id_p=%s;", (id))
-    usuarios = cursor.fetchall()
+    productos = cursor.fetchall()
     conexion.commit()
 
     return redirect('/admin/productos')
@@ -476,7 +473,7 @@ def admin_droguerias_borrar(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM droguerias where id_d=%s;", (id))
-    usuarios = cursor.fetchall()
+    drogueria = cursor.fetchall()
     conexion.commit()
 
     return redirect('/admin/droguerias')
@@ -577,4 +574,4 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=8000, debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
