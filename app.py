@@ -29,10 +29,20 @@ def inicio():
     return render_template('sitio/index.html')
 
 
-@app.route('/admin/')
-def open():
+# @app.route('/admin/')
+# def open():
 
-    return render_template('admin/index.html')
+#    return render_template('admin/index.html')
+
+
+@app.route('/apms/')
+def apms_index():
+    return render_template('apms/index.html')
+
+
+@app.route('/sup/')
+def sup_index():
+    return render_template('sup/index.html')
 
 
 @app.route('/admin/', methods=['POST'])
@@ -44,12 +54,18 @@ def admin_index():
     cursor.execute(
         "select * FROM usuarios where u_rrdzz =%s and u_pass =%s", (usuario, contraseña))
     _usuario = cursor.fetchall()
+    print(_usuario)
     conexion.commit()
-
     if _usuario:
-        return render_template('/admin/index.html')
+        if _usuario[0][8] == "ADM":
+            return render_template('/admin/index.html')
+        elif _usuario[0][8] == "SUP":
+            return redirect('/sup')
+        elif _usuario[0][8] == "APM":
+            redirect('/apms/')
+            return redirect('/apms')
     else:
-        flash('Error')
+        flash('¡Usuario o contraseña, no válido!')
         return redirect('/sitio/loguin')
 
 
@@ -298,6 +314,34 @@ def admin_productos_editar():
 # funciones de pedidos:
 
 
+@ app.route('/apms/pedidos')
+def apms_pedidos():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `pedidos`;")
+    pedidos = cursor.fetchall()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias)
+
+
+@ app.route('/sup/pedidos')
+def sup_pedidos():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `pedidos`;")
+    pedidos = cursor.fetchall()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/pedidos.html', pedidos=pedidos, droguerias=droguerias)
+
+
 @ app.route('/admin/pedidos')
 def admin_pedidos():
     conexion = mysql.connect()
@@ -347,6 +391,28 @@ def admin_pedidos_borrar():
     return redirect('/admin/pedidos')
 
 # funciones de clientes:
+
+
+@ app.route('/apms/clientes')
+def apms_clientes():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    clientes = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('apms/clientes.html', clientes=clientes)
+
+
+@ app.route('/sup/clientes')
+def sup_clientes():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    clientes = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/clientes.html', clientes=clientes)
 
 
 @ app.route('/admin/clientes')
@@ -496,6 +562,28 @@ def admin_droguerias_editar():
 
     return redirect('/admin/droguerias')
 # funciones de módulos:
+
+
+@ app.route('/apms/modulos')
+def apms_modulos():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos`;")
+    modulos = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('apms/modulos.html', modulos=modulos)
+
+
+@ app.route('/sup/modulos')
+def sup_modulos():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos`;")
+    modulos = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/modulos.html', modulos=modulos)
 
 
 @ app.route('/admin/modulos')

@@ -1,0 +1,137 @@
+{% include 'sup/cabecera.html' %}
+<br>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <form action="/sup/pedidos/guardar" method="post" enctype="multipart/form-data">
+            <div id="pe_drogueria" name="pe_drogueria">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="pe_droguerias" class="form-label">Droguería:</label>
+                            <select class="form-select" aria-label="Droguerias en sistema" name="pe_droguerias">
+                                <option selected>Seleccione</option>
+                                {% for drogueria in droguerias %}
+                                <option value="{{drogueria[2]}}">{{drogueria[2]}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="pe_cod" class="form-label">Cuenta:</label>
+                            <input type="text" class="form-control" name="pe_cod" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                        <div class="col-4">
+                            <label for="pe_nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="pe_nombre" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="pe_cuit" class="form-label">Cuit:</label>
+                            <input type="text" class="form-control" name="pe_cuit" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                        <div class="col-4">
+                            <label for="pe_postal" class="form-label">Cód Póstal:</label>
+                            <input type="text" class="form-control" name="pe_postal" id="#" aria-describedby="helpId"
+                                placeholder="">
+                        </div>
+                        <div class="col-4">
+                            <label for="pe_localidades" class="form-label">Localidad:</label>
+                            <input type="text" class="form-control" name="pe_localidades" id="#"
+                                aria-describedby="helpId" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="pe_domicilio" class="form-label">Domicilio:</label>
+                    <input type="text" class="form-control" name="pe_domicilio" id="#" aria-describedby="helpId"
+                        placeholder="">
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-5">
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-dark" style="margin:auto ;">Agregar</button>
+                        </div>
+                        <div class="col-5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+<br>
+<div class="card-body" style="min-height: 500px;">
+    <div class="card border-info">
+        <div class="card-header">
+            <h4>Pedidos:</h4>
+        </div>
+        <div class="card-body">
+
+            <table id="tblContact" class="table table-sm">
+                <thead>
+                    <tr>
+                        <!--<th scope="col" class="table-info">#</th>-->
+                        <th style="text-align: center;" scope="col" class="table-info">Nro. Cuenta</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Drogueria</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Cuit</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Cód. Postal</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Nombre</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Localidad</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Domicilio</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="rowsPedidos">
+                    {% for pedido in pedidos %}
+                    <tr>
+                        <!--<th scope="row">0</th>-->
+
+
+                        <td id="pe_cod" align="center">{{pedido[1]}}</td>
+                        <td id="pe_droguerias" align="center">{{pedido[2]}}</td>
+                        <td id="pe_cuit" align="center">{{pedido[3]}}</td>
+                        <td id="pe_postal" align="center">{{pedido[4]}}</td>
+                        <td id="pe_nombre" align="center">{{pedido[5]}}</td>
+                        <td id="pe_localidades" align="center">{{pedido[6]}}</td>
+                        <td id="pe_domicilio" align="center">{{pedido[7]}}</td>
+
+                        <td id="acciones" align="center">
+
+                            <div class="row">
+                                <div class="col">
+                                    <a class="btn btn-info btn-sm" href="/sup/editarPedidos/{{pedido[0]}}" role="button"
+                                        style="display:center;">Editar</a>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-danger btn-sm" href="/sup/pedidos/borrar/{{pedido[0]}}"
+                                        role="button" style="display:center;">Borrar</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <div class="card-footer text-muted">
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% include 'sup/pie.html' %}
