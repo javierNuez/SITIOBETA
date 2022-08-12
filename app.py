@@ -122,7 +122,7 @@ def admin_ofertas_update(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT o_modulo, o_producto, o_minima, o_descuento FROM `ofertas` WHERE id_o=%s;", (id))
+        "SELECT * FROM `ofertas` WHERE id_o=%s;", (id))
     ofertas = cursor.fetchall()
     conexion.commit()
 
@@ -577,4 +577,4 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(host="localhost", port=8000, debug=True)
