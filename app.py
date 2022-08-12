@@ -39,10 +39,23 @@ def inicio():
 def apms_index():
     return render_template('apms/index.html')
 
+# Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
-@app.route('/sup/')
-def sup_index():
-    return render_template('sup/index.html')
+
+@app.route('/sup/<usuario>')
+def sup_of(usuario):
+    print(usuario)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_usuario=%s;", (usuario))
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/ofertas.html', ofertas=ofertas)
+    # return render_template('sup/index.html')
+
+# Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
 @app.route('/admin/', methods=['POST'])
@@ -54,13 +67,15 @@ def admin_index():
     cursor.execute(
         "select * FROM usuarios where u_rrdzz =%s and u_pass =%s", (usuario, contraseña))
     _usuario = cursor.fetchall()
-    print(_usuario)
+
     conexion.commit()
     if _usuario:
         if _usuario[0][8] == "ADM":
             return render_template('/admin/index.html')
         elif _usuario[0][8] == "SUP":
-            return redirect('/sup')
+            us = _usuario[0][3]
+            print(us)
+            return redirect(f'/sup/{us}')
         elif _usuario[0][8] == "APM":
             redirect('/apms/')
             return redirect('/apms')
@@ -143,6 +158,18 @@ def admin_ofertas_update(id):
 
 
 # funciones de usuarios:
+# Aca esta la magia para devolver la pantalla segun el usuario----------------------------
+@ app.route('/sup/pedidos/<int:usuario>')
+def sup_pedidos_layout(usuario):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidos` WHERE p_usuario=%s;", (usuario))
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/ofertas.html', ofertas=ofertas)
+# Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
 @ app.route('/admin/usuarios')
@@ -324,8 +351,11 @@ def apms_pedidos():
     cursor.execute("SELECT * FROM `droguerias`;")
     droguerias = cursor.fetchall()
     conexion.commit()
+    cursor.execute("SELECT * FROM `ofertas`;")
+    ofertas = cursor.fetchall()
+    conexion.commit()
 
-    return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias)
+    return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias, ofertas=ofertas)
 
 
 @ app.route('/sup/pedidos')
