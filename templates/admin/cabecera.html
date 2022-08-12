@@ -32,5 +32,12 @@
 
     </div>
   </nav>
+  {% with usuarios = usuarios %}
+  {% if usuario %}
+  {% for usuario in usuarios %}
+  <h1>Bienvenido: {{ usuario[3] }}</h1>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
   <div class="container">
     <br />

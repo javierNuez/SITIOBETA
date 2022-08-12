@@ -11,9 +11,6 @@ from datetime import date
 app = Flask(__name__)
 
 
-today = date.today()
-print(today)
-
 app.secret_key = "vigoray"
 mysql = MySQL()
 
@@ -34,6 +31,7 @@ def inicio():
 
 @app.route('/admin/')
 def open():
+
     return render_template('admin/index.html')
 
 
@@ -50,12 +48,12 @@ def admin_index():
 
     if _usuario:
         login = True
-
+        print(usuario)
         return render_template('/admin/index.html')
     else:
         login = False
-
-        return redirect('/')
+        flash('Error')
+        return redirect('/sitio/loguin')
 
 
 @app.route('/sitio/loguin')
@@ -178,10 +176,12 @@ def admin_usuarios_editar():
     _desde = request.form['txtDesde']
     _hasta = request.form['txtHasta']
     _pass = request.form['txtPass']
+    _roll = request.form['txtRoll']
     _id = request.form['txtID']
 
-    sql = "UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s, u_pass=%s WHERE id_u=%s;"
-    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _id)
+    sql = "UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s, u_pass=%s, u_roll=%s WHERE id_u=%s;"
+    datos = (_nombre, _apellido, _rrdzz, _mail,
+             _desde, _hasta, _pass, _roll, _id)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -201,7 +201,7 @@ def admin_usuarios_guardar():
     _desde = request.form['txtDesde']
     _hasta = request.form['txtHasta']
     _pass = request.form['txtPass']
-
+    _roll = request.form['txtRoll']
 # condicional para usar mensajes
     sql = "SELECT * FROM usuarios WHERE u_rrdzz=%s or u_mail=%s;"
     datos = (_rrdzz, _mail)
@@ -215,8 +215,8 @@ def admin_usuarios_guardar():
         flash('Rrdzz o Correo, ya registrado')
         return redirect('/admin/usuarios')
 
-    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
-    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass)
+    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _roll)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
