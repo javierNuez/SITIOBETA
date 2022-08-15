@@ -12,6 +12,7 @@
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
 </head>
+{% if usuarios %}
 
 <body>
     <div class="col" style="padding-top: 30px">
@@ -21,14 +22,13 @@
 
     <nav class="navbar navbar-expand navbar-light bg-light">
         <div class="nav navbar-nav" style="margin:auto;">
-            <a class="nav-item nav-link active" href="/sup/">Inicio</a>
-            <a class="nav-item nav-link" href="pedidos">Pedidos</a>
-            <a class="nav-item nav-link" href="clientes">Clientes</a>
-            <a class="nav-item nav-link" href="modulos">Módulos</a>
+            <a class="nav-item nav-link active" href="/sup/index/{{usuarios[0][9]}}">Inicio</a>
+            <a class="nav-item nav-link" href="../pedidos/{{usuarios[0][9]}}">Pedidos</a>
+            <a class="nav-item nav-link" href="../clientes/{{usuarios[0][9]}}">Clientes</a>
+            <a class="nav-item nav-link" href="../ofertas/{{usuarios[0][9]}}">Ofertas</a>
             <a class="nav-item nav-link" href="/">Log-out</a>
 
         </div>
     </nav>
-
+{% endif %}
     <div class="container">
-        <br />

@@ -1,4 +1,4 @@
-
+from random import randint
 from audioop import add
 from datetime import datetime
 from lib2to3.pytree import convert
@@ -42,19 +42,29 @@ def apms_index():
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@app.route('/sup/<usuario>')
+@app.route('/sup/<int:usuario>')
 def sup_of(usuario):
-    print(usuario)
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas` WHERE o_usuario=%s;", (usuario))
-    ofertas = cursor.fetchall()
+        "SELECT * FROM `pedidos` WHERE o_usuario_hash=%s;", (usuario))
+    pedidos = cursor.fetchall()
     conexion.commit()
 
-    return render_template('sup/ofertas.html', ofertas=ofertas)
+    return render_template('sup/pedidos.html', pedidos=pedidos)
     # return render_template('sup/index.html')
+@app.route('/sup/index/<int:usuario>')
+def sup_index(usuario):
 
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    conexion.commit()
+    print(usuarios)
+    return render_template('sup/index.html', usuarios=usuarios)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
@@ -73,9 +83,10 @@ def admin_index():
         if _usuario[0][8] == "ADM":
             return render_template('/admin/index.html')
         elif _usuario[0][8] == "SUP":
-            us = _usuario[0][3]
-            print(us)
-            return redirect(f'/sup/{us}')
+            us = _usuario[0][9]
+           
+            return redirect(f'/sup/index/{us}')
+
         elif _usuario[0][8] == "APM":
             redirect('/apms/')
             return redirect('/apms')
@@ -167,9 +178,53 @@ def sup_pedidos_layout(usuario):
         "SELECT * FROM `pedidos` WHERE p_usuario=%s;", (usuario))
     ofertas = cursor.fetchall()
     conexion.commit()
-
-    return render_template('sup/ofertas.html', ofertas=ofertas)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    conexion.commit()
+    return render_template('sup/pedidos.html', ofertas=ofertas, usuarios = usuarios)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
+
+@app.route('/sup/ofertas/<int:usuario>')
+def sup_ofertas(usuario):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
+    ofertas = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM `modulos`;")
+    modulos = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM `productos`;")
+    productos = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    conexion.commit()
+   
+
+    return render_template('sup/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos, usuarios = usuarios)
+
+@ app.route('/sup/clientes/<int:usuario>')
+def sup_clientes(usuario):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    clientes = cursor.fetchall()
+    conexion.commit()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sup/clientes.html', clientes=clientes, usuarios = usuarios)
 
 
 @ app.route('/admin/usuarios')
@@ -242,6 +297,11 @@ def admin_usuarios_guardar():
     _hasta = request.form['txtHasta']
     _pass = request.form['txtPass']
     _roll = request.form['txtRoll']
+    _hash = randint(1000000000,9999999999)
+    _hash = str(_hash)+_rrdzz
+# condicional para ver si existe _hash
+   
+
 # condicional para usar mensajes
     sql = "SELECT * FROM usuarios WHERE u_rrdzz=%s or u_mail=%s;"
     datos = (_rrdzz, _mail)
@@ -251,12 +311,13 @@ def admin_usuarios_guardar():
     _existe = cursor.fetchall()
     conexion.commit()
 
+
     if _existe:
         flash('Rrdzz o Correo, ya registrado')
         return redirect('/admin/usuarios')
 
-    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _roll)
+    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`, `u_hash`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _roll, _hash)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -358,19 +419,6 @@ def apms_pedidos():
     return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias, ofertas=ofertas)
 
 
-@ app.route('/sup/pedidos')
-def sup_pedidos():
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `pedidos`;")
-    pedidos = cursor.fetchall()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `droguerias`;")
-    droguerias = cursor.fetchall()
-    conexion.commit()
-
-    return render_template('sup/pedidos.html', pedidos=pedidos, droguerias=droguerias)
-
 
 @ app.route('/admin/pedidos')
 def admin_pedidos():
@@ -434,15 +482,7 @@ def apms_clientes():
     return render_template('apms/clientes.html', clientes=clientes)
 
 
-@ app.route('/sup/clientes')
-def sup_clientes():
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `clientes`;")
-    clientes = cursor.fetchall()
-    conexion.commit()
 
-    return render_template('sup/clientes.html', clientes=clientes)
 
 
 @ app.route('/admin/clientes')
@@ -692,4 +732,5 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run( debug=True)
+#host="192.168.0.117", port=8000,

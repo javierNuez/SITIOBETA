@@ -24,14 +24,14 @@
 <br>
 
 
-<div class="card-body" style="min-height: 500px;">
-	<div class="card border-info">
+
+	
 		<div class="card-header">
 			<h4>Usuarios:</h4>
 		</div>
 		<div class="card-body">
 			<form action="/admin/usuarios/guardar" method="post" enctype="multipart/form-data">
-				<table id="tblContact" class="table table-sm">
+				<table id="tblContact" class="table table-sm border-info">
 					<thead>
 						<tr>
 							<!--<th scope="col" class="table-info">#</th>-->
@@ -73,7 +73,7 @@
 									<option value="APM">APM</option>
 								</select></td>
 							<td id="acciones">
-								<div class="d-grid gap-2 col-6 mx-auto">
+								<div class="d-grid gap-2 col">
 									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
 								</div>
 							</td>
@@ -98,11 +98,11 @@
 							<td id="acciones" align="center">
 
 								<div class="row">
-									<div class="col-6">
+									<div class="col">
 										<a class="btn btn-info btn-sm" href="/admin/editarUsuarios/{{usuario[0]}}"
 											role="button" style="display:center;">Editar</a>
 									</div>
-									<div class="col-6">
+									<div class="col">
 										<a class="btn btn-danger btn-sm" href="/admin/usuarios/borrar/{{usuario[0]}}"
 											role="button" style="display:center;">Borrar</a>
 									</div>
@@ -120,8 +120,8 @@
 
 		</div>
 
-	</div>
-</div>
+	
+
 
 
 

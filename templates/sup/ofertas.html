@@ -10,73 +10,7 @@
 {% endif %}
 {% endwith %}
 <br>
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-8" style="max-width: 1280px;min-width: 480px;">
-        <form action="/admin/ofertas/guardar" method="post" enctype="multipart/form-data">
-            <div id="" name="">
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="" class="form-label">Módulos:</label>
-                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtModulo">
-                                <option selected>Seleccione</option>
-                                {% for modulo in modulos %}
-                                <option
-                                    value="{{modulo[0]}}#{{modulo[1]}}#{{modulo[2]}}#{{modulo[3]}}#{{modulo[4]}}#{{modulo[5]}}">
-                                    {{modulo[1]}}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label for="txtProducto" class="form-label">Productos:</label>
-                            <select class="form-select" aria-label="txtProducto" name="txtProducto">
-                                <option selected>Seleccione</option>
-                                {% for producto in productos %}
-                                <option
-                                    value="{{producto[0]}}#{{producto[1]}}#{{producto[2]}}#{{producto[3]}}#{{producto[4]}}">
-                                    {{producto[2]}}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-2"></div>
-                        <div class="col-4">
-                            <label for="cantidadM" class="form-label">Cantidad minima:</label>
-                            <input type="text" class="form-control" name="txtMinima" id="#" aria-describedby="helpId"
-                                placeholder="">
-                        </div>
-                        <div class="col-4">
-                            <label for="cantidadM" class="form-label">Descuento:</label>
-                            <input type="text" class="form-control" name="txtDescuento" id="#" aria-describedby="helpId"
-                                placeholder="">
-                        </div>
-                        <div class="col-2"></div>
-                    </div>
 
-                </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-5">
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-dark" style="margin:auto ;">Agregar</button>
-                        </div>
-                        <div class="col-5">
-                        </div>
-                    </div>
-                </div>
-        </form>
-    </div>
-
-
-    <div class="col-2"></div>
-</div>
 <br>
 <div class="card-body" style="min-height: 500px;">
     <div class="card border-info">
@@ -162,7 +96,6 @@
     </div>
 </div>
 </div>
-
 
 
 
