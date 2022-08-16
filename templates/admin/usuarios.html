@@ -25,102 +25,102 @@
 
 
 
-	
-		<div class="card-header">
-			<h4>Usuarios:</h4>
-		</div>
-		<div class="card-body">
-			<form action="/admin/usuarios/guardar" method="post" enctype="multipart/form-data">
-				<table id="tblContact" class="table table-sm border-info">
-					<thead>
-						<tr>
-							<!--<th scope="col" class="table-info">#</th>-->
 
-							<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
-							<th style="text-align: center;" scope="col" class="table-info">Apellido</th>
-							<th style="text-align: center;" scope="col" class="table-info">Rrdzz</th>
-							<th style="text-align: center;" scope="col" class="table-info">E-mail</th>
-							<th style="text-align: center;" scope="col" class="table-info">Desde</th>
-							<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
-							<th style="text-align: center;" scope="col" class="table-info">Contraseña</th>
-							<th style="text-align: center;" scope="col" class="table-info">Roll</th>
-							<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
-						</tr>
-					</thead>
-					<tbody id="rowsUsuarios">
+<div class="card-header">
+	<h4>Usuarios:</h4>
+</div>
+<div class="card-body">
+	<form action="/admin/usuarios/guardar" method="post" enctype="multipart/form-data">
+		<table id="tblContact" class="table table-sm border-info">
+			<thead>
+				<tr>
+					<!--<th scope="col" class="table-info">#</th>-->
 
-						<tr>
-							<!--<th scope="row">0</th>-->
+					<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
+					<th style="text-align: center;" scope="col" class="table-info">Apellido</th>
+					<th style="text-align: center;" scope="col" class="table-info">Rrdzz (numérico)</th>
+					<th style="text-align: center;" scope="col" class="table-info">E-mail</th>
+					<th style="text-align: center;" scope="col" class="table-info">Desde</th>
+					<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
+					<th style="text-align: center;" scope="col" class="table-info">Contraseña</th>
+					<th style="text-align: center;" scope="col" class="table-info">Roll</th>
+					<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+				</tr>
+			</thead>
+			<tbody id="rowsUsuarios">
 
-							<td id="u_nombre"><input type="text" class="form-control form-control-sm" name="txtNombre"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="u_apellido"><input type="text" class="form-control form-control-sm"
-									name="txtApellido" id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="u_rrdzz"><input type="text" class="form-control form-control-sm" name="txtRrdzz"
-									id="#" aria-describedby="helpId" placeholder="" required></td>
-							<td id="u_mail"><input type="email" class="form-control form-control-sm" name="txtMail"
-									id="#" aria-describedby="helpId" placeholder="" required></td>
-							<td id="u_fecha_i"><input type="date" class="form-control form-control-sm" name="txtDesde"
-									id="#" aria-describedby="helpId" placeholder="" required></td>
-							<td id="u_fecha_f"><input type="date" class="form-control form-control-sm" name="txtHasta"
-									id="#" aria-describedby="helpId" placeholder="" required></td>
-							<td id="u_pass"><input type="password" class="form-control form-control-sm" name="txtPass"
-									id="#" aria-describedby="helpId" placeholder="" required></td>
-							<td id="u_roll"><select name="txtRoll" id="txtRoll">
-									<option value="">Seleccione</option>
-									<option value="ADM">Admin</option>
-									<option value="SUP">Supervisor</option>
-									<option value="APM">APM</option>
-								</select></td>
-							<td id="acciones">
-								<div class="d-grid gap-2 col">
-									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
-								</div>
-							</td>
-						</tr>
+				<tr>
+					<!--<th scope="row">0</th>-->
 
-					</tbody>
-					<tbody id="rowsUsuarios">
-						{% for usuario in usuarios %}
-						<tr>
-							<!--<th scope="row">0</th>-->
+					<td id="u_nombre"><input type="text" class="form-control form-control-sm" name="txtNombre" id="#"
+							aria-describedby="helpId" placeholder=""></td>
+					<td id="u_apellido"><input type="text" class="form-control form-control-sm" name="txtApellido"
+							id="#" aria-describedby="helpId" placeholder=""></td>
+					<td id="u_rrdzz"><input type="number" class="form-control form-control-sm" name="txtRrdzz" id="#"
+							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_mail"><input type="email" class="form-control form-control-sm" name="txtMail" id="#"
+							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_fecha_i"><input type="date" class="form-control form-control-sm" name="txtDesde" id="#"
+							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_fecha_f"><input type="date" class="form-control form-control-sm" name="txtHasta" id="#"
+							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_pass"><input type="password" class="form-control form-control-sm" name="txtPass" id="#"
+							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_roll"><select name="txtRoll" id="txtRoll">
+							<option value="">Seleccione</option>
+							<option value="ADM">Admin</option>
+							<option value="SUP">Supervisor</option>
+							<option value="APM">APM</option>
+						</select></td>
+					<td id="acciones">
+						<div class="d-grid gap-2 col">
+							<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
+						</div>
+					</td>
+				</tr>
 
-							<td id="u_nombre" align="center">{{usuario[1]}}</td>
-							<td id="u_apellido" align="center">{{usuario[2]}}</td>
-							<td id="u_rrdzz" align="center">{{usuario[3]}}</td>
-							<td id="u_mail" align="center">{{usuario[4]}}</td>
-							<td id="u_fecha_i" align="center">{{usuario[5]}}</td>
-							<td id="u_fecha_f" align="center">{{usuario[6]}}</td>
-							<td id="u_pass"><input type="password" class="form-control form-control-sm" name="txtPass"
-									value="{{usuario[7]}}" aria-describedby="helpId" placeholder="" disabled></td>
-							<td id="u_roll"><input type="text" class="form-control form-control-sm" name="txtRoll"
-									value="{{usuario[8]}}" aria-describedby="helpId" placeholder="" disabled></td>
-							<td id="acciones" align="center">
+			</tbody>
+			<tbody id="rowsUsuarios">
+				{% for usuario in usuarios %}
+				<tr>
+					<!--<th scope="row">0</th>-->
 
-								<div class="row">
-									<div class="col">
-										<a class="btn btn-info btn-sm" href="/admin/editarUsuarios/{{usuario[0]}}"
-											role="button" style="display:center;">Editar</a>
-									</div>
-									<div class="col">
-										<a class="btn btn-danger btn-sm" href="/admin/usuarios/borrar/{{usuario[0]}}"
-											role="button" style="display:center;">Borrar</a>
-									</div>
-								</div>
-							</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+					<td id="u_nombre" align="center">{{usuario[1]}}</td>
+					<td id="u_apellido" align="center">{{usuario[2]}}</td>
+					<td id="u_rrdzz" align="center">{{usuario[3]}}</td>
+					<td id="u_mail" align="center">{{usuario[4]}}</td>
+					<td id="u_fecha_i" align="center">{{usuario[5]}}</td>
+					<td id="u_fecha_f" align="center">{{usuario[6]}}</td>
+					<td id="u_pass"><input type="password" class="form-control form-control-sm" name="txtPass"
+							value="{{usuario[7]}}" aria-describedby="helpId" placeholder="" disabled></td>
+					<td id="u_roll"><input type="text" class="form-control form-control-sm" name="txtRoll"
+							value="{{usuario[8]}}" aria-describedby="helpId" placeholder="" disabled></td>
+					<td id="acciones" align="center">
 
-			</form>
+						<div class="row">
+							<div class="col">
+								<a class="btn btn-info btn-sm" href="/admin/editarUsuarios/{{usuario[0]}}" role="button"
+									style="display:center;">Editar</a>
+							</div>
+							<div class="col">
+								<a class="btn btn-danger btn-sm" href="/admin/usuarios/borrar/{{usuario[0]}}"
+									role="button" style="display:center;">Borrar</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 
-		</div>
-		<div class="card-footer text-muted">
+	</form>
 
-		</div>
+</div>
+<div class="card-footer text-muted">
 
-	
+</div>
+
+
 
 
 

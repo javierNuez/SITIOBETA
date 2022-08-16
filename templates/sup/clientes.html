@@ -5,8 +5,10 @@
 		<div class="card-header">
 			<h4>Clientes:</h4>
 		</div>
+		{% if usuarios %}
 		<div class="card-body">
-			<form action="/sup/clientes/guardar" method="post" enctype="multipart/form-data">
+			<form action="/sup/clientes/guardar/{{usuarios[0][9]}}" method="post" enctype="multipart/form-data">
+				{% endif %}
 				<table id="tblContact" class="table table-sm">
 					<thead>
 						<tr>
@@ -25,23 +27,22 @@
 								<select class="form-select form-select-sm" aria-label="" name="txtDrogueria">
 									<option selected>Seleccione</option>
 									{% for drogueria in droguerias %}
-									<option
-										value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
+									<option value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
 										{{drogueria[1]}}>{{drogueria[2]}}
 									</option>
 									{% endfor %}
 								</select>
-								</td>
-							<td id=""><input type="number" class="form-control form-control-sm" name="txtCuenta"
-									id="" aria-describedby="helpId" placeholder=""></td>
-							<td id=""><input type="text" class="form-control form-control-sm" name="txtNombre"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id=""><input type="text" class="form-control form-control-sm" name="txtCuit" id="#"
+							</td>
+							<td id=""><input type="number" class="form-control form-control-sm" name="txtCuenta" id=""
 									aria-describedby="helpId" placeholder=""></td>
-							<td id=""><input type="text" class="form-control form-control-sm"
-									name="txtLocalidad" id="#" aria-describedby="" placeholder=""></td>
-							<td id=""><input type="text" class="form-control form-control-sm" name="txtPostal"
-									id="#" aria-describedby="helpId" placeholder=""></td>
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtNombre" id="#"
+									aria-describedby="helpId" placeholder=""></td>
+							<td id=""><input type="number" class="form-control form-control-sm" name="txtCuit" id="#"
+									aria-describedby="helpId" placeholder=""></td>
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtLocalidad" id="#"
+									aria-describedby="" placeholder=""></td>
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtPostal" id="#"
+									aria-describedby="helpId" placeholder=""></td>
 							<td id="acciones">
 								<div class="d-grid gap-2 col-6 mx-auto">
 									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
@@ -68,8 +69,13 @@
 											role="button" style="display:center;">Editar</a>
 									</div>
 									<div class="col-6">
-										<a class="btn btn-danger btn-sm" href="/sup/clientes/borrar/{{cliente[0]}}"
-											role="button" style="display:center;">Borrar</a>
+										{% if usuarios %}
+										<form action="/sup/clientes/borrar" method="post" enctype="multipart/form-data">
+											<input type="number" name="id_cliente" value="{{cliente[0]}}" hidden>
+											<input type="number" name="usuario_Hash" value="{{usuarios[0][9]}}" hidden>
+											<button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+										</form>
+										{% endif %}
 									</div>
 								</div>
 							</td>
@@ -83,4 +89,4 @@
 		</div>
 
 
-{% include 'sup/pie.html' %}
+		{% include 'sup/pie.html' %}

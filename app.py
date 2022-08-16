@@ -54,6 +54,8 @@ def sup_of(usuario):
 
     return render_template('sup/pedidos.html', pedidos=pedidos)
     # return render_template('sup/index.html')
+
+
 @app.route('/sup/index/<int:usuario>')
 def sup_index(usuario):
 
@@ -84,7 +86,7 @@ def admin_index():
             return render_template('/admin/index.html')
         elif _usuario[0][8] == "SUP":
             us = _usuario[0][9]
-           
+
             return redirect(f'/sup/index/{us}')
 
         elif _usuario[0][8] == "APM":
@@ -184,12 +186,13 @@ def sup_pedidos_layout(usuario):
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
     conexion.commit()
-    return render_template('sup/pedidos.html', ofertas=ofertas, usuarios = usuarios)
+    return render_template('sup/pedidos.html', ofertas=ofertas, usuarios=usuarios)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
+
 
 @app.route('/sup/ofertas/<int:usuario>')
 def sup_ofertas(usuario):
-    
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
@@ -213,11 +216,9 @@ def sup_ofertas(usuario):
         "SELECT * FROM `droguerias`")
     droguerias = cursor.fetchall()
     conexion.commit()
-    
 
-   
+    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios)
 
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios = usuarios)
 
 @ app.route('/sup/clientes/<int:usuario>')
 def sup_clientes(usuario):
@@ -238,11 +239,18 @@ def sup_clientes(usuario):
     usuarios = cursor.fetchall()
     conexion.commit()
 
-    return render_template('sup/clientes.html', clientes=clientes, droguerias=droguerias, usuarios = usuarios)
+    return render_template('sup/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
-@ app.route('/sup/clientes/guardar', methods=['POST'])
-def sup_clientes_guardar():
 
+@ app.route('/sup/clientes/guardar/<int:usuario>', methods=['POST'])
+def sup_clientes_guardar(usuario):
+    print(usuario)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    conexion.commit()
     _drogueria = request.form['txtDrogueria']
     _cuenta = request.form['txtCuenta']
     _nombre = request.form['txtNombre']
@@ -252,14 +260,16 @@ def sup_clientes_guardar():
     datos_drogueria = [_drogueria.split('#')]
 
     sql = "INSERT INTO `clientes` (`id_c`, `c_id_drogueria`, `c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, `c_nombre`, `c_cuit`, `c_localidad`, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (datos_drogueria[0][0], datos_drogueria[0][1], datos_drogueria[0][2], _cuenta, _nombre, _cuit, _localidad, _postal)
+    datos = (datos_drogueria[0][0], datos_drogueria[0][1],
+             datos_drogueria[0][2], _cuenta, _nombre, _cuit, _localidad, _postal)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
     conexion.commit()
 
-    return redirect('/sup/clientes')
+    return sup_clientes(usuario)
+
 
 @ app.route('/admin/usuarios')
 def admin_usuarios():
@@ -293,6 +303,19 @@ def admin_usuarios_borrar(id):
     conexion.commit()
 
     return redirect('/admin/usuarios')
+
+
+@ app.route('/sup/clientes/borrar', methods=['POST'])
+def sup_clientes_borrar():
+    _cliente = request.form['id_cliente']
+    _usuario = request.form['usuario_Hash']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("DELETE FROM clientes where id_c=%s;", (_cliente))
+    conexion.commit()
+    hash = int(_usuario)
+
+    return redirect(f'/sup/clientes/{hash}')
 
 
 @ app.route('/admin/editarUsuario/editar', methods=['POST'])
@@ -331,10 +354,11 @@ def admin_usuarios_guardar():
     _hasta = request.form['txtHasta']
     _pass = request.form['txtPass']
     _roll = request.form['txtRoll']
-    _hash = randint(1000000000,9999999999)
+    _hash = randint(1000000000, 9999999999)
     _hash = str(_hash)+_rrdzz
+    print(_hash)
 # condicional para ver si existe _hash
-   
+
 
 # condicional para usar mensajes
     sql = "SELECT * FROM usuarios WHERE u_rrdzz=%s or u_mail=%s;"
@@ -345,13 +369,13 @@ def admin_usuarios_guardar():
     _existe = cursor.fetchall()
     conexion.commit()
 
-
     if _existe:
         flash('Rrdzz o Correo, ya registrado')
         return redirect('/admin/usuarios')
 
     sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`, `u_hash`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (_nombre, _apellido, _rrdzz, _mail, _desde, _hasta, _pass, _roll, _hash)
+    datos = (_nombre, _apellido, _rrdzz, _mail,
+             _desde, _hasta, _pass, _roll, _hash)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -453,7 +477,6 @@ def apms_pedidos():
     return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias, ofertas=ofertas)
 
 
-
 @ app.route('/admin/pedidos')
 def admin_pedidos():
     conexion = mysql.connect()
@@ -514,9 +537,6 @@ def apms_clientes():
     conexion.commit()
 
     return render_template('apms/clientes.html', clientes=clientes)
-
-
-
 
 
 @ app.route('/admin/clientes')
@@ -766,5 +786,5 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.21", port=8000, debug=True)
-#host="192.168.0.117", port=8000,
+    app.run(host="89.0.0.28", port=8000, debug=True)
+# host="192.168.0.117", port=8000,
