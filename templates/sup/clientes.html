@@ -10,7 +10,7 @@
 				<table id="tblContact" class="table table-sm">
 					<thead>
 						<tr>
-							<th style="text-align: center;" scope="col" class="table-info">Cód.Drogueria</th>
+							<th style="text-align: center;" scope="col" class="table-info">Droguería</th>
 							<th style="text-align: center;" scope="col" class="table-info">Cuenta</th>
 							<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
 							<th style="text-align: center;" scope="col" class="table-info">CUIT</th>
@@ -21,17 +21,26 @@
 					</thead>
 					<tbody id="rowsClientes">
 						<tr>
-							<td id="c_cod"><input type="text" class="form-control form-control-sm" name="c_cod" id="#"
-									aria-describedby="helpId" placeholder=""></td>
-							<td id="c_cuenta"><input type="text" class="form-control form-control-sm" name="c_cuenta"
+							<td id="c_drogueria">
+								<select class="form-select form-select-sm" aria-label="" name="txtDrogueria">
+									<option selected>Seleccione</option>
+									{% for drogueria in droguerias %}
+									<option
+										value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
+										{{drogueria[1]}}>{{drogueria[2]}}
+									</option>
+									{% endfor %}
+								</select>
+								</td>
+							<td id=""><input type="number" class="form-control form-control-sm" name="txtCuenta"
+									id="" aria-describedby="helpId" placeholder=""></td>
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtNombre"
 									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="c_nombre"><input type="text" class="form-control form-control-sm" name="c_nombre"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="c_cuit"><input type="text" class="form-control form-control-sm" name="c_cuit" id="#"
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtCuit" id="#"
 									aria-describedby="helpId" placeholder=""></td>
-							<td id="c_localidad"><input type="text" class="form-control form-control-sm"
-									name="c_localidad" id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="c_postal"><input type="text" class="form-control form-control-sm" name="c_postal"
+							<td id=""><input type="text" class="form-control form-control-sm"
+									name="txtLocalidad" id="#" aria-describedby="" placeholder=""></td>
+							<td id=""><input type="text" class="form-control form-control-sm" name="txtPostal"
 									id="#" aria-describedby="helpId" placeholder=""></td>
 							<td id="acciones">
 								<div class="d-grid gap-2 col-6 mx-auto">
@@ -44,12 +53,12 @@
 						{% for cliente in clientes %}
 						<tr>
 							<!--<th scope="row">0</th>-->
-							<td id="c_cod" align="center">{{cliente[1]}}</td>
-							<td id="c_cuenta" align="center">{{cliente[2]}}</td>
-							<td id="c_nombre" align="center">{{cliente[3]}}</td>
-							<td id="c_cuit" align="center">{{cliente[4]}}</td>
-							<td id="c_localidad" align="center">{{cliente[5]}}</td>
-							<td id="c_postal" align="center">{{cliente[6]}}</td>
+							<td id="c_cod" align="center">{{cliente[3]}}</td>
+							<td id="c_cuenta" align="center">{{cliente[4]}}</td>
+							<td id="c_nombre" align="center">{{cliente[5]}}</td>
+							<td id="c_cuit" align="center">{{cliente[6]}}</td>
+							<td id="c_localidad" align="center">{{cliente[7]}}</td>
+							<td id="c_postal" align="center">{{cliente[8]}}</td>
 
 							<td id="acciones" align="center">
 
@@ -72,7 +81,6 @@
 		</div>
 		<div class="card-footer text-muted">
 		</div>
-	</div>
-</div>
-</div>
+
+
 {% include 'sup/pie.html' %}
