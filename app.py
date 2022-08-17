@@ -190,9 +190,15 @@ def sup_pedidos_layout(usuario):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
+
 @app.route('/sup/ofertas/<int:usuario>')
 def sup_ofertas(usuario):
-
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+    
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
@@ -209,15 +215,11 @@ def sup_ofertas(usuario):
     cursor.execute(
         "SELECT * FROM `clientes`")
     clientes = cursor.fetchall()
-
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `droguerias`")
-    droguerias = cursor.fetchall()
+    clientesF = clientes
     conexion.commit()
+    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientesF=clientesF, usuarios=usuarios)
 
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios)
+
 
 
 @ app.route('/sup/clientes/<int:usuario>')
@@ -232,6 +234,8 @@ def sup_clientes(usuario):
     cursor.execute("SELECT * FROM `clientes`;")
     clientes = cursor.fetchall()
 
+   
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -241,6 +245,39 @@ def sup_clientes(usuario):
 
     return render_template('sup/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
+@ app.route('/sup/editarCliente/<int:clienteUsuario>')
+def sup_clientes_editar(clienteUsuario):
+    _clienteUsuario = str(clienteUsuario)
+
+    _usuario = _clienteUsuario[-14:]
+    _cliente = _clienteUsuario[:-14]
+
+    usuario = (int(_usuario))
+    cliente = (int(_cliente))
+    
+    
+    
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `usuarios` where u_hash = %s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes` where id_c = %s;", (cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('sup/editarClientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
+
+
+    
 
 @ app.route('/sup/clientes/guardar/<int:usuario>', methods=['POST'])
 def sup_clientes_guardar(usuario):
@@ -786,5 +823,5 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(host="192.168.0.21", port=8000, debug=True)
 # host="192.168.0.117", port=8000,

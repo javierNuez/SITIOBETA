@@ -21,10 +21,10 @@
                             <label for="" class="form-label">Droguerías:</label>
                             <select class="form-select form-select-sm" aria-label="" name="txtDrogueria">
                                 <option>Seleccione</option>
-                                {% for cliente in clientes %}
+                                {% for drogueria in droguerias %}
                                 <option
-                                    value="{{cliente[3]}}">
-                                    {{cliente[3]}}
+                                    value="{{drogueria[1]}}">
+                                    {{drogueria[2]}}
                                 </option>
                                 
                                 {% endfor %}
@@ -39,11 +39,13 @@
                             <label for="" class="form-label">Nombre:</label>
                             <select class="form-select form-select-sm" aria-label="Oferta comercial vigente" name="txtCliente">
                                 <option selected>Seleccione</option>
+                                
                                 {% for cliente in clientes %}
                                 <option
                                     value="{{cliente[0]}}#{{cliente[4]}}#{{cliente[5]}}#{{cliente[6]}}#{{cliente[7]}}#{{cliente[8]}}">
                                     {{cliente[5]}}
                                 </option>
+                                
                                 {% endfor %}
                             </select>
                         </div>
