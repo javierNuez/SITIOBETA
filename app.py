@@ -200,7 +200,7 @@ def sup_ofertas(usuario):
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
+    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
 
     conexion = mysql.connect()
@@ -214,9 +214,9 @@ def sup_ofertas(usuario):
     cursor.execute(
         "SELECT * FROM `clientes`")
     clientes = cursor.fetchall()
-    clientesF = clientes
+
     conexion.commit()
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientesF=clientesF, usuarios=usuarios)
+    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios)
 
 
 @ app.route('/sup/clientes/<int:usuario>')
@@ -276,6 +276,16 @@ def sup_clientes_guardar(usuario):
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
@@ -289,7 +299,7 @@ def sup_clientes_guardar(usuario):
     datos_drogueria = [_drogueria.split('#')]
     if _drogueria == 'Seleccione':
         flash('¡Por favor elija una Droguería!')
-        return sup_clientes(usuario)
+        return redirect(f'../{usuario}')
 
     sql = "INSERT INTO `clientes` (`id_c`, `c_id_drogueria`, `c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, `c_nombre`, `c_cuit`, `c_localidad`, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (datos_drogueria[0][0], datos_drogueria[0][1],
@@ -300,7 +310,7 @@ def sup_clientes_guardar(usuario):
     cursor.execute(sql, datos)
     conexion.commit()
 
-    return sup_clientes(usuario)
+    return redirect(f'../{usuario}')
 
 
 @ app.route('/admin/usuarios')

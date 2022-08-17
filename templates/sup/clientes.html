@@ -1,114 +1,175 @@
 {% include 'sup/cabecera.html' %}
+{% with messages= get_flashed_messages() %}
 
+{% if messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	<strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor
+	%}
+</div>
+{% endif %}
+{% endwith %}
 <br>
-<div class="card-body" style="min-height: 500px;">
-	<div class="card border-info">
-		<div class="card-header">
-			<h4>Clientes:</h4>
-		</div>
-		{% if usuarios %}
-		<div class="card-body">
-			<form action="/sup/clientes/guardar/{{usuarios[0][9]}}" method="post" enctype="multipart/form-data">
-				{% endif %}
-				{% with messages= get_flashed_messages() %}
-
-				{% if messages %}
-				<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					<strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
+<div class="accordion" id="accordionPanelsStayOpenExample">
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse"
+				data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+				aria-controls="panelsStayOpen-collapseOne">
+				<div class="card-header">
+					<h4>Clientes cargados:</h4>
 				</div>
-				{% endif %}
-				{% endwith %}
-				<tbody id="rowsClientes">
-					<tr>
-						<label for="txtDrogueria" class="form-label">Droguerías:</label>
-						<td id="c_drogueria">
-							<select class="form-select form-select-sm" aria-label="" name="txtDrogueria" required>
-								<option selected>Seleccione</option>
-								{% for drogueria in droguerias %}
-								<option value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
-									{{drogueria[1]}}>{{drogueria[2]}}
-								</option>
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+			aria-labelledby="panelsStayOpen-headingOne">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+
+
+
+						<table id="tblContact" class="table table-sm">
+							<thead>
+								<tr>
+									<th style="text-align: center;" scope="col" class="table-info">Droguería
+									</th>
+									<th style="text-align: center;" scope="col" class="table-info">Cuenta</th>
+									<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
+									<th style="text-align: center;" scope="col" class="table-info">CUIT</th>
+									<th style="text-align: center;" scope="col" class="table-info">Localidad
+									</th>
+									<th style="text-align: center;" scope="col" class="table-info">Cód. Postal
+									</th>
+									<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+								</tr>
+							</thead>
+
+							<tbody id="">
+								{% for cliente in clientes %}
+								<tr>
+									<!--<th scope="row">0</th>-->
+									<td id="c_cod" align="center">{{cliente[3]}}</td>
+									<td id="c_cuenta" align="center">{{cliente[4]}}</td>
+									<td id="c_nombre" align="center">{{cliente[5]}}</td>
+									<td id="c_cuit" align="center">{{cliente[6]}}</td>
+									<td id="c_localidad" align="center">{{cliente[7]}}</td>
+									<td id="c_postal" align="center">{{cliente[8]}}</td>
+
+									<td id="acciones" align="center">
+
+										<div class="row">
+											<div class="col">
+												{% if usuarios %}
+												<a class="btn btn-info btn-sm"
+													href="/sup/editarCliente/{{cliente[0]}}{{usuarios[0][9]}}"
+													role="button" style="display:center;">Editar</a>
+												{% endif %}
+											</div>
+											<div class="col">
+												{% if usuarios %}
+												<form action="/sup/clientes/borrar" method="post"
+													enctype="multipart/form-data">
+													<input type="number" name="id_cliente" value="{{cliente[0]}}"
+														hidden>
+													<input type="number" name="usuario_Hash" value="{{usuarios[0][9]}}"
+														hidden>
+													<button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+												</form>
+												{% endif %}
+											</div>
+										</div>
+
+									</td>
+								</tr>
 								{% endfor %}
-							</select>
-						</td>
-						<label for="txtCuenta" class="form-label">Cuenta:</label>
-						<td id=""><input type="number" class="form-control form-control-sm" name="txtCuenta" id=""
-								aria-describedby="helpId" placeholder=""></td>
-						<label for="txtNombre" class="form-label">Nombre:</label>
-						<td id=""><input type="text" class="form-control form-control-sm" name="txtNombre" id="#"
-								aria-describedby="helpId" placeholder="" required></td>
-						<label for="txtCuit" class="form-label">Cuit:</label>
-						<td id=""><input type="number" class="form-control form-control-sm" name="txtCuit" id="#"
-								aria-describedby="helpId" placeholder=""></td>
-						<label for="txtLocalidad" class="form-label">Localidad:</label>
-						<td id=""><input type="text" class="form-control form-control-sm" name="txtLocalidad" id="#"
-								aria-describedby="" placeholder=""></td>
-						<label for="txtPostal" class="form-label">Código Postal:</label>
-						<td id=""><input type="text" class="form-control form-control-sm" name="txtPostal" id="#"
-								aria-describedby="helpId" placeholder=""></td>
-						<td id="acciones">
-							<div class="d-grid gap-2 col-6 mx-auto">
-								<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</form>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
-		<table id="tblContact" class="table table-sm">
-			<thead>
-				<tr>
-					<th style="text-align: center;" scope="col" class="table-info">Droguería</th>
-					<th style="text-align: center;" scope="col" class="table-info">Cuenta</th>
-					<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
-					<th style="text-align: center;" scope="col" class="table-info">CUIT</th>
-					<th style="text-align: center;" scope="col" class="table-info">Localidad</th>
-					<th style="text-align: center;" scope="col" class="table-info">Cód. Postal</th>
-					<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
-				</tr>
-			</thead>
+	</div>
 
-			<tbody id="">
-				{% for cliente in clientes %}
-				<tr>
-					<!--<th scope="row">0</th>-->
-					<td id="c_cod" align="center">{{cliente[3]}}</td>
-					<td id="c_cuenta" align="center">{{cliente[4]}}</td>
-					<td id="c_nombre" align="center">{{cliente[5]}}</td>
-					<td id="c_cuit" align="center">{{cliente[6]}}</td>
-					<td id="c_localidad" align="center">{{cliente[7]}}</td>
-					<td id="c_postal" align="center">{{cliente[8]}}</td>
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+				data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+				aria-controls="panelsStayOpen-collapseTwo">
+				<div class="card-header">
+					<h4>Agregar clientes:</h4>
+				</div>
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+			aria-labelledby="panelsStayOpen-headingTwo">
+			<div class="container">
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
 
-					<td id="acciones" align="center">
 
-						<div class="row">
-							<div class="col">
-								{% if usuarios %}
-								<a class="btn btn-info btn-sm"
-									href="/sup/editarCliente/{{cliente[0]}}{{usuarios[0][9]}}" role="button"
-									style="display:center;">Editar</a>
+						{% if usuarios %}
+						<div class="card-body">
+							<form action="/sup/clientes/guardar/{{usuarios[0][9]}}" method="post"
+								enctype="multipart/form-data">
 								{% endif %}
-							</div>
-							<div class="col">
-								{% if usuarios %}
-								<form action="/sup/clientes/borrar" method="post" enctype="multipart/form-data">
-									<input type="number" name="id_cliente" value="{{cliente[0]}}" hidden>
-									<input type="number" name="usuario_Hash" value="{{usuarios[0][9]}}" hidden>
-									<button type="submit" class="btn btn-danger btn-sm">Borrar</button>
-								</form>
-								{% endif %}
-							</div>
+
+								</br>
+								<tbody id="rowsClientes">
+									<tr>
+										<label for="txtDrogueria" class="form-label">Droguerías:</label>
+										<td id="c_drogueria">
+											<select class="form-select form-select-sm" aria-label="" name="txtDrogueria"
+												required>
+												<option selected>Seleccione</option>
+												{% for drogueria in droguerias %}
+												<option value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
+													{{drogueria[1]}}>{{drogueria[2]}}
+												</option>
+												{% endfor %}
+											</select>
+										</td>
+										<label for="txtCuenta" class="form-label">Cuenta:</label>
+										<td id=""><input type="number" class="form-control form-control-sm"
+												name="txtCuenta" id="" aria-describedby="helpId" placeholder="">
+										</td>
+										<label for="txtNombre" class="form-label">Nombre:</label>
+										<td id=""><input type="text" class="form-control form-control-sm"
+												name="txtNombre" id="#" aria-describedby="helpId" placeholder=""
+												required></td>
+										<label for="txtCuit" class="form-label">Cuit:</label>
+										<td id=""><input type="number" class="form-control form-control-sm"
+												name="txtCuit" id="#" aria-describedby="helpId" placeholder=""></td>
+										<label for="txtLocalidad" class="form-label">Localidad:</label>
+										<td id=""><input type="text" class="form-control form-control-sm"
+												name="txtLocalidad" id="#" aria-describedby="" placeholder=""></td>
+										<label for="txtPostal" class="form-label">Código Postal:</label>
+										<td id=""><input type="text" class="form-control form-control-sm"
+												name="txtPostal" id="#" aria-describedby="helpId" placeholder="">
+										</td>
+										<td id="acciones">
+											<div class="d-grid gap-2 col-6 mx-auto">
+												<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</form>
 						</div>
 
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
 
-		<div class="card-footer text-muted">
+					</div>
+					<div class="col-1"></div>
+				</div>
+			</div>
 		</div>
+	</div>
+</div>
+<!-- -->
 
+<br>
 
-		{% include 'sup/pie.html' %}
+</div>
+
+{% include 'sup/pie.html' %}
