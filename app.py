@@ -190,7 +190,6 @@ def sup_pedidos_layout(usuario):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-
 @app.route('/sup/ofertas/<int:usuario>')
 def sup_ofertas(usuario):
     conexion = mysql.connect()
@@ -198,7 +197,7 @@ def sup_ofertas(usuario):
     cursor.execute(
         "SELECT * FROM `droguerias`")
     droguerias = cursor.fetchall()
-    
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
@@ -220,8 +219,6 @@ def sup_ofertas(usuario):
     return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientesF=clientesF, usuarios=usuarios)
 
 
-
-
 @ app.route('/sup/clientes/<int:usuario>')
 def sup_clientes(usuario):
     conexion = mysql.connect()
@@ -234,8 +231,6 @@ def sup_clientes(usuario):
     cursor.execute("SELECT * FROM `clientes`;")
     clientes = cursor.fetchall()
 
-   
-
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -244,6 +239,7 @@ def sup_clientes(usuario):
     conexion.commit()
 
     return render_template('sup/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
+
 
 @ app.route('/sup/editarCliente/<int:clienteUsuario>')
 def sup_clientes_editar(clienteUsuario):
@@ -254,9 +250,7 @@ def sup_clientes_editar(clienteUsuario):
 
     usuario = (int(_usuario))
     cliente = (int(_cliente))
-    
-    
-    
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `droguerias`;")
@@ -277,11 +271,9 @@ def sup_clientes_editar(clienteUsuario):
     return render_template('sup/editarClientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
 
-    
-
 @ app.route('/sup/clientes/guardar/<int:usuario>', methods=['POST'])
 def sup_clientes_guardar(usuario):
-    print(usuario)
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -295,6 +287,9 @@ def sup_clientes_guardar(usuario):
     _localidad = request.form['txtLocalidad']
     _postal = request.form['txtPostal']
     datos_drogueria = [_drogueria.split('#')]
+    if _drogueria == 'Seleccione':
+        flash('¡Por favor elija una Droguería!')
+        return sup_clientes(usuario)
 
     sql = "INSERT INTO `clientes` (`id_c`, `c_id_drogueria`, `c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, `c_nombre`, `c_cuit`, `c_localidad`, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (datos_drogueria[0][0], datos_drogueria[0][1],
@@ -349,6 +344,28 @@ def sup_clientes_borrar():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM clientes where id_c=%s;", (_cliente))
+    conexion.commit()
+    hash = int(_usuario)
+
+    return redirect(f'/sup/clientes/{hash}')
+
+
+@ app.route('/sup/clientes/editar', methods=['POST'])
+def sup_clientes_update():
+    _usuario = request.form['usuario_Hash']
+    _cuenta = request.form['txtCuenta']
+    _nombre = request.form['txtNombre']
+    _cuit = request.form['txtCuit']
+    _localidad = request.form['txtLocalidad']
+    _postal = request.form['txtPostal']
+    _id = request.form['txtID']
+
+    sql = "UPDATE clientes SET c_cuenta=%s, c_nombre=%s, c_cuit=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_cuenta, _nombre, _cuit, _localidad, _postal, _id)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
     conexion.commit()
     hash = int(_usuario)
 
@@ -823,5 +840,6 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.21", port=8000, debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
+# host="89.0.0.28", port=8000,
