@@ -13,10 +13,10 @@
 
 </head>
 {% if usuarios %}
+
 <body>
     <div class="col" style="padding-top: 30px">
-        <img src="http://www.laboratoriosbeta.com.ar/wp-content/uploads/2013/04/Logo-Beta1.png"
-            alt="laboratoriosbeta.com">
+        <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
     </div>
 
     <nav class="navbar navbar-expand navbar-light bg-light">
@@ -29,5 +29,5 @@
 
         </div>
     </nav>
-{% endif %}
+    {% endif %}
     <div class="container">

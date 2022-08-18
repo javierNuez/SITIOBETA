@@ -18,128 +18,12 @@
                 data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
                 aria-controls="panelsStayOpen-collapseOne">
                 <div class="card-header">
-                    <h4>Oferta comercial:</h4>
+                    <h4>Datos del cliente:</h4>
                 </div>
             </button>
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
             aria-labelledby="panelsStayOpen-headingOne">
-            <div class="container">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-8">
-                        <form action="/sup/ofertas/guardar" method="post" enctype="multipart/form-data">
-                            <div class="col-2"></div>
-                    </div>
-                    <br>
-                    <div class="card-body">
-
-
-                        <div class="card-body">
-
-                            <table id="tblContact" class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <!--<th scope="col" class="table-info">#</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Id</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. ID</th>-->
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Mód.
-                                            Nombre</th>
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Titulo</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Pie</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Desde</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Hasta</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. ID</th>-->
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Cód.
-                                        </th>
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                            Descripción</th>
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Desde</th>-->
-                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Hasta</th>-->
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Mínimo
-                                        </th>
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                            Descuento</th>
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Unidades
-                                        </th>
-                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Acciones
-                                        </th>
-                                    </tr>
-
-                                </thead>
-
-                                <tbody id="rowsPedidos">
-                                    {% for oferta in ofertas %}
-                                    <tr>
-                                        <!--<th scope="row">0</th>-->
-
-
-                                        <!--<td id="" align="center">{{oferta[0]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[1]}}</td>-->
-                                        <td id="" align="left">{{oferta[2]}}</td>
-                                        <!--<td id="" align="center">{{oferta[3]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[4]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[5]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[6]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[7]}}</td>-->
-                                        <td id="" align="left">{{oferta[8]}}</td>
-                                        <td id="" align="left">{{oferta[9]}}</td>
-                                        <!--<td id="" align="center">{{oferta[10]}}</td>-->
-                                        <!--<td id="" align="center">{{oferta[11]}}</td>-->
-                                        <td id="" align="center">{{oferta[12]}}</td>
-                                        <td id="" align="center">{{oferta[13]}}%</td>
-                                        <td id="" align="center"><input type="text" name="" id="" style="width:40px;">
-                                        </td>
-
-
-
-                                        <td id="acciones" align="center">
-
-                                            <div class="row">
-
-                                                <div class="col">
-                                                    <a class="btn btn-info btn-sm"
-                                                        href="/admin/editarOfertas/{{oferta[0]}}" role="button"
-                                                        style="display:center;">Editar</a>
-                                                </div>
-                                                <div class="col">
-                                                    <form action="/admin/ofertas/borrar" method="post">
-                                                        <input value="{{oferta[0]}}" type="text" name="txtID" id="txtID"
-                                                            hidden>
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm">Borrar</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="card-footer text-muted">
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
-                <div class="card-header">
-                    <h4>Datos del cliente:</h4>
-                </div>
-
-            </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-            data-bs-parent="#accordionExample">
             <div class="container">
                 <div class="row">
                     <div class="col-1"></div>
@@ -189,9 +73,102 @@
             </div>
         </div>
     </div>
-</div>
-</div>
 
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+                <div class="card-header">
+                    <h4>Oferta comercial:</h4>
+                </div>
+
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <form action="/sup/ofertas/guardar" method="post" enctype="multipart/form-data">
+                            <div class="col-2"></div>
+                    </div>
+                    <br>
+                    <div class="card-body">
+
+
+                        <div class="card-body">
+
+                            <table id="tblContact" class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <!--<th scope="col" class="table-info">#</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Id</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. ID</th>-->
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Mód.
+                                            Nombre</th>
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Titulo</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Pie</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Desde</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Hasta</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. ID</th>-->
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Cód.
+                                        </th>
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">
+                                            Descripción</th>
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Desde</th>-->
+                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Hasta</th>-->
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Mínimo
+                                        </th>
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">
+                                            Descuento</th>
+                                        <th style="text-align: center;" scope="col-md-1" class="table-info">Unidades
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="rowsPedidos">
+                                    {% for oferta in ofertas %}
+                                    <tr>
+                                        <!--<th scope="row">0</th>-->
+
+
+                                        <!--<td id="" align="center">{{oferta[0]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[1]}}</td>-->
+                                        <td id="" align="left">{{oferta[2]}}</td>
+                                        <!--<td id="" align="center">{{oferta[3]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[4]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[5]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[6]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[7]}}</td>-->
+                                        <td id="" align="left">{{oferta[8]}}</td>
+                                        <td id="" align="left">{{oferta[9]}}</td>
+                                        <!--<td id="" align="center">{{oferta[10]}}</td>-->
+                                        <!--<td id="" align="center">{{oferta[11]}}</td>-->
+                                        <td id="" align="center">{{oferta[12]}}</td>
+                                        <td id="" align="center">{{oferta[13]}}%</td>
+                                        <td id="" align="center"><input type="text" name="" id="" style="width:40px;">
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="card-footer text-muted">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---->
+    </div>
+</div>
+</div>
 
 
 
