@@ -65,7 +65,7 @@ def sup_index(usuario):
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
     conexion.commit()
-    print(usuarios)
+
     return render_template('sup/index.html', usuarios=usuarios)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -192,6 +192,8 @@ def sup_pedidos_layout(usuario):
 
 @app.route('/sup/ofertas/<int:usuario>')
 def sup_ofertas(usuario):
+
+    _usuario = usuario
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -216,7 +218,66 @@ def sup_ofertas(usuario):
     clientes = cursor.fetchall()
 
     conexion.commit()
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios)
+    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios, _usuario=_usuario)
+
+
+@ app.route('/sup/cargaOfert01/drogueria/<int:usuario>', methods=['POST'])
+def sup_cargaOferta01_droguerias(usuario):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    print(f"clientes: {clientes}")
+    print(f"droguerias:{droguerias}")
+    print(f"usuario: {usuario}")
+
+    return render_template('sup/cargaOferta01.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/sup/cargaOferta01/carga', methods=['POST'])
+def sup_cargaOferta_update():
+    """
+    _usuario = request.form['usuario_Hash']
+    _cuenta = request.form['txtCuenta']
+    _nombre = request.form['txtNombre']
+    _cuit = request.form['txtCuit']
+    _localidad = request.form['txtLocalidad']
+    _postal = request.form['txtPostal']
+    _id = request.form['txtID']
+
+    sql = "UPDATE clientes SET c_cuenta=%s, c_nombre=%s, c_cuit=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_cuenta, _nombre, _cuit, _localidad, _postal, _id)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    hash = int(_usuario)
+"""
+    return redirect(f'/sup/clientes/{hash}')
 
 
 @ app.route('/sup/clientes/<int:usuario>')

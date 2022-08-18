@@ -1,5 +1,4 @@
 {% include 'sup/cabecera.html' %}
-
 {% with messages= get_flashed_messages() %}
 
 {% if messages %}
@@ -11,6 +10,7 @@
 {% endwith %}
 <br>
 <br>
+
 <div class="accordion" id="accordionPanelsStayOpenExample">
     <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -32,34 +32,57 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col">
+
                                         <label for="" class="form-label">Droguerías:</label>
-                                        <select class="form-select form-select-sm" aria-label="" name="txtDrogueria">
-                                            <option>Seleccione</option>
-                                            {% for drogueria in droguerias %}
-                                            <option value="{{drogueria[1]}}">
-                                                {{drogueria[2]}}
-                                            </option>
+                                        {% if usuarios %}
+                                        <form action="/sup/cargaOfert01/drogueria/{{usuarios[0][9]}}" method="post"
+                                            enctype="multipart/form-data">{% endif %}
+                                            {% if _usuario %}
+                                            <input type="number" name="txtUsuario" value="{{_usuario}}" hidden>
+                                            {% endif %}
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <select class="form-select form-select-sm" aria-label=""
+                                                        name="txtDrogueria">
 
-                                            {% endfor %}
+                                                        <option>Seleccione</option>
+                                                        {% for drogueria in droguerias %}
+                                                        <option value="{{drogueria[1]}}">
+                                                            {{drogueria[1]}}-{{drogueria[2]}}
+                                                        </option>
+                                                        {% endfor %}
 
-                                        </select>
+                                                    </select>
+
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <button type="submit" class="btn btn-info btn-sm">Aplicar</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="" class="form-label">Nombre del cliente:</label>
-                                        <select class="form-select form-select-sm" aria-label="Oferta comercial vigente"
-                                            name="txtCliente">
-                                            <option selected>Seleccione</option>
-                                            {% for cliente in clientes %}
-                                            <option
-                                                value="{{cliente[0]}}#{{cliente[4]}}#{{cliente[5]}}#{{cliente[6]}}#{{cliente[7]}}#{{cliente[8]}}">
-                                                {{cliente[5]}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
+                                        <label for="" class="form-label">Clientes:</label>
+
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <select class="form-select form-select-sm" aria-label="" name=""
+                                                    disabled>
+                                                    <option>Seleccione</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <button type="submit" class="btn btn-info btn-sm"
+                                                    disabled>Aplicar</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +172,8 @@
                                         <!--<td id="" align="center">{{oferta[11]}}</td>-->
                                         <td id="" align="center">{{oferta[12]}}</td>
                                         <td id="" align="center">{{oferta[13]}}%</td>
-                                        <td id="" align="center"><input type="text" name="" id="" style="width:40px;">
+                                        <td id="" align="center"><input type="text" name="" id="" style="width:40px;"
+                                                disabled>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -157,8 +181,9 @@
                             </table>
 
                         </div>
-                        <div class="card-footer text-muted">
-
+                        <div class="card-footer text-muted" align="center">
+                            <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Enviar
+                                pedido</button>
                         </div>
 
                     </div>

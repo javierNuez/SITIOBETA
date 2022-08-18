@@ -1,0 +1,23 @@
+<div class="col">
+    <label for="" class="form-label">Clientes:</label>
+    <form>
+        <div class="row">
+            <div class="col-8">
+                <select class="form-select form-select-sm" aria-label="" name="">
+                    <option>Seleccione</option>
+                    {% for drogueria in drogueriasC %}
+                    <option value="{{drogueria[4]}}">
+                        {{drogueria[5]}}
+                        <input type="number" name="txtDrogueria" id="" value="{{drogueria[4]}}">
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-danger btn-sm">Cargar</button>
+            </div>
+        </div>
+    </form>
+</div>
