@@ -230,8 +230,6 @@ def sup_cargaOferta01_droguerias(usuario):
     usuarios = cursor.fetchall()
 
     _drogueria = request.form['txtDrogueria']
-    
-    
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -253,8 +251,8 @@ def sup_cargaOferta01_droguerias(usuario):
 
     conexion.commit()
 
-
     return render_template('sup/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
 
 @ app.route('/sup/cargaOfert02/cliente/<int:usuario>', methods=['POST'])
 def sup_cargaOferta02_droguerias(usuario):
@@ -264,12 +262,12 @@ def sup_cargaOferta02_droguerias(usuario):
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
 
-    _drogueria=request.form['txtDrogueria2']
+    _drogueria = request.form['txtDrogueria2']
     _cliente = request.form['txtCliente']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria)) 
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
     droguerias = cursor.fetchall()
 
     conexion = mysql.connect()
@@ -285,29 +283,14 @@ def sup_cargaOferta02_droguerias(usuario):
         return render_template('sup/cargaOferta03.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
     print("los clientes")
-    return render_template('sup/cargaOferta02.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
-
-@ app.route('/sup/cargaOferta01/carga', methods=['POST'])
-def sup_cargaOferta_update():
-    """
-    _usuario = request.form['usuario_Hash']
-    _cuenta = request.form['txtCuenta']
-    _nombre = request.form['txtNombre']
-    _cuit = request.form['txtCuit']
-    _localidad = request.form['txtLocalidad']
-    _postal = request.form['txtPostal']
-    _id = request.form['txtID']
-
-    sql = "UPDATE clientes SET c_cuenta=%s, c_nombre=%s, c_cuit=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
-    datos = (_cuenta, _nombre, _cuit, _localidad, _postal, _id)
-
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute(sql, datos)
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+    print(_cliente)
     conexion.commit()
-    hash = int(_usuario)
-"""
-    return redirect(f'/sup/clientes/{hash}')
+    return render_template('sup/cargaOferta02.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/sup/clientes/<int:usuario>')
@@ -941,6 +924,6 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.21", port=8000, debug=True)
+    app.run(host="192.168.0.75", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
