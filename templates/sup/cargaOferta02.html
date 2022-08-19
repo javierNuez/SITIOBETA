@@ -33,36 +33,37 @@
                             {% endif %}
                             {% if usuarios %}
                             <form action="/sup/cargaOfert02/cliente/{{usuarios[0][9]}}" method="post"
-                            enctype="multipart/form-data">{% endif %}
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col">
-
-                                        <label for="" class="form-label">Droguerías:</label>
-                                        {% if droguerias %}
-                                        <input type="text" value="{{droguerias[0][1]}}" name="txtDrogueria2" hidden>
-                                        {% endif %}
-                                        <div class="row">
-                                            <div class="col-10">
-                                                <select class="form-select form-select-sm" aria-label="" name="txtDrogueria"
-                                                    disabled>
-                                                    {% if droguerias %}
-                                                    <option value="{{droguerias[0][1]}}">{{droguerias[0][1]}}-{{droguerias[0][2]}}</option>
-                                                    {% endif %}
-                                                </select>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="submit" class="btn btn-info btn-sm"
-                                                    disabled>Aplicar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                enctype="multipart/form-data">{% endif %}
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col">
-                                            <label for="" class="form-label">Clientes:</label>
-                                            
+
+                                            <label for="" class="form-label">Droguerías:</label>
+                                            {% if droguerias %}
+                                            <input type="text" value="{{droguerias[0][1]}}" name="txtDrogueria2" hidden>
+                                            {% endif %}
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <select class="form-select form-select-sm" aria-label=""
+                                                        name="txtDrogueria" disabled>
+                                                        {% if droguerias %}
+                                                        <option value="{{droguerias[0][1]}}">
+                                                            {{droguerias[0][1]}}-{{droguerias[0][2]}}</option>
+                                                        {% endif %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="submit" class="btn btn-info btn-sm"
+                                                        disabled>Aplicar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="" class="form-label">Clientes:</label>
+
 
                                                 <div class="row">
                                                     <div class="col-10">
@@ -83,13 +84,13 @@
                                                             class="btn btn-info btn-sm">Aplicar</button>
                                                     </div>
                                                 </div>
-                                            
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                            </div>
-                        </form>
+                                </div>
+                            </form>
                         </div>
                         <div class="col-1"></div>
                     </div>
