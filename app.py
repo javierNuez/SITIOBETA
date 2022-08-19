@@ -230,6 +230,8 @@ def sup_cargaOferta01_droguerias(usuario):
     usuarios = cursor.fetchall()
 
     _drogueria = request.form['txtDrogueria']
+    
+    
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -250,12 +252,40 @@ def sup_cargaOferta01_droguerias(usuario):
     clientes = cursor.fetchall()
 
     conexion.commit()
-    print(f"clientes: {clientes}")
-    print(f"droguerias:{droguerias}")
-    print(f"usuario: {usuario}")
 
-    return render_template('sup/cargaOferta01.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
+    return render_template('sup/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+@ app.route('/sup/cargaOfert02/cliente/<int:usuario>', methods=['POST'])
+def sup_cargaOferta02_droguerias(usuario):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria=request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria)) 
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+
+    conexion.commit()
+    if _cliente == "Nuevo":
+        print("Nuevo")
+        print(f"{_drogueria}")
+        return render_template('sup/cargaOferta03.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+    print("los clientes")
+    return render_template('sup/cargaOferta02.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 @ app.route('/sup/cargaOferta01/carga', methods=['POST'])
 def sup_cargaOferta_update():
@@ -911,6 +941,6 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(host="192.168.0.21", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,

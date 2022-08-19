@@ -41,9 +41,9 @@
                                             <input type="number" name="txtUsuario" value="{{_usuario}}" hidden>
                                             {% endif %}
                                             <div class="row">
-                                                <div class="col-8">
+                                                <div class="col-10">
                                                     <select class="form-select form-select-sm" aria-label=""
-                                                        name="txtDrogueria">
+                                                        name="txtDrogueria" autofocus>
 
                                                         <option>Seleccione</option>
                                                         {% for drogueria in droguerias %}
@@ -56,7 +56,7 @@
 
                                                 </div>
 
-                                                <div class="col-4">
+                                                <div class="col-2">
                                                     <button type="submit" class="btn btn-info btn-sm">Aplicar</button>
                                                 </div>
                                             </div>
@@ -71,13 +71,13 @@
                                         <label for="" class="form-label">Clientes:</label>
 
                                         <div class="row">
-                                            <div class="col-8">
+                                            <div class="col-10">
                                                 <select class="form-select form-select-sm" aria-label="" name=""
                                                     disabled>
                                                     <option>Seleccione</option>
                                                 </select>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-2">
                                                 <button type="submit" class="btn btn-info btn-sm"
                                                     disabled>Aplicar</button>
                                             </div>

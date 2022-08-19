@@ -39,10 +39,10 @@
 
                                         <div class="row">
                                             <div class="col-10">
-                                                <select class="form-select form-select-sm" aria-label="" name="txtDrogueria"
+                                                <select class="form-select form-select-sm" aria-label="" name=""
                                                     disabled>
                                                     {% for drogueria in droguerias %}
-                                                    <option>{{drogueria[1]}}>{{drogueria[2]}}</option>
+                                                    <option>{{drogueria[1]}}-{{drogueria[2]}}</option>
                                                     {% endfor%}
                                                 </select>
                                             </div>
@@ -57,31 +57,61 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="" class="form-label">Clientes:</label>
-                                            {% if usuarios %}
-                                            <form action="/sup/cargaOfert02/cliente/{{usuarios[0][9]}}" method="post"
-                                            enctype="multipart/form-data">{% endif %}
+                                         
                                                 <div class="row">
                                                     <div class="col-10">
                                                         <select class="form-select form-select-sm" aria-label=""
-                                                            name="txtCliente">
+                                                            name="" disabled>
                                                             <option>Nuevo</option>
-                                                            {% for cliente in clientes %}
-                                                            <option value="{{cliente[4]}}">
-                                                                {{cliente[4]}}-{{cliente[5]}}
-                                                            </option>
-                                                            {% endfor %}
-
-
                                                         </select>
                                                     </div>
                                                     <div class="col-2">
                                                         <button type="submit"
-                                                            class="btn btn-info btn-sm">Aplicar</button>
+                                                            class="btn btn-info btn-sm" disabled>Aplicar</button>
                                                     </div>
                                                 </div>
-                                            </form>
+                                      
                                         </div>
                                     </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <label for="" class="form-label">Cuenta:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                            name="" id="" aria-describedby="helpId" placeholder="">                             
+                                        </div>
+                                        <div class="col-5">
+                                            <label for="" class="form-label">CUIT:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                            name="" id="" aria-describedby="helpId" placeholder="">                             
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <label for="" class="form-label">Nombre:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                            name="" id="" aria-describedby="helpId" placeholder="">                             
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <label for="" class="form-label">Localidad:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                            name="" id="" aria-describedby="helpId" placeholder="">                             
+                                        </div>
+                                        <div class="col-5">
+                                            <label for="" class="form-label">Código Postal:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                            name="" id="" aria-describedby="helpId" placeholder="">                             
+                                        </div>
+                                    </div>
+                                </div>
+
                                 </div>
 
                             </div>
