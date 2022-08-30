@@ -7,7 +7,7 @@ from flask import Flask
 from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 from datetime import date
-
+import json
 app = Flask(__name__)
 
 
@@ -51,6 +51,7 @@ def sup_of(usuario):
         "SELECT * FROM `pedidos` WHERE o_usuario_hash=%s;", (usuario))
     pedidos = cursor.fetchall()
     conexion.commit()
+    print(pedidos)
 
     return render_template('sup/pedidos.html', pedidos=pedidos)
     # return render_template('sup/index.html')
@@ -391,11 +392,25 @@ def sup_clientes_guardar(usuario):
 def admin_usuarios():
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `usuarios`;")
+    cursor.execute(
+        "SELECT * FROM `usuarios`;")
     usuarios = cursor.fetchall()
     conexion.commit()
 
     return render_template('admin/usuarios.html', usuarios=usuarios)
+
+
+@ app.route('/admin/usuariosj')
+def admin_usuariosJ():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT id_u, u_nombre,u_apellido, u_rrdzz, u_mail FROM `usuarios`;")
+    usuarios = cursor.fetchall()
+    print(usuarios)
+    conexion.commit()
+    usuariosJ = json.dumps(usuarios)
+    return render_template('admin/usuariosJ.html', usuariosJ=usuariosJ)
 
 
 @ app.route('/admin/editarUsuarios/<int:id>')
@@ -924,6 +939,6 @@ def admin_modulos_update(id):
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.75", port=8000, debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
