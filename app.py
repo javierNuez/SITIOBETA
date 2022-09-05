@@ -1,9 +1,12 @@
+
+
+from locale import normalize
 from random import randint
 from audioop import add
 from datetime import datetime
 from lib2to3.pytree import convert
 from unicodedata import numeric
-from flask import Flask
+from flask import Flask, jsonify
 from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 from datetime import date
@@ -12,8 +15,6 @@ app = Flask(__name__)
 
 
 app.secret_key = "vigoray"
-mysql = MySQL()
-
 mysql = MySQL()
 
 
@@ -873,6 +874,109 @@ def admin_modulos():
 
     return render_template('admin/modulos.html', modulos=modulos)
 
+# -------------------------------------------------------------------------
+
+
+@ app.route('/apibeta', methods=['GET'])
+def usuarios_oces():
+    try:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `modulos`;")
+        modulo = cursor.fetchall()
+        listaModulos = []
+        for m in modulo:
+            modulos = {}
+            modulos["id_m"] = m[0]
+            modulos["m_nombre"] = m[1]
+            modulos["m_titulo"] = m[2]
+            modulos["m_pie"] = m[3]
+            modulos["m_desde"] = m[4]
+            modulos["m_hasta"] = m[5]
+            listaModulos.append(modulos)
+
+        return jsonify({"modulo": listaModulos, "mensaje": "Módulos encontrados"})
+    except Exception as ex:
+        return jsonify({'mensaje': "Error"})
+
+
+@ app.route('/apibeta/<int:id>', methods=['GET'])
+def usuarios_oces_uno(id):
+    try:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `modulos` where id_m = %s;", (id))
+        modulo = cursor.fetchone()
+        if modulo != None:
+            listaModulos = []
+            modulos = {}
+            modulos["id_m"] = modulo[0]
+            modulos["m_nombre"] = modulo[1]
+            modulos["m_titulo"] = modulo[2]
+            modulos["m_pie"] = modulo[3]
+            modulos["m_desde"] = modulo[4]
+            modulos["m_hasta"] = modulo[5]
+            listaModulos.append(modulos)
+
+            return jsonify({"modulo": listaModulos, "mensaje": "Modulo encontrado."})
+        else:
+            return jsonify({"mensaje": "Modulo no encontrado"})
+    except Exception as ex:
+        return jsonify({'mensaje': "Error"})
+
+
+@app.route('/apibeta', methods=['POST'])
+def registrar_modulos_api():
+    try:
+        _mensaje = request.json['mensaje']
+        _nombre = request.json['modulo'][0]['m_nombre']
+        _titulo = request.json['modulo'][0]['m_titulo']
+        _pie = request.json['modulo'][0]['m_pie']
+        _desde = request.json['modulo'][0]['m_desde']
+        _hasta = request.json['modulo'][0]['m_hasta']
+
+        sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
+        datos = (_nombre, _titulo, _pie, _desde, _hasta)
+
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute(sql, datos)
+        conexion.commit()
+
+        return jsonify({"mensaje": _mensaje})
+
+    except Exception as ex:
+        return jsonify({'mensaje': "Error"})
+
+
+@app.route('/apibeta2', methods=['POST'])
+def registrar_modulos_api_sin_():
+
+    try:
+        _mensaje = request.json['mensaje']
+        _modulo = request.json['modulo']
+        count = 0
+        for i in _modulo:
+            _nombre = request.json['modulo'][count]['Mnombre']
+            _titulo = request.json['modulo'][count]['Mtitulo']
+            _pie = request.json['modulo'][count]['Mpie']
+            _desde = request.json['modulo'][count]['Mdesde']
+            _hasta = request.json['modulo'][count]['Mhasta']
+
+            sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
+            datos = (_nombre, _titulo, _pie, _desde, _hasta)
+
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(sql, datos)
+            conexion.commit()
+            count += 1
+        return jsonify({"mensaje": _mensaje})
+
+    except Exception as ex:
+        return jsonify({'mensaje': "Error"})
+# ----------------------------------------------------------------------------------
+
 
 @ app.route('/admin/editarModulos/editar', methods=['POST'])
 def admin_modulo_editar():
@@ -938,7 +1042,12 @@ def admin_modulos_update(id):
     return render_template('admin/editarModulo.html', modulos=modulos)
 
 
+def pagina_no_encontrada(error):
+    return "<h2>La página no existe.</h2>", 404
+
+
 if __name__ == '__main__':
+    app.register_error_handler(404, pagina_no_encontrada)
     app.run(host="89.0.0.28", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
