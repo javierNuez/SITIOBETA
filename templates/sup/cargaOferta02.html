@@ -68,7 +68,8 @@
                                                 <div class="row">
                                                     <div class="col-10">
                                                         <select class="form-select form-select-sm" aria-label=""
-                                                            name="txtCliente">
+                                                            name="txtCliente" onchange="this.form.submit()">
+                                                            <option>Seleccione</option>
                                                             <option>Nuevo</option>
                                                             {% for cliente in clientes %}
                                                             <option value="{{cliente[4]}}">
@@ -78,10 +79,6 @@
 
 
                                                         </select>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button type="submit"
-                                                            class="btn btn-info btn-sm">Aplicar</button>
                                                     </div>
                                                 </div>
 

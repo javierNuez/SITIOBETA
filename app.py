@@ -258,6 +258,7 @@ def sup_cargaOferta01_droguerias(usuario):
 
 @ app.route('/sup/cargaOfert02/cliente/<int:usuario>', methods=['POST'])
 def sup_cargaOferta02_droguerias(usuario):
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -292,7 +293,48 @@ def sup_cargaOferta02_droguerias(usuario):
     clientes = cursor.fetchall()
     print(_cliente)
     conexion.commit()
-    return render_template('sup/cargaOferta02.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+    return render_template('sup/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/sup/cargaOfert04/cliente/<int:usuario>', methods=['POST'])
+def sup_cargaOferta04_d_c(usuario):
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+    """
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+    """
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    ancho = len(ofertas)
+    conexion.commit()
+
+    listaPedidos = []
+    for i in ofertas:
+        n = f"numeroValido{i[0]}"
+        n = str(n)
+        listaPedidos.append(request.form[n])
+        print(listaPedidos)
+
+    return render_template('sup/pedidos.html', droguerias=droguerias, usuarios=usuarios)
 
 
 @ app.route('/sup/clientes/<int:usuario>')

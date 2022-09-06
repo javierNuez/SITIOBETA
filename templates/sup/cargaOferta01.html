@@ -39,8 +39,8 @@
 
                                         <div class="row">
                                             <div class="col-10">
-                                                <select class="form-select form-select-sm" aria-label="" name="txtDrogueria"
-                                                    disabled>
+                                                <select class="form-select form-select-sm" aria-label=""
+                                                    name="txtDrogueria" disabled>
                                                     {% for drogueria in droguerias %}
                                                     <option>{{drogueria[1]}}>{{drogueria[2]}}</option>
                                                     {% endfor%}
@@ -59,7 +59,7 @@
                                             <label for="" class="form-label">Clientes:</label>
                                             {% if usuarios %}
                                             <form action="/sup/cargaOfert02/cliente/{{usuarios[0][9]}}" method="post"
-                                            enctype="multipart/form-data">{% endif %}
+                                                enctype="multipart/form-data">{% endif %}
                                                 <div class="row">
                                                     <div class="col-10">
                                                         <select class="form-select form-select-sm" aria-label=""
@@ -73,10 +73,6 @@
 
 
                                                         </select>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <button type="submit"
-                                                            class="btn btn-info btn-sm">Aplicar</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -190,7 +186,7 @@
             <!---->
         </div>
     </div>
-<!--javier actualización-->
+    <!--javier actualización-->
 
 
     {% include 'sup/pie.html' %}

@@ -43,7 +43,7 @@
                                             <div class="row">
                                                 <div class="col-10">
                                                     <select class="form-select form-select-sm" aria-label=""
-                                                        name="txtDrogueria" autofocus>
+                                                        name="txtDrogueria" onchange="this.form.submit()" autofocus>
 
                                                         <option>Seleccione</option>
                                                         {% for drogueria in droguerias %}
@@ -54,10 +54,6 @@
 
                                                     </select>
 
-                                                </div>
-
-                                                <div class="col-2">
-                                                    <button type="submit" class="btn btn-info btn-sm">Aplicar</button>
                                                 </div>
                                             </div>
                                         </form>
