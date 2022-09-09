@@ -930,6 +930,7 @@ def usuarios_oces():
             modulos["m_pie"] = m[3]
             modulos["m_desde"] = m[4]
             modulos["m_hasta"] = m[5]
+            modulos["m_cantidad_minima"] = m[6]
             listaModulos.append(modulos)
 
         return jsonify({"modulo": listaModulos, "mensaje": "Módulos encontrados"})
@@ -953,6 +954,7 @@ def usuarios_oces_uno(id):
             modulos["m_pie"] = modulo[3]
             modulos["m_desde"] = modulo[4]
             modulos["m_hasta"] = modulo[5]
+            modulos["m_cantidad_minima"] = modulo[6]
             listaModulos.append(modulos)
 
             return jsonify({"modulo": listaModulos, "mensaje": "Modulo encontrado."})
