@@ -53,8 +53,16 @@
                             data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
                             aria-controls="panelsStayOpen-collapseOne">
                             <div class="card-header">
-                                <h4>Datos del cliente:</h4>
+                                <h4>Oferta comercial:</h4>
                             </div>
+                        </button><br>
+                        <div class="row">
+                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <h4>Datos del pedido</h4>
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
                         </button>
                     </h2>
                     <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
@@ -127,7 +135,7 @@
                         </div>
                     </div>
 
-                    <div class="accordion-item">
+                    <!--<div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -155,25 +163,18 @@
                                             <table id="tblContact" class="table table-sm">
                                                 <thead>
                                                     <tr>
-                                                        <!--<th scope="col" class="table-info">#</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Id</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. ID</th>-->
+
                                                         <th style="text-align: center;" scope="col-md-1"
                                                             class="table-info">Mód.
                                                             Nombre</th>
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Titulo</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Pie</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Desde</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Mód. Hasta</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. ID</th>-->
+
                                                         <th style="text-align: center;" scope="col-md-1"
                                                             class="table-info">Cód.
                                                         </th>
                                                         <th style="text-align: center;" scope="col-md-1"
                                                             class="table-info">
                                                             Descripción</th>
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Desde</th>-->
-                                                        <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Hasta</th>-->
+
                                                         <th style="text-align: center;" scope="col-md-1"
                                                             class="table-info">
                                                             Mínimo
@@ -193,21 +194,12 @@
                                                 <tbody id="rowsPedidos">
                                                     {% for oferta in ofertas %}
                                                     <tr>
-                                                        <!--<th scope="row">0</th>-->
 
-
-                                                        <!--<td id="" align="center">{{oferta[0]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[1]}}</td>-->
                                                         <td id="" align="left">{{oferta[2]}}</td>
-                                                        <!--<td id="" align="center">{{oferta[3]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[4]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[5]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[6]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[7]}}</td>-->
+
                                                         <td id="" align="left">{{oferta[8]}}</td>
                                                         <td id="" align="left">{{oferta[9]}}</td>
-                                                        <!--<td id="" align="center">{{oferta[10]}}</td>-->
-                                                        <!--<td id="" align="center">{{oferta[11]}}</td>-->
+
                                                         <td id="" align="center">{{oferta[12]}}</td>
                                                         <td id="" align="center">{{oferta[13]}}%</td>
                                                         <td id="" align="center">
@@ -230,8 +222,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!---->
-                    </div>
+                        
+                    </div>-->
                 </form>
             </div>
 
