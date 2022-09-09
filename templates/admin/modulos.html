@@ -10,16 +10,20 @@
 				<table id="tblContact" class="table table-sm">
 					<thead>
 						<tr>
+							<th style="text-align: center;" scope="col" class="table-info">ID</th>
 							<th style="text-align: center;" scope="col" class="table-info">Nombre interno</th>
 							<th style="text-align: center;" scope="col" class="table-info">Tíulo</th>
 							<th style="text-align: center;" scope="col" class="table-info">Pie</th>
 							<th style="text-align: center;" scope="col" class="table-info">Desde</th>
 							<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
+							<th style="text-align: center;" scope="col" class="table-info">Cant. minima</th>
 							<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
 						</tr>
 					</thead>
-					<tbody id="rowsClientes">
+					<tbody id="">
 						<tr>
+							<td id="id_m"><input type="text" class="form-control form-control-sm" name="id_m" id="#"
+									aria-describedby="helpId" placeholder="" style="max-width: 50px;" disabled></td>
 							<td id="m_nombre"><input type="text" class="form-control form-control-sm" name="m_nombre"
 									id="#" aria-describedby="helpId" placeholder=""></td>
 							<td id="m_titulo"><input type="text" class="form-control form-control-sm" name="m_titulo"
@@ -30,6 +34,10 @@
 									id="#" aria-describedby="helpId" placeholder=""></td>
 							<td id="m_hasta"><input type="date" class="form-control form-control-sm" name="m_hasta"
 									id="#" aria-describedby="helpId" placeholder=""></td>
+							<td id=""><input type="number" class="form-control form-control-sm" name="txtCantidad"
+									id="#" aria-describedby="helpId" placeholder=""
+									style="max-width: 50px; margin-left: 30px;">
+							</td>
 
 							<td id="acciones">
 								<div class="d-grid gap-2 col-6 mx-auto">
@@ -42,11 +50,13 @@
 						{% for modulo in modulos %}
 						<tr>
 							<!--<th scope="row">0</th>-->
+							<td id="Id_m" align="Left">{{modulo[0]}}</td>
 							<td id="m_nombre" align="Left">{{modulo[1]}}</td>
 							<td id="m_titulo" align="Left">{{modulo[2]}}</td>
 							<td id="m_pie" align="Left">{{modulo[3]}}</td>
 							<td id="m_desde" align="center">{{modulo[4]}}</td>
 							<td id="m_hasta" align="center">{{modulo[5]}}</td>
+							<td id="m_cantidad_minima" align="center">{{modulo[6]}}</td>
 							<td id="acciones" align="center">
 
 								<div class="row">

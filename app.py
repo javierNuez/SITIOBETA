@@ -176,6 +176,7 @@ def admin_ofertas_update(id):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 @ app.route('/sup/pedidos/<int:usuario>')
 def sup_pedidos_layout(usuario):
+    print(usuario)
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -187,6 +188,7 @@ def sup_pedidos_layout(usuario):
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
+
     conexion.commit()
     return render_template('sup/pedidos.html', ofertas=ofertas, usuarios=usuarios)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
@@ -285,7 +287,6 @@ def sup_cargaOferta02_droguerias(usuario):
         print(f"{_drogueria}")
         return render_template('sup/cargaOferta03.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
-    print("los clientes")
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -298,43 +299,37 @@ def sup_cargaOferta02_droguerias(usuario):
 
 @ app.route('/sup/cargaOfert04/cliente/<int:usuario>', methods=['POST'])
 def sup_cargaOferta04_d_c(usuario):
-
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-
+    print(f"usuario: {usuario}")
     _drogueria = request.form['txtDrogueria2']
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
-    droguerias = cursor.fetchall()
-    """
-    _cliente = request.form['txtCliente']
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
-    clientes = cursor.fetchall()
-    """
+    print(f"drogueria: {_drogueria}")
+
+    _cliente = request.form['txtCliente2']
+    print(f"clientes: {_cliente}")
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `ofertas`")
     ofertas = cursor.fetchall()
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in ofertas:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    print(listaUnidades)
     ancho = len(ofertas)
     conexion.commit()
+    print(usuarios)
+    print(listaOfertaVigente)
 
-    listaPedidos = []
-    for i in ofertas:
-        n = f"numeroValido{i[0]}"
-        n = str(n)
-        listaPedidos.append(request.form[n])
-        print(listaPedidos)
-
-    return render_template('sup/pedidos.html', droguerias=droguerias, usuarios=usuarios)
+    return render_template('sup/pedidos.html', drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas)
 
 
 @ app.route('/sup/clientes/<int:usuario>')
@@ -969,24 +964,111 @@ def usuarios_oces_uno(id):
 
 @app.route('/apibeta', methods=['POST'])
 def registrar_modulos_api():
+    respuesta = request.json
     try:
         _mensaje = request.json['mensaje']
-        _nombre = request.json['modulo'][0]['m_nombre']
-        _titulo = request.json['modulo'][0]['m_titulo']
-        _pie = request.json['modulo'][0]['m_pie']
-        _desde = request.json['modulo'][0]['m_desde']
-        _hasta = request.json['modulo'][0]['m_hasta']
+        _modulo = request.json['modulo']
+        count = 0
+        for i in _modulo:
+            _id = request.json['modulo'][count]['idM']
+            sql = "DELETE FROM modulos WHERE id_m = %s;"
+            datos = (_id)
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(sql, datos)
+            conexion.commit()
+            count += 1
+            nw_mensaje = _mensaje+" OK del server"
+        return jsonify({"mensaje": nw_mensaje+" "+respuesta})
+    except Exception as ex:
+        return jsonify({'mensaje': f"Error {respuesta}"})
 
-        sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
-        datos = (_nombre, _titulo, _pie, _desde, _hasta)
 
-        conexion = mysql.connect()
-        cursor = conexion.cursor()
-        cursor.execute(sql, datos)
-        conexion.commit()
+@app.route('/apibeta2', methods=['DELETE'])
+def registrar_modulos_api_DELETE_():
+    respuesta = request.json
+    try:
+        _mensaje = request.json['mensaje']
+        _modulo = request.json['modulo']
+        count = 0
+        for i in _modulo:
+            _id = request.json['modulo'][count]['idM']
+            sql = "DELETE FROM modulos WHERE id_m = %s;"
+            datos = (_id)
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(sql, datos)
+            conexion.commit()
+            count += 1
+            nw_mensaje = _mensaje+" OK del server"
+        return jsonify({"mensaje": nw_mensaje+" "+respuesta})
+    except Exception as ex:
+        return jsonify({'mensaje': f"Error {respuesta}"})
 
-        return jsonify({"mensaje": _mensaje})
 
+@app.route('/apibeta2', methods=['PUT'])
+def registrar_modulos_api_put_():
+    try:
+        _mensaje = request.json['mensaje']
+        _modulo = request.json['modulo']
+        count = 0
+        for i in _modulo:
+
+            _nombre = request.json['modulo'][count]['Mnombre']
+            _titulo = request.json['modulo'][count]['Mtitulo']
+            _pie = request.json['modulo'][count]['Mpie']
+            _desde = request.json['modulo'][count]['Mdesde']
+            _hasta = request.json['modulo'][count]['Mhasta']
+            _id = request.json['modulo'][count]['idM']
+
+            if _nombre != None:
+                sql = "UPDATE modulos SET m_nombre=%s WHERE id_m=%s;"
+                datos = (_nombre, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                nw_mensaje = "Campo 'nombre', error"
+            if _titulo != None:
+                sql = "UPDATE modulos SET m_titulo=%s WHERE id_m=%s;"
+                datos = (_titulo, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                nw_mensaje = "Campo 'titulo', error"
+            if _pie != None:
+                sql = "UPDATE modulos SET m_pie=%s WHERE id_m=%s;"
+                datos = (_pie, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                nw_mensaje = "Campo 'Pie', error"
+            if _desde != None:
+                sql = "UPDATE modulos SET m_desde=%s WHERE id_m=%s;"
+                datos = (_desde, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                nw_mensaje = "Campo 'desde', error"
+            if _hasta != None:
+                sql = "UPDATE modulos SET m_hasta=%s WHERE id_m=%s;"
+                datos = (_hasta, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                nw_mensaje = "Campo 'hasta', error"
+            count += 1
+        nw_mensaje = _mensaje+" OK del server: PUT por ID"
+        return jsonify({"mensaje": nw_mensaje})
     except Exception as ex:
         return jsonify({'mensaje': "Error"})
 
@@ -1004,9 +1086,10 @@ def registrar_modulos_api_sin_():
             _pie = request.json['modulo'][count]['Mpie']
             _desde = request.json['modulo'][count]['Mdesde']
             _hasta = request.json['modulo'][count]['Mhasta']
+            _cantidad = request.json['modulo'][count]['Mcantidad']
 
-            sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
-            datos = (_nombre, _titulo, _pie, _desde, _hasta)
+            sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`, `m_cantidad_minima`) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+            datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad)
 
             conexion = mysql.connect()
             cursor = conexion.cursor()
@@ -1029,9 +1112,10 @@ def admin_modulo_editar():
     _desde = request.form['txtDesde']
     _hasta = request.form['txtHasta']
     _id = request.form['txtID']
+    _cantidad = request.form['txtCantidad']
 
-    sql = "UPDATE modulos SET m_nombre=%s, m_titulo=%s, m_pie=%s, m_desde=%s, m_hasta=%s WHERE id_m=%s;"
-    datos = (_nombre, _titulo, _pie, _desde, _hasta, _id)
+    sql = "UPDATE modulos SET m_nombre=%s, m_titulo=%s, m_pie=%s, m_desde=%s, m_hasta=%s, m_cantidad_minima=%s WHERE id_m=%s;"
+    datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad, _id)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1049,9 +1133,10 @@ def admin_modulos_guardar():
     _pie = request.form['m_pie']
     _desde = request.form['m_desde']
     _hasta = request.form['m_hasta']
+    _cantidad = request.form['txtCantidad']
 
-    sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`) VALUES (NULL, %s,%s,%s,%s,%s);"
-    datos = (_nombre, _titulo, _pie, _desde, _hasta)
+    sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`, `m_cantidad_minima`) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+    datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()

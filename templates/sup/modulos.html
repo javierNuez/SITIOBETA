@@ -1,73 +1,106 @@
-{% include 'sup/cabecera.html' %}
-<br>
-<div class="card-body" style="min-height: 500px;">
-	<div class="card border-info">
-		<div class="card-header">
-			<h4>Módulos:</h4>
-		</div>
-		<div class="card-body">
-			<form action="/sup/modulos/guardar" method="post" enctype="multipart/form-data">
-				<table id="tblContact" class="table table-sm">
-					<thead>
-						<tr>
-							<th style="text-align: center;" scope="col" class="table-info">Nombre interno</th>
-							<th style="text-align: center;" scope="col" class="table-info">Tíulo</th>
-							<th style="text-align: center;" scope="col" class="table-info">Pie</th>
-							<th style="text-align: center;" scope="col" class="table-info">Desde</th>
-							<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
-							<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
-						</tr>
-					</thead>
-					<tbody id="rowsClientes">
-						<tr>
-							<td id="m_nombre"><input type="text" class="form-control form-control-sm" name="m_nombre"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="m_titulo"><input type="text" class="form-control form-control-sm" name="m_titulo"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="m_pie"><input type="text" class="form-control form-control-sm" name="m_pie" id="#"
-									aria-describedby="helpId" placeholder=""></td>
-							<td id="m_desde"><input type="date" class="form-control form-control-sm" name="m_desde"
-									id="#" aria-describedby="helpId" placeholder=""></td>
-							<td id="m_hasta"><input type="date" class="form-control form-control-sm" name="m_hasta"
-									id="#" aria-describedby="helpId" placeholder=""></td>
+<!doctype html>
+<html lang="en">
 
-							<td id="acciones">
-								<div class="d-grid gap-2 col-6 mx-auto">
-									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-					<tbody id="rowsModulos">
-						{% for modulo in modulos %}
-						<tr>
-							<!--<th scope="row">0</th>-->
-							<td id="m_nombre" align="Left">{{modulo[1]}}</td>
-							<td id="m_titulo" align="Left">{{modulo[2]}}</td>
-							<td id="m_pie" align="Left">{{modulo[3]}}</td>
-							<td id="m_desde" align="center">{{modulo[4]}}</td>
-							<td id="m_hasta" align="center">{{modulo[5]}}</td>
-							<td id="acciones" align="center">
+<head>
+	<title>Oces</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-								<div class="row">
-									<div class="col">
-										<a class=" btn btn-info btn-sm" href="/sup/editarModulos/{{modulo[0]}}"
-											role="button" style="display:center;">Editar</a>
-									</div>
-									<div class="col">
-										<a class=" btn btn-danger btn-sm" href="/sup/modulos/borrar/{{modulo[0]}}"
-											role="button" style="display:center;">Borrar</a>
-									</div>
-								</div>
-							</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</form>
-		</div>
-		<div class="card-footer text-muted">
-		</div>
+	<!-- Bootstrap CSS v5.2.0-beta1 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+		integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+{% if usuarios %}
+
+<body>
+	<div class="col" style="padding-top: 30px">
+		<img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
 	</div>
-</div>
-{% include 'sup/pie.html' %}
+
+	<nav class="navbar navbar-expand navbar-light bg-light">
+		<div class="nav navbar-nav" style="margin:auto;">
+			<a class="nav-item nav-link active" href="/sup/index/{{usuarios[0][9]}}">Inicio</a>
+			<a class="nav-item nav-link" href="../pedidos/{{usuarios[0][9]}}">Pedidos</a>
+			<a class="nav-item nav-link" href="../ofertas/{{usuarios[0][9]}}">Oferta comercial</a>
+			<a class="nav-item nav-link" href="../clientes/{{usuarios[0][9]}}">Clientes</a>
+			<a class="nav-item nav-link" href="/">Cerrar sesión</a>
+
+		</div>
+	</nav>
+	{% endif %}
+	<div class="container">
+		<br>
+		<div class="card-body" style="min-height: 500px;">
+			<div class="card border-info">
+				<div class="card-header">
+					<h4>Módulos:</h4>
+				</div>
+				<div class="card-body">
+					<form action="/sup/modulos/guardar" method="post" enctype="multipart/form-data">
+						<table id="tblContact" class="table table-sm">
+							<thead>
+								<tr>
+									<th style="text-align: center;" scope="col" class="table-info">Nombre interno</th>
+									<th style="text-align: center;" scope="col" class="table-info">Tíulo</th>
+									<th style="text-align: center;" scope="col" class="table-info">Pie</th>
+									<th style="text-align: center;" scope="col" class="table-info">Desde</th>
+									<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
+									<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+								</tr>
+							</thead>
+							<tbody id="rowsClientes">
+								<tr>
+									<td id="m_nombre"><input type="text" class="form-control form-control-sm"
+											name="m_nombre" id="#" aria-describedby="helpId" placeholder=""></td>
+									<td id="m_titulo"><input type="text" class="form-control form-control-sm"
+											name="m_titulo" id="#" aria-describedby="helpId" placeholder=""></td>
+									<td id="m_pie"><input type="text" class="form-control form-control-sm" name="m_pie"
+											id="#" aria-describedby="helpId" placeholder=""></td>
+									<td id="m_desde"><input type="date" class="form-control form-control-sm"
+											name="m_desde" id="#" aria-describedby="helpId" placeholder=""></td>
+									<td id="m_hasta"><input type="date" class="form-control form-control-sm"
+											name="m_hasta" id="#" aria-describedby="helpId" placeholder=""></td>
+
+									<td id="acciones">
+										<div class="d-grid gap-2 col-6 mx-auto">
+											<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+							<tbody id="rowsModulos">
+								{% for modulo in modulos %}
+								<tr>
+									<!--<th scope="row">0</th>-->
+									<td id="m_nombre" align="Left">{{modulo[1]}}</td>
+									<td id="m_titulo" align="Left">{{modulo[2]}}</td>
+									<td id="m_pie" align="Left">{{modulo[3]}}</td>
+									<td id="m_desde" align="center">{{modulo[4]}}</td>
+									<td id="m_hasta" align="center">{{modulo[5]}}</td>
+									<td id="acciones" align="center">
+
+										<div class="row">
+											<div class="col">
+												<a class=" btn btn-info btn-sm" href="/sup/editarModulos/{{modulo[0]}}"
+													role="button" style="display:center;">Editar</a>
+											</div>
+											<div class="col">
+												<a class=" btn btn-danger btn-sm"
+													href="/sup/modulos/borrar/{{modulo[0]}}" role="button"
+													style="display:center;">Borrar</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</form>
+				</div>
+				<div class="card-footer text-muted">
+				</div>
+			</div>
+		</div>
+		{% include 'sup/pie.html' %}
