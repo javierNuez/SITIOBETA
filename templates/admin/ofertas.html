@@ -18,8 +18,9 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label for="" class="form-label">Módulos:</label>
-                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtModulo">
+                            <label for="txtModulo" class="form-label">Módulos:</label>
+                            <select class="form-select" aria-label="Oferta comercial vigente" name="txtModulo"
+                                id="txtModulo">
                                 <option selected>Seleccione</option>
                                 {% for modulo in modulos %}
                                 <option
@@ -31,7 +32,7 @@
                         </div>
                         <div class="col-6">
                             <label for="txtProducto" class="form-label">Productos:</label>
-                            <select class="form-select" aria-label="txtProducto" name="txtProducto">
+                            <select class="form-select" aria-label="txtProducto" name="txtProducto" id="txtProducto">
                                 <option selected>Seleccione</option>
                                 {% for producto in productos %}
                                 <option
@@ -45,18 +46,26 @@
                 </div>
                 <div class="mb-3">
                     <div class="row">
-                        <div class="col-2"></div>
+
                         <div class="col-4">
-                            <label for="cantidadM" class="form-label">Cantidad minima:</label>
-                            <input type="text" class="form-control" name="txtMinima" id="#" aria-describedby="helpId"
-                                placeholder="">
+                            <label for="txtMinima" class="form-label">Cantidad minima:</label>
+                            <input type="text" class="form-control" name="txtMinima" id="txtMinima"
+                                aria-describedby="helpId" placeholder="">
                         </div>
                         <div class="col-4">
-                            <label for="cantidadM" class="form-label">Descuento:</label>
-                            <input type="text" class="form-control" name="txtDescuento" id="#" aria-describedby="helpId"
-                                placeholder="">
+                            <label for="txtDescuento" class="form-label">Descuento:</label>
+                            <input type="text" class="form-control" name="txtDescuento" id="txtDescuento"
+                                aria-describedby="helpId" placeholder="">
                         </div>
-                        <div class="col-2"></div>
+                        <div class="col-4">
+                            <label for="txtObligatorio" class="form-label">Producto obligatorio:</label><br>
+                            <select name="txtObligatorio" id="txtObligatorio">
+                                <option value="no">No</option>
+                                <option value="si">Si</option>
+
+                            </select>
+
+                        </div>
                     </div>
 
                 </div>
@@ -103,6 +112,7 @@
                         <!--<th style="text-align: center;" scope="col" class="table-info">Prod. Hasta</th>-->
                         <th style="text-align: center;" scope="col" class="table-info">Mínimo</th>
                         <th style="text-align: center;" scope="col" class="table-info">Descuento</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Prod. obligatorio</th>
                         <th style="text-align: center;" scope="col" class="table-info">Acciones</th>
                     </tr>
 
@@ -128,6 +138,7 @@
                         <!--<td id="" align="center">{{oferta[11]}}</td>-->
                         <td id="" align="center">{{oferta[12]}}</td>
                         <td id="" align="center">{{oferta[13]}}%</td>
+                        <td id="" align="center">{{oferta[15]}}</td>
 
 
 
