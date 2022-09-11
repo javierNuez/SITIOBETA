@@ -43,13 +43,20 @@ def apms_index():
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@app.route('/sup/<int:usuario>')
-def sup_of(usuario):
+@app.route('/sup')
+def sup_of():
+    usuario = request.form["hashUsuario"]
+    print(usuario)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `pedidos` WHERE o_usuario_hash=%s;", (usuario))
+        "SELECT * FROM `pedidos` WHERE o_usuario_hash=%s;", (usuarios))
     pedidos = cursor.fetchall()
     conexion.commit()
     print(pedidos)
@@ -58,9 +65,9 @@ def sup_of(usuario):
     # return render_template('sup/index.html')
 
 
-@app.route('/sup/index/<int:usuario>')
-def sup_index(usuario):
-
+@app.route('/sup')
+def sup_index():
+    usuario = request.form['hasUsuario']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -85,11 +92,12 @@ def admin_index():
     conexion.commit()
     if _usuario:
         if _usuario[0][8] == "ADM":
-            return render_template('/admin/index.html')
+            us = _usuario[0][9]
+            return render_template('/admin/index.html', usuarios=us)
         elif _usuario[0][8] == "SUP":
             us = _usuario[0][9]
 
-            return redirect(f'/sup/index/{us}')
+            return render_template('/sup/index.html', usuarios=us)
 
         elif _usuario[0][8] == "APM":
             redirect('/apms/')
@@ -175,9 +183,9 @@ def admin_ofertas_update(id):
 
 # funciones de usuarios:
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
-@ app.route('/sup/pedidos/<int:usuario>')
-def sup_pedidos_layout(usuario):
-    print(usuario)
+@ app.route('/sup/pedidos/')
+def sup_pedidos_layout():
+    usuario = request.form['hashUsuario']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -333,8 +341,14 @@ def sup_cargaOferta04_d_c(usuario):
     return render_template('sup/pedidos.html', drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas)
 
 
-@ app.route('/sup/clientes/<int:usuario>')
-def sup_clientes(usuario):
+@ app.route('/sup/clientes/')
+def sup_clientes():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    usuarios = cursor.fetchall()
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `droguerias`;")
@@ -345,26 +359,15 @@ def sup_clientes(usuario):
     cursor.execute("SELECT * FROM `clientes`;")
     clientes = cursor.fetchall()
 
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
-    usuarios = cursor.fetchall()
     conexion.commit()
 
     return render_template('sup/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
 
-@ app.route('/sup/editarCliente/<int:clienteUsuario>')
-def sup_clientes_editar(clienteUsuario):
-    _clienteUsuario = str(clienteUsuario)
-
-    _usuario = _clienteUsuario[-14:]
-    _cliente = _clienteUsuario[:-14]
-
-    usuario = (int(_usuario))
-    cliente = (int(_cliente))
-
+@ app.route('/sup/clientes/editar', methods=['POST'])
+def sup_clientes_editar():
+    usuario = request.form['hashUsuario']
+    cliente = request.form['id_cliente']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `droguerias`;")

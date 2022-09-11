@@ -15,19 +15,22 @@
 {% if usuarios %}
 
 <body>
+
+
     <div class="col" style="padding-top: 30px">
-        <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
-    </div>
-
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <div class="nav navbar-nav" style="margin:auto;">
-            <a class="nav-item nav-link active" href="/sup/index/{{usuarios[0][9]}}">Inicio</a>
-            <a class="nav-item nav-link" href="../pedidos/{{usuarios[0][9]}}">Pedidos</a>
-            <a class="nav-item nav-link" href="../ofertas/{{usuarios[0][9]}}">Oferta comercial</a>
-            <a class="nav-item nav-link" href="../clientes/{{usuarios[0][9]}}">Clientes</a>
-            <a class="nav-item nav-link" href="/">Cerrar sesión</a>
-
+        <div class="col" style="padding-top: 30px">
+            <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
         </div>
-    </nav>
-    {% endif %}
-    <div class="container">
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <div class="nav navbar-nav" style="margin:auto;">
+                <a class="nav-item nav-link active" href="/sup/index/">Inicio</a>
+                <a class="nav-item nav-link" href="/sup/pedidos/">Pedidos</a>
+                <a class="nav-item nav-link" href="/sup/ofertas/">Oferta comercial</a>
+                <a class="nav-item nav-link" href="/sup/clientes/">Clientes</a>
+                <a class="nav-item nav-link" href="/">Cerrar sesión</a>
+
+            </div>
+        </nav>
+        {% endif %}
+        <div class="container">

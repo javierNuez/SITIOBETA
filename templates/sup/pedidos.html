@@ -1,91 +1,59 @@
-<!doctype html>
-<html lang="en">
+{% include 'sup/cabecera.html' %}
 
-<head>
-    <title>Oces</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% with messages= get_flashed_messages() %}
 
-    <!-- Bootstrap CSS v5.2.0-beta1 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+{% if messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 
-</head>
-{% if usuarios %}
+<div class="card-body">
+    <div class="card border-info">
+        <div class="card-header">
+            <h4>Informacion del pedido:</h4>
+        </div>
+        <div class="card-body" style="margin-left: 0%;">
 
-<body>
-    <div class="col" style="padding-top: 30px">
-        <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
-    </div>
+            <table id="tblContact" class="table table-sm">
+                <thead>
+                    <tr>
 
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <div class="nav navbar-nav" style="margin:auto;">
-            <a class="nav-item nav-link active" href="/sup/index/{{usuarios[0][9]}}">Inicio</a>
-            <a class="nav-item nav-link" href="../pedidos/{{usuarios[0][9]}}">Pedidos</a>
-            <a class="nav-item nav-link" href="../ofertas/{{usuarios[0][9]}}">Oferta comercial</a>
-            <a class="nav-item nav-link" href="../clientes/{{usuarios[0][9]}}">Clientes</a>
-            <a class="nav-item nav-link" href="/">Cerrar sesión</a>
+                        <th style="text-align: center;" scope="col" class="table-info">Mód. Nombre</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Cód.</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Descripción</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Mínimo</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Descuento</th>
+                        <th style="text-align: center;" scope="col" class="table-info">Unidades</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="">
+                    {% for oferta in ofertas %}
+                    <tr>
+
+                        <td id="" align="left">{{oferta[2]}}</td>
+                        <td id="" align="left">{{oferta[8]}}</td>
+                        <td id="" align="left">{{oferta[9]}}</td>
+                        <td id="" align="center">{{oferta[12]}}</td>
+                        <td id="" align="center">{{oferta[13]}}%</td>
+                        <td id="" align="center"><input type="text" name="" value="" style="width:40px;">
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
         </div>
-    </nav>
-    {% endif %}
-    <div class="container">
+        <div class="card-footer text-muted">
 
-        {% with messages= get_flashed_messages() %}
-
-        {% if messages %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
-        </div>
-        {% endif %}
-        {% endwith %}
-
-        <div class="card-body">
-            <div class="card border-info">
-                <div class="card-header">
-                    <h4>Informacion del pedido:</h4>
-                </div>
-                <div class="card-body" style="margin-left: 0%;">
-
-                    <table id="tblContact" class="table table-sm">
-                        <thead>
-                            <tr>
-
-                                <th style="text-align: center;" scope="col" class="table-info">Mód. Nombre</th>
-                                <th style="text-align: center;" scope="col" class="table-info">Cód.</th>
-                                <th style="text-align: center;" scope="col" class="table-info">Descripción</th>
-                                <th style="text-align: center;" scope="col" class="table-info">Mínimo</th>
-                                <th style="text-align: center;" scope="col" class="table-info">Descuento</th>
-                                <th style="text-align: center;" scope="col" class="table-info">Unidades</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="">
-                            {% for oferta in ofertas %}
-                            <tr>
-
-                                <td id="" align="left">{{oferta[2]}}</td>
-                                <td id="" align="left">{{oferta[8]}}</td>
-                                <td id="" align="left">{{oferta[9]}}</td>
-                                <td id="" align="center">{{oferta[12]}}</td>
-                                <td id="" align="center">{{oferta[13]}}%</td>
-                                <td id="" align="center"><input type="text" name="" value="" style="width:40px;">
-                                </td>
-
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-                </div>
-                <div class="card-footer text-muted">
-
-                </div>
-            </div>
         </div>
     </div>
-    {% include 'sup/pie.html' %}
+</div>
+</div>
+{% include 'sup/pie.html' %}

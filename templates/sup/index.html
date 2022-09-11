@@ -1,46 +1,17 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <title>Oces</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS v5.2.0-beta1 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
-</head>
+{% include 'sup/cabecera.html' %}
+<input type="text" id="hashUsuario" value="{{usuarios}}" name="hashUsuario">
+<script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
 {% if usuarios %}
 
-<body>
-    <div class="col" style="padding-top: 30px">
-        <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
-    </div>
-
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <div class="nav navbar-nav" style="margin:auto;">
-            <a class="nav-item nav-link active" href="/sup/index/{{usuarios[0][9]}}">Inicio</a>
-            <a class="nav-item nav-link" href="../pedidos/{{usuarios[0][9]}}">Pedidos</a>
-            <a class="nav-item nav-link" href="../ofertas/{{usuarios[0][9]}}">Oferta comercial</a>
-            <a class="nav-item nav-link" href="../clientes/{{usuarios[0][9]}}">Clientes</a>
-            <a class="nav-item nav-link" href="/">Cerrar sesión</a>
-
-        </div>
-    </nav>
-    {% endif %}
+<div class="p-5" style="background-color: rgba(200, 221, 241, 0.333);">
     <div class="container">
-        {% if usuarios %}
-        <div class="p-5" style="background-color: rgba(200, 221, 241, 0.333);">
-            <div class="container">
-                <h1 class="display-2">Oces Supervisor</h1>
-                <p class="lead">Usuario {{usuarios[0][3]}}</p>
-                <p class="lead">{{usuarios[0][1]}} {{usuarios[0][2]}}</p>
-                <hr class="my-2">
-                <p>Laboratorios Beta SA</p>
+        <h1 class="display-2">Oces Supervisor</h1>
+        <p class="lead">Usuario {{usuarios[0][3]}}</p>
+        <p class="lead">{{usuarios[0][1]}} {{usuarios[0][2]}}</p>
+        <hr class="my-2">
+        <p>Laboratorios Beta SA</p>
 
-            </div>
-        </div>
-        {% endif %}
-        {% include 'sup/pie.html' %}
+    </div>
+</div>
+{% endif %}
+{% include 'sup/pie.html' %}
