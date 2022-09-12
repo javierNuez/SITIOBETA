@@ -27,6 +27,7 @@ mysql.init_app(app)
 
 @app.route('/')
 def inicio():
+
     return render_template('sitio/index.html')
 
 
@@ -39,6 +40,11 @@ def inicio():
 @app.route('/apms/')
 def apms_index():
     return render_template('apms/index.html')
+
+
+@app.route('/apms/inicio')
+def apms_inicio():
+    return render_template('apms/inicio.html')
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -81,6 +87,7 @@ def sup_index():
 
 @app.route('/admin/', methods=['POST'])
 def admin_index():
+
     usuario = request.form['txtUsuario']
     contraseña = request.form['txtPassword']
     conexion = mysql.connect()
@@ -93,15 +100,17 @@ def admin_index():
     if _usuario:
         if _usuario[0][8] == "ADM":
             us = _usuario[0][9]
-            return render_template('/admin/index.html', usuarios=us)
+            return render_template('/admin/index.html', usuarioStorage=us)
         elif _usuario[0][8] == "SUP":
             us = _usuario[0][9]
+            print(us)
 
-            return render_template('/sup/index.html', usuarios=us)
+            return render_template('/sup/index.html', usuarioStorage=us)
 
         elif _usuario[0][8] == "APM":
-            redirect('/apms/')
-            return redirect('/apms')
+            us = _usuario[0][9]
+
+            return render_template('/apms/index.html', usuarioStorage=us)
     else:
         flash('¡Usuario o contraseña, no válido!')
         return redirect('/sitio/loguin')
@@ -551,7 +560,7 @@ def admin_usuarios_guardar():
     _roll = request.form['txtRoll']
     _hash = randint(1000000000, 9999999999)
     _hash = str(_hash)+_rrdzz
-    print(_hash)
+
 # condicional para ver si existe _hash
 
 
@@ -1025,6 +1034,7 @@ def registrar_modulos_api_put_():
             _pie = request.json['modulo'][count]['Mpie']
             _desde = request.json['modulo'][count]['Mdesde']
             _hasta = request.json['modulo'][count]['Mhasta']
+            _minima = request.json['modulo'][count]['Mcantidad']
             _id = request.json['modulo'][count]['idM']
 
             if _nombre != None:
@@ -1035,7 +1045,7 @@ def registrar_modulos_api_put_():
                 cursor.execute(sql, datos)
                 conexion.commit()
             else:
-                nw_mensaje = "Campo 'nombre', error"
+                _mensaje = "Campo 'nombre', error"
             if _titulo != None:
                 sql = "UPDATE modulos SET m_titulo=%s WHERE id_m=%s;"
                 datos = (_titulo, _id)
@@ -1044,7 +1054,7 @@ def registrar_modulos_api_put_():
                 cursor.execute(sql, datos)
                 conexion.commit()
             else:
-                nw_mensaje = "Campo 'titulo', error"
+                _mensaje = "Campo 'titulo', error"
             if _pie != None:
                 sql = "UPDATE modulos SET m_pie=%s WHERE id_m=%s;"
                 datos = (_pie, _id)
@@ -1053,7 +1063,7 @@ def registrar_modulos_api_put_():
                 cursor.execute(sql, datos)
                 conexion.commit()
             else:
-                nw_mensaje = "Campo 'Pie', error"
+                _mensaje = "Campo 'Pie', error"
             if _desde != None:
                 sql = "UPDATE modulos SET m_desde=%s WHERE id_m=%s;"
                 datos = (_desde, _id)
@@ -1062,7 +1072,7 @@ def registrar_modulos_api_put_():
                 cursor.execute(sql, datos)
                 conexion.commit()
             else:
-                nw_mensaje = "Campo 'desde', error"
+                _mensaje = "Campo 'desde', error"
             if _hasta != None:
                 sql = "UPDATE modulos SET m_hasta=%s WHERE id_m=%s;"
                 datos = (_hasta, _id)
@@ -1071,7 +1081,16 @@ def registrar_modulos_api_put_():
                 cursor.execute(sql, datos)
                 conexion.commit()
             else:
-                nw_mensaje = "Campo 'hasta', error"
+                _mensaje = "Campo 'hasta', error"
+            if _minima != None:
+                sql = "UPDATE modulos SET m_cantidad_minima = %s WHERE id_m=%s;"
+                datos = (_minima, _id)
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+            else:
+                _mensaje = "Campo 'minima', error"
             count += 1
         nw_mensaje = _mensaje+" OK del server: PUT por ID"
         return jsonify({"mensaje": nw_mensaje})

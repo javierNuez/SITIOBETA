@@ -1,4 +1,2 @@
-var mostrar = document.getElementById("hashUsuarioO");
-var hashUsuario = sessionStorage.getItem(hash);
-console.log(hashUsuario);
-mostrar.value = hashUsuario;
+var data = window.sessionStorage.getItem("hash");
+document.getElementById("hashUsuarioO").value = data + "U";

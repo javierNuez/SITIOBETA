@@ -1,8 +1,9 @@
 {% include 'admin/cabecera.html' %}
 
 <div>
-
-    <strong>¡Bienvenido usuario: ¡{{ usuario }}!</strong>
+    {% if usuarioStorage %}
+    <strong>Bienvenido usuario: {{ usuarioStorage[-5:].capitalize() }}</strong>
+    {% endif %}
 </div>
 
 

@@ -1,18 +1,25 @@
 {% include 'apms/cabecera.html' %}
+{% if usuarioStorage %}
+<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}">
+<script src="{{ url_for( 'static', filename='js/javaLogin.js' ) }}"></script>
+<script src="{{ url_for( 'static', filename='js/javaUsuario.js' ) }}"></script>
+<input type="text" id="hashUsuario" name="hashUsuarioO">
 
-<div>
-
-    <strong>¡Bienvenido usuario: ¡!</strong>
-</div>
 
 
-<div class="p-5 bg-light">
+
+
+<div class="p-5" style="background-color: rgba(200, 221, 241, 0.333);">
     <div class="container">
-        <h1 class="display-3">Oces APM</h1>
-        <!--<p class="lead">Bienvenid@</p>-->
-        <hr class="my-2">
+        <h1 class="display-2">Oces Apm</h1>
+        <div>
+
+            <strong>¡Bienvenido usuario: {{ usuarioStorage[-5:].capitalize() }}</strong>
+
+        </div>
         <p>Laboratorios Beta SA</p>
 
     </div>
 </div>
+{% endif %}
 {% include 'apms/pie.html' %}

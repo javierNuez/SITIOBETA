@@ -1,14 +1,21 @@
 {% include 'sup/cabecera.html' %}
-<input type="text" id="hashUsuario" value="{{usuarios}}" name="hashUsuario">
-<script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
-{% if usuarios %}
+{% if usuarioStorage %}
+<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}">
+<script src="{{ url_for( 'static', filename='js/javaLogin.js' ) }}"></script>
+<input type="text" id="hashUsuario" name="hashUsuarioO">
+<script src="{{ url_for( 'static', filename='js/javaUsuario.js' ) }}"></script>
+
+
+
 
 <div class="p-5" style="background-color: rgba(200, 221, 241, 0.333);">
     <div class="container">
         <h1 class="display-2">Oces Supervisor</h1>
-        <p class="lead">Usuario {{usuarios[0][3]}}</p>
-        <p class="lead">{{usuarios[0][1]}} {{usuarios[0][2]}}</p>
-        <hr class="my-2">
+        <div>
+
+            <strong>¡Bienvenido usuario: {{ usuarioStorage[-5:].capitalize() }}</strong>
+
+        </div>
         <p>Laboratorios Beta SA</p>
 
     </div>

@@ -4,7 +4,7 @@
 
 
 {% block content %}
-{% if usuario %}
+{% if usuarioStorage %}
 <div class="alert alert-succsses alert-dismissible fade show" role="alert">
 	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	<strong>¡Bienvenido usuario: ¡{{ usuario }}!</strong>
@@ -38,7 +38,7 @@
 
 					<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
 					<th style="text-align: center;" scope="col" class="table-info">Apellido</th>
-					<th style="text-align: center;" scope="col" class="table-info">Rrdzz (numérico)</th>
+					<th style="text-align: center;" scope="col" class="table-info">Rrdzz(5díg.)</th>
 					<th style="text-align: center;" scope="col" class="table-info">E-mail</th>
 					<th style="text-align: center;" scope="col" class="table-info">Desde</th>
 					<th style="text-align: center;" scope="col" class="table-info">Hasta</th>
@@ -56,8 +56,8 @@
 							aria-describedby="helpId" placeholder=""></td>
 					<td id="u_apellido"><input type="text" class="form-control form-control-sm" name="txtApellido"
 							id="#" aria-describedby="helpId" placeholder=""></td>
-					<td id="u_rrdzz"><input type="number" class="form-control form-control-sm" name="txtRrdzz" id="#"
-							aria-describedby="helpId" placeholder="" required></td>
+					<td id="u_rrdzz"><input type="text" class="form-control form-control-sm" name="txtRrdzz" id="#"
+							aria-describedby="helpId" placeholder="" maxlength="5" minlength="5" required></td>
 					<td id="u_mail"><input type="email" class="form-control form-control-sm" name="txtMail" id="#"
 							aria-describedby="helpId" placeholder="" required></td>
 					<td id="u_fecha_i"><input type="date" class="form-control form-control-sm" name="txtDesde" id="#"

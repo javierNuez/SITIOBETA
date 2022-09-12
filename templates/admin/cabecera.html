@@ -14,17 +14,19 @@
 </head>
 
 <body>
-  {% if usuarios %}
-  <input type="text" id="hashUsuario" value="{{usuarios}}" name="hashUsuario">
-  <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
+  {% if usuarioStorage %}
+  <input type="text" id="hashUsuario" value="{{usuarioStorage}}" name="hashUsuario">
+  <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}" hidden></script>
   {% endif %}
+
+
   <div class="col" style="padding-top: 30px">
     <img src="http://www.laboratoriosbeta.com.ar/wp-content/uploads/2013/04/Logo-Beta1.png" alt="laboratoriosbeta.com">
   </div>
 
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="nav navbar-nav" style="margin:auto;">
-      <a class="nav-item nav-link active" href="/admin/">Inicio</a>
+
       <a class="nav-item nav-link" href="pedidos">Pedidos</a>
       <a class="nav-item nav-link" href="droguerias">Droguerias</a>
       <a class="nav-item nav-link" href="clientes">Clientes</a>
@@ -32,7 +34,8 @@
       <a class="nav-item nav-link" href="modulos">Módulos</a>
       <a class="nav-item nav-link" href="ofertas">Oferta comercial</a>
       <a class="nav-item nav-link" href="usuarios">Usuarios</a>
-      <a class="nav-item nav-link" href="/">Cerrar sesión</a>
+
+      <a class="nav-item nav-link" href="/" onclick="return sessionStorage.clear()">Cerrar sesión</a>
 
     </div>
   </nav>
