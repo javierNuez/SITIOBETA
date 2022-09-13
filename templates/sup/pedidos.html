@@ -1,5 +1,15 @@
 {% include 'sup/cabecera.html' %}
+<input type="text" id="hashUsuarioO" hidden>
+<script>
+    var hashUsuario = sessionStorage.getItem("hash");
+    console.log(hashUsuario);
+    document.getElementById("hashUsuarioO").value = hashUsuario;
 
+    if (!(hashUsuario)) {
+        window.location.href = "/";
+    }
+
+</script>
 {% with messages= get_flashed_messages() %}
 
 {% if messages %}

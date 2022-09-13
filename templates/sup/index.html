@@ -1,9 +1,9 @@
 {% include 'sup/cabecera.html' %}
 {% if usuarioStorage %}
-<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}">
+<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}" hidden>
 <script src="{{ url_for( 'static', filename='js/javaLogin.js' ) }}"></script>
-<input type="text" id="hashUsuario" name="hashUsuarioO">
-<script src="{{ url_for( 'static', filename='js/javaUsuario.js' ) }}"></script>
+
+
 
 
 

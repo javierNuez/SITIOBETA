@@ -1,4 +1,11 @@
 {% include 'sup/cabecera.html' %}
+<script>
+    var hashUsuario = sessionStorage.getItem("hash");
+    if (!(hashUsuario)) {
+        window.location.href = "/";
+    }
+</script>
+
 {% with messages= get_flashed_messages() %}
 
 {% if messages %}
@@ -43,12 +50,15 @@
                                     <div class="col">
 
                                         <label for="" class="form-label">Droguerías:</label>
-                                        {% if usuarios %}
-                                        <form action="/sup/cargaOfert01/drogueria/{{usuarios[0][9]}}" method="post"
-                                            enctype="multipart/form-data">{% endif %}
-                                            {% if _usuario %}
-                                            <input type="number" name="txtUsuario" value="{{_usuario}}" hidden>
-                                            {% endif %}
+
+                                        <form action="/sup/cargaOfert01/drogueria/" method="post"
+                                            enctype="multipart/form-data">
+                                            <input type="text" id="hashUsuarioO" name="hashUsuarioO" hidden>
+                                            <script>
+                                                var hashUsuario = sessionStorage.getItem("hash");
+                                                document.getElementById("hashUsuarioO").value = hashUsuario;
+                                            </script>
+
                                             <div class="row">
                                                 <div class="col-10">
                                                     <select class="form-select form-select-sm" aria-label=""
@@ -181,6 +191,7 @@
             </div>-->
 </div>
 </div>
+
 
 
 

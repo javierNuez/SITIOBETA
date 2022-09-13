@@ -11,6 +11,7 @@ from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 from datetime import date
 import json
+
 app = Flask(__name__)
 
 
@@ -45,6 +46,16 @@ def apms_index():
 @app.route('/apms/inicio')
 def apms_inicio():
     return render_template('apms/inicio.html')
+
+
+@app.route('/admin/inicio')
+def admin_inicio():
+    return render_template('admin/inicio.html')
+
+
+@app.route('/sup/inicio')
+def sup_inicio():
+    return render_template('sup/inicio.html')
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -82,6 +93,8 @@ def sup_index():
     conexion.commit()
 
     return render_template('sup/index.html', usuarios=usuarios)
+
+
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
@@ -147,8 +160,8 @@ def admin_ofertas_guardar():
     if _modulo == '' or _producto == '' or _minima == '' or _descuento == '':
         flash('¡Por favor llenar todos los campos!')
         return redirect('/admin/ofertas')
-    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5],
+    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
              datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio)
     print(datos)
 
@@ -194,7 +207,7 @@ def admin_ofertas_update(id):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 @ app.route('/sup/pedidos/')
 def sup_pedidos_layout():
-    usuario = request.form['hashUsuario']
+    """
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -206,16 +219,16 @@ def sup_pedidos_layout():
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-
     conexion.commit()
-    return render_template('sup/pedidos.html', ofertas=ofertas, usuarios=usuarios)
+    """
+    return render_template('sup/pedidos.html')
+
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@app.route('/sup/ofertas/<int:usuario>')
-def sup_ofertas(usuario):
+@app.route('/sup/ofertas/')
+def sup_ofertas():
 
-    _usuario = usuario
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -226,13 +239,13 @@ def sup_ofertas(usuario):
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
-
+    """
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-
+    """
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -240,17 +253,19 @@ def sup_ofertas(usuario):
     clientes = cursor.fetchall()
 
     conexion.commit()
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes, usuarios=usuarios, _usuario=_usuario)
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
 
 
-@ app.route('/sup/cargaOfert01/drogueria/<int:usuario>', methods=['POST'])
-def sup_cargaOferta01_droguerias(usuario):
+@ app.route('/sup/cargaOfert01/drogueria/', methods=['POST'])
+def sup_cargaOferta01_droguerias():
+    usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-
+    print(usuarios)
     _drogueria = request.form['txtDrogueria']
 
     conexion = mysql.connect()
@@ -276,9 +291,9 @@ def sup_cargaOferta01_droguerias(usuario):
     return render_template('sup/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
-@ app.route('/sup/cargaOfert02/cliente/<int:usuario>', methods=['POST'])
-def sup_cargaOferta02_droguerias(usuario):
-
+@ app.route('/sup/cargaOfert02/cliente/', methods=['POST'])
+def sup_cargaOferta02_droguerias():
+    usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -315,8 +330,9 @@ def sup_cargaOferta02_droguerias(usuario):
     return render_template('sup/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
-@ app.route('/sup/cargaOfert04/cliente/<int:usuario>', methods=['POST'])
-def sup_cargaOferta04_d_c(usuario):
+@ app.route('/sup/cargaOfert04/cliente/', methods=['POST'])
+def sup_cargaOferta04_d_c():
+    usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(

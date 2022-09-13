@@ -15,8 +15,8 @@
 
 <body>
   {% if usuarioStorage %}
-  <input type="text" id="hashUsuario" value="{{usuarioStorage}}" name="hashUsuario">
-  <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}" hidden></script>
+  <input type="text" id="hashUsuario" value="{{usuarioStorage}}" name="hashUsuario" hidden>
+  <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
   {% endif %}
 
 
@@ -26,7 +26,7 @@
 
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="nav navbar-nav" style="margin:auto;">
-
+      <a class="nav-item nav-link" href="inicio">Inicio</a>
       <a class="nav-item nav-link" href="pedidos">Pedidos</a>
       <a class="nav-item nav-link" href="droguerias">Droguerias</a>
       <a class="nav-item nav-link" href="clientes">Clientes</a>

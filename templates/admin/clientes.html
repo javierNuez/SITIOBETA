@@ -1,4 +1,10 @@
 {% include 'admin/cabecera.html' %}
+<script>
+	var hashUsuario = sessionStorage.getItem("hash");
+	if (!(hashUsuario)) {
+		window.location.href = "/";
+	}
+</script>
 <br>
 <div class="card-body" style="min-height: 500px;">
 	<div class="card border-info">
