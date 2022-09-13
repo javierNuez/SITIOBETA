@@ -11,6 +11,15 @@ from flask import render_template, request, redirect, flash
 from flaskext.mysql import MySQL
 from datetime import date
 import json
+from datetime import date
+from datetime import datetime
+
+# Día actual
+today = date.today()
+
+# Fecha actual y hora
+now = datetime.now()
+
 
 app = Flask(__name__)
 
@@ -63,7 +72,7 @@ def sup_inicio():
 @app.route('/sup')
 def sup_of():
     usuario = request.form["hashUsuario"]
-    print(usuario)
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -108,21 +117,31 @@ def admin_index():
     cursor.execute(
         "select * FROM usuarios where u_rrdzz =%s and u_pass =%s", (usuario, contraseña))
     _usuario = cursor.fetchall()
-
+    hashU = usuario
+    no = 'no'
     conexion.commit()
+    _fechaD = datetime.strptime(f"{_usuario[0][5]}", "%Y-%m-%d")
+    _fechaH = datetime.strptime(f"{_usuario[0][6]}", "%Y-%m-%d")
+
     if _usuario:
+        if _fechaD > now or _fechaH < now:
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(
+                "UPDATE usuarios SET u_habilitado=%s WHERE u_rrdzz=%s", (no, hashU))
+            conexion.commit()
+
+            return redirect('/sitio/index.html')
+
         if _usuario[0][8] == "ADM":
             us = _usuario[0][9]
             return render_template('/admin/index.html', usuarioStorage=us)
         elif _usuario[0][8] == "SUP":
             us = _usuario[0][9]
-            print(us)
-
             return render_template('/sup/index.html', usuarioStorage=us)
 
         elif _usuario[0][8] == "APM":
             us = _usuario[0][9]
-
             return render_template('/apms/index.html', usuarioStorage=us)
     else:
         flash('¡Usuario o contraseña, no válido!')
@@ -163,7 +182,6 @@ def admin_ofertas_guardar():
     sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
              datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio)
-    print(datos)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -239,13 +257,7 @@ def sup_ofertas():
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
-    """
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
-    usuarios = cursor.fetchall()
-    """
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -265,7 +277,7 @@ def sup_cargaOferta01_droguerias():
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-    print(usuarios)
+
     _drogueria = request.form['txtDrogueria']
 
     conexion = mysql.connect()
@@ -325,7 +337,7 @@ def sup_cargaOferta02_droguerias():
     cursor.execute(
         "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
     clientes = cursor.fetchall()
-    print(_cliente)
+
     conexion.commit()
     return render_template('sup/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
@@ -474,7 +486,7 @@ def admin_usuariosJ():
     cursor.execute(
         "SELECT id_u, u_nombre,u_apellido, u_rrdzz, u_mail FROM `usuarios`;")
     usuarios = cursor.fetchall()
-    print(usuarios)
+
     conexion.commit()
     usuariosJ = json.dumps(usuarios)
     return render_template('admin/usuariosJ.html', usuariosJ=usuariosJ)
@@ -550,10 +562,11 @@ def admin_usuarios_editar():
     _pass = request.form['txtPass']
     _roll = request.form['txtRoll']
     _id = request.form['txtID']
+    _habilitado = request.form['txtHabilitado']
 
-    sql = "UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s, u_pass=%s, u_roll=%s WHERE id_u=%s;"
+    sql = "UPDATE usuarios SET u_nombre=%s, u_apellido=%s, u_rrdzz=%s, u_mail=%s, u_desde=%s, u_hasta=%s, u_pass=%s, u_roll=%s , u_habilitado=%s WHERE id_u=%s;"
     datos = (_nombre, _apellido, _rrdzz, _mail,
-             _desde, _hasta, _pass, _roll, _id)
+             _desde, _hasta, _pass, _roll, _habilitado, _id)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -576,6 +589,7 @@ def admin_usuarios_guardar():
     _roll = request.form['txtRoll']
     _hash = randint(1000000000, 9999999999)
     _hash = str(_hash)+_rrdzz
+    _habilitado = request.form['txtHabilitado']
 
 # condicional para ver si existe _hash
 
@@ -593,9 +607,9 @@ def admin_usuarios_guardar():
         flash('Rrdzz o Correo, ya registrado')
         return redirect('/admin/usuarios')
 
-    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`, `u_hash`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`, `u_hash`, `u_habilitado`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (_nombre, _apellido, _rrdzz, _mail,
-             _desde, _hasta, _pass, _roll, _hash)
+             _desde, _hasta, _pass, _roll, _hash, _habilitado)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()

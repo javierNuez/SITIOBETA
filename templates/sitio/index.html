@@ -1,4 +1,12 @@
 {% include 'sitio/cabecera.html' %}
+{% with messages= get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% for message in messages %}{{ message }}{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 <div class="p-5 bg-light">
     <div class="container">
         <h1 class="display-3">Oces</h1>

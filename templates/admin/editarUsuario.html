@@ -82,10 +82,19 @@
                                     <div class="card-body">
                                         <label for="txtRoll" class="form-label">Roll:</label>
                                         <select name="txtRoll" id="txtRoll">
-                                            <option value="">Seleccione</option>
+                                            <option value="{{usuario[8]}}">{{usuario[8]}}</option>
                                             <option value="ADM">Admin</option>
                                             <option value="SUP">Supervisor</option>
                                             <option value="APM">APM</option>
+                                        </select>
+                                    </div>
+                                    <div class="card-body">
+                                        <label for="txtHabilitado" class="form-label">Habilitado:</label>
+                                        <select name="txtHabilitado" id="txtHabilitado">
+                                            <option value="{{usuario[10]}}">{{usuario[10]}}</option>
+                                            <option value="si">Si</option>
+                                            <option value="no">No</option>
+
                                         </select>
                                     </div>
                                     <div class="card-body">
