@@ -15,10 +15,10 @@ from datetime import date
 from datetime import datetime
 
 # Día actual
-today = date.today()
+# today = date.today()
 
 # Fecha actual y hora
-now = datetime.now()
+# now = datetime.now()
 
 
 app = Flask(__name__)
@@ -109,29 +109,33 @@ def sup_index():
 
 @app.route('/admin/', methods=['POST'])
 def admin_index():
-
+    now = datetime.now()
     usuario = request.form['txtUsuario']
     contraseña = request.form['txtPassword']
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "select * FROM usuarios where u_rrdzz =%s and u_pass =%s", (usuario, contraseña))
+        "select * FROM usuarios where u_rrdzz =%s and u_pass =%s;", (usuario, contraseña))
     _usuario = cursor.fetchall()
-    hashU = usuario
-    no = 'no'
+    print(_usuario)
     conexion.commit()
-    _fechaD = datetime.strptime(f"{_usuario[0][5]}", "%Y-%m-%d")
-    _fechaH = datetime.strptime(f"{_usuario[0][6]}", "%Y-%m-%d")
+    no = 'no'
 
     if _usuario:
-        if _fechaD > now or _fechaH < now:
+        _fechaD = datetime.strptime(f"{_usuario[0][5]}", "%Y-%m-%d")
+        _fechaH = datetime.strptime(f"{_usuario[0][6]}", "%Y-%m-%d")
+
+        if _fechaD >= now or _fechaH <= now:
             conexion = mysql.connect()
             cursor = conexion.cursor()
             cursor.execute(
-                "UPDATE usuarios SET u_habilitado=%s WHERE u_rrdzz=%s", (no, hashU))
+                "UPDATE usuarios SET u_habilitado=%s WHERE u_hash=%s;", (no, _usuario[0][9]))
             conexion.commit()
-
-            return redirect('/sitio/index.html')
+            flash('Usuario bloqueado.')
+            return redirect('/sitio/loguin')
+        if _usuario[0][10] == "no":
+            flash('Usuario no habilitado.')
+            return redirect('/sitio/loguin')
 
         if _usuario[0][8] == "ADM":
             us = _usuario[0][9]
@@ -325,8 +329,8 @@ def sup_cargaOferta02_droguerias():
     cursor.execute(
         "SELECT * FROM `ofertas`")
     ofertas = cursor.fetchall()
-
     conexion.commit()
+
     if _cliente == "Nuevo":
         print("Nuevo")
         print(f"{_drogueria}")
@@ -374,6 +378,9 @@ def sup_cargaOferta04_d_c():
     conexion.commit()
     print(usuarios)
     print(listaOfertaVigente)
+    for i in ofertas:
+
+        print(i[1])
 
     return render_template('sup/pedidos.html', drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas)
 
@@ -578,7 +585,7 @@ def admin_usuarios_editar():
 
 @ app.route('/admin/usuarios/guardar', methods=['POST'])
 def admin_usuarios_guardar():
-
+    now = datetime.now()
     _nombre = request.form['txtNombre']
     _apellido = request.form['txtApellido']
     _rrdzz = request.form['txtRrdzz']
@@ -591,12 +598,23 @@ def admin_usuarios_guardar():
     _hash = str(_hash)+_rrdzz
     _habilitado = request.form['txtHabilitado']
 
-# condicional para ver si existe _hash
+# condicional para ver si existe usuario en vigencia
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE u_rrdzz=%s;", (_rrdzz))
+    _existeUsuario = cursor.fetchall()
+    conexion.commit()
+    desde = datetime.strptime(f"{_existeUsuario[0][5]}", "%Y-%m-%d")
+    hasta = datetime.strptime(f"{_existeUsuario[0][6]}", "%Y-%m-%d")
+    if desde <= now and hasta >= now:
+        flash('El usuario está vigente, modifique vigencia o elimine el usuario.')
+        return redirect('/admin/usuarios')
 
 
 # condicional para usar mensajes
-    sql = "SELECT * FROM usuarios WHERE u_rrdzz=%s or u_mail=%s;"
-    datos = (_rrdzz, _mail)
+    sql = "SELECT * FROM usuarios WHERE u_mail=%s;"
+    datos = (_mail)
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
@@ -604,7 +622,7 @@ def admin_usuarios_guardar():
     conexion.commit()
 
     if _existe:
-        flash('Rrdzz o Correo, ya registrado')
+        flash('Correo, ya registrado')
         return redirect('/admin/usuarios')
 
     sql = "INSERT INTO `usuarios` (`id_u`, `u_nombre`, `u_apellido`, `u_rrdzz`, `u_mail`, `u_desde`, `u_hasta`, `u_pass`, `u_roll`, `u_hash`, `u_habilitado`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"

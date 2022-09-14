@@ -11,212 +11,121 @@
 <br>
 <br>
 
-<div class="accordion" id="accordionPanelsStayOpenExample">
-    <div class="accordion-item">
-        <form>
-            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                    aria-controls="panelsStayOpen-collapseOne">
-                    <div class="card-header">
-                        <h4>Oferta comercial:</h4>
-                    </div>
-                </button><br>
-                <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-4">
-                        <h4>Nuevo cliente</h4>
-                    </div>
-                    <div class="col-4"></div>
-                </div>
-                </button>
-            </h2>
-            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                aria-labelledby="panelsStayOpen-headingOne">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-1"></div>
-                        <div class="col-10">
-                            <div class="card-body">
-                                {% if usuario %}
-                                <input type="number" name="txtUsuario" value="{{usuario}}" hidden>
-                                {% endif %}
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col">
+<form>
 
-                                            <label for="" class="form-label">Droguerías:</label>
-
-                                            <div class="row">
-                                                <div class="col-10">
-                                                    <select class="form-select form-select-sm" aria-label="" name=""
-                                                        disabled>
-                                                        {% for drogueria in droguerias %}
-                                                        <option>{{drogueria[1]}}-{{drogueria[2]}}</option>
-                                                        {% endfor%}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div class="row">
-                                            <div class="col">
-                                                <label for="" class="form-label">Clientes:</label>
-
-                                                <div class="row">
-                                                    <div class="col-10">
-                                                        <select class="form-select form-select-sm" aria-label="" name=""
-                                                            disabled>
-                                                            <option>Nuevo</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <label for="" class="form-label">Cuenta:</label>
-                                                <input type="number" class="form-control form-control-sm" name="" id=""
-                                                    aria-describedby="helpId" placeholder="">
-                                            </div>
-                                            <div class="col-5">
-                                                <label for="" class="form-label">CUIT:</label>
-                                                <input type="number" class="form-control form-control-sm" name="" id=""
-                                                    aria-describedby="helpId" placeholder="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div class="row">
-                                            <div class="col-10">
-                                                <label for="" class="form-label">Nombre:</label>
-                                                <input type="text" class="form-control form-control-sm" name="" id=""
-                                                    aria-describedby="helpId" placeholder="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <label for="" class="form-label">Localidad:</label>
-                                                <input type="text" class="form-control form-control-sm" name="" id=""
-                                                    aria-describedby="helpId" placeholder="">
-                                            </div>
-                                            <div class="col-5">
-                                                <label for="" class="form-label">Código Postal:</label>
-                                                <input type="number" class="form-control form-control-sm" name="" id=""
-                                                    aria-describedby="helpId" placeholder="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col"></div>
-                                        <div class="col">
-                                            <button type="submit" class="btn btn-info btn-mg">Guardar</button>
-                                        </div>
-                                        <div class="col"></div>
-                                    </div>
-
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="col-1"></div>
-                    </div>
-
-                </div>
-            </div>
-        </form>
+    <div class="card-header">
+        <h4>Oferta comercial:</h4>
     </div>
-    <h1>ofertas03</h1>
-    <!--
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <div class="card-header">
-                            <h4>Oferta comercial:</h4>
-                        </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <h4>Nuevo cliente</h4>
+        </div>
+        <div class="col-4"></div>
+    </div>
 
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="container">
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="card-body">
+                    {% if usuario %}
+                    <input type="number" name="txtUsuario" value="{{usuario}}" hidden>
+                    {% endif %}
+                    <div class="mb-3">
                         <div class="row">
-                            <div class="col-2"></div>
-                            <div class="col-8">
-                                <form action="/sup/ofertas/guardar" method="post" enctype="multipart/form-data">
-                                    <div class="col-2"></div>
-                            </div>
-                            <br>
-                            <div class="card-body">
+                            <div class="col">
 
+                                <label for="" class="form-label">Droguerías:</label>
 
-                                <div class="card-body">
-
-                                    <table id="tblContact" class="table table-sm">
-                                        <thead>
-                                            <tr>
-
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">Mód.
-                                                    Nombre</th>
-
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">Cód.
-                                                </th>
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                                    Descripción</th>
-
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                                    Mínimo
-                                                </th>
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                                    Descuento</th>
-                                                <th style="text-align: center;" scope="col-md-1" class="table-info">
-                                                    Unidades
-                                                </th>
-
-                                            </tr>
-
-                                        </thead>
-
-                                        <tbody id="rowsPedidos">
-                                            {% for oferta in ofertas %}
-                                            <tr>
-
-                                                <td id="" align="left">{{oferta[2]}}</td>
-
-                                                <td id="" align="left">{{oferta[8]}}</td>
-                                                <td id="" align="left">{{oferta[9]}}</td>
-
-                                                <td id="" align="center">{{oferta[12]}}</td>
-                                                <td id="" align="center">{{oferta[13]}}%</td>
-                                                <td id="" align="center"><input type="text" name="" id=""
-                                                        style="width:40px;" disabled>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-
+                                <div class="row">
+                                    <div class="col-10">
+                                        <select class="form-select form-select-sm" aria-label="" name="" disabled>
+                                            {% for drogueria in droguerias %}
+                                            <option>{{drogueria[1]}}-{{drogueria[2]}}</option>
+                                            {% endfor%}
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="card-footer text-muted" align="center">
-                                    <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Enviar
-                                        pedido</button>
-                                </div>
-
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="" class="form-label">Clientes:</label>
+
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <select class="form-select form-select-sm" aria-label="" name="" disabled>
+                                                <option>Nuevo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <label for="" class="form-label">Cuenta:</label>
+                                    <input type="number" class="form-control form-control-sm" name="" id=""
+                                        aria-describedby="helpId" placeholder="">
+                                </div>
+                                <div class="col-5">
+                                    <label for="" class="form-label">CUIT:</label>
+                                    <input type="number" class="form-control form-control-sm" name="" id=""
+                                        aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-10">
+                                    <label for="" class="form-label">Nombre:</label>
+                                    <input type="text" class="form-control form-control-sm" name="" id=""
+                                        aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <label for="" class="form-label">Localidad:</label>
+                                    <input type="text" class="form-control form-control-sm" name="" id=""
+                                        aria-describedby="helpId" placeholder="">
+                                </div>
+                                <div class="col-5">
+                                    <label for="" class="form-label">Código Postal:</label>
+                                    <input type="number" class="form-control form-control-sm" name="" id=""
+                                        aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-info btn-mg">Guardar</button>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+
+
                     </div>
+
                 </div>
 
-            </div>-->
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+    </div>
+    </div>
+</form>
+</div>
+<h1>ofertas03</h1>
+
 </div>
 
 <!-- javier actualizacion-->
