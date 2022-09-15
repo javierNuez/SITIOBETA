@@ -347,6 +347,7 @@ def sup_cargaOferta02_droguerias():
 
 
 @ app.route('/sup/cargaOfert04/cliente/', methods=['POST'])
+# @ app.route('/sup/cargaOfert02/cliente/', methods=['POST'])
 def sup_cargaOferta04_d_c():
     usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
@@ -375,14 +376,30 @@ def sup_cargaOferta04_d_c():
         listaOfertaVigente.append(i)
     print(listaUnidades)
     ancho = len(ofertas)
+    print("Ancho:", ancho)
     conexion.commit()
     print(usuarios)
     print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
     for i in ofertas:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    listaFinal = []
 
-        print(i[1])
-
-    return render_template('sup/pedidos.html', drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas)
+    for i in listaModOfer:
+        listaModulo = []
+        for x in ofertas:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    print(salidaModulos)
+    return render_template('sup/pedidos.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho)
 
 
 @ app.route('/sup/clientes/')

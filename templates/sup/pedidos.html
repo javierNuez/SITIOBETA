@@ -25,45 +25,99 @@
         <div class="card-header">
             <h4>Informacion del pedido:</h4>
         </div>
+        {% for salida in salidas %}
         <div class="card-body" style="margin-left: 0%;">
 
-            <table id="tblContact" class="table table-sm">
+
+            <table id="tblContact" class="table table-sm table-hover table-bordered">
                 <thead>
                     <tr>
-
-                        <th style="text-align: center;" scope="col" class="table-info">Mód. Nombre</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Cód.</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Producto</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Mínimo</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Descuento</th>
-                        <th style="text-align: center;" scope="col" class="table-info">Unidades</th>
-
+                        <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
+                        <th style="text-align: left;" scope="col" class="table-primary"></th>
+                        <th style="text-align: left;" scope="col" class="table-primary"></th>
+                        <th style="text-align: left;" scope="col" class="table-primary"></th>
+                        <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
+                            {{salida[1][0][7]}}</th>
                     </tr>
-
                 </thead>
-
                 <tbody id="">
-                    {% for oferta in ofertas %}
+                    <!--<table id="tblContact" class="table table-sm">-->
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Producto</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Código</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Cantidad mínima</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Descuento</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Unidades</th>
+                        </tr>
+                    </thead>
+                <tbody id="">
+                    {% for i in salida[1] %}
+
                     <tr>
-
-                        <td id="" align="left">{{oferta[2]}}</td>
-                        <td id="" align="left">{{oferta[9]}}</td>
-                        <td id="" align="left">{{oferta[10]}}</td>
-                        <td id="" align="center">{{oferta[13]}}</td>
-                        <td id="" align="center">{{oferta[14]}}%</td>
-                        <td id="" align="center"><input type="text" name="" value="" style="width:40px;">
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[10]}}
                         </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[9]}}
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[13]}}
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[14]}}%
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
 
+                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}" value="">
+                        </td>
                     </tr>
+
                     {% endfor %}
+
+                    <tr>
+                        <td style="text-align: center;" scope="col" class="table-secondary">
+
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-secondary">
+
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-secondary">
+
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-secondary">
+
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-secondary">
+                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:60px;"
+                                id="totalModulo{{salida[0]}}" disabled>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
-        </div>
-        <div class="card-footer text-muted">
+            {% if ancho %}
+            <input type="number" value="{{ancho}}" id="ancho" hidden>
+            {% endif %}
+            {% if modulosT %}
+            <input type="number" value="{{modulosT}}" id="modulosT" hidden>
+            {% endif %}
 
+        </div>
+
+        {% endfor %}
+        <div class="card-footer text-muted">
+            <div class="card-footer text-muted" align="center">
+                <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Enviar
+                    pedido</button>
+            </div>
         </div>
     </div>
 </div>
-</div>
+
 {% include 'sup/pie.html' %}
