@@ -1,4 +1,4 @@
-{% include 'sup/cabecera.html' %}
+{% include 'admin/cabecera.html' %}
 <input type="text" id="hashUsuarioO" hidden>
 <script>
     var hashUsuario = sessionStorage.getItem("hash");
@@ -30,7 +30,7 @@
 
         </div>
         {% for salida in salidas %}
-        <div class="card-body" style="margin-left: 0%;">
+        <div class="card-body" style="padding: 16px 0px ;">
 
 
             <table id="tblContact" class="table table-sm table-hover table-bordered">
@@ -124,4 +124,4 @@
     </div>
 </div>
 
-{% include 'sup/pie.html' %}
+{% include 'admin/pie.html' %}

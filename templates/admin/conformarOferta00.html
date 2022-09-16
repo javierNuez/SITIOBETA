@@ -1,4 +1,4 @@
-{% include 'sup/cabecera.html' %}
+{% include 'admin/cabecera.html' %}
 <script>
     var hashUsuario = sessionStorage.getItem("hash");
     if (!(hashUsuario)) {
@@ -27,7 +27,7 @@
                     <div class="col">
                         <label for="" class="form-label">Droguerías:</label>
 
-                        <form action="/sup/cargaOfert01/drogueria/" method="post" enctype="multipart/form-data">
+                        <form action="/admin/conformarOferta01/drogueria/" method="post" enctype="multipart/form-data">
                             <input type="text" id="hashUsuarioO" name="hashUsuarioO" hidden>
                             <script>
                                 var hashUsuario = sessionStorage.getItem("hash");
@@ -84,4 +84,4 @@
 
 
 
-{% include 'sup/pie.html' %}
+{% include 'admin/pie.html' %}

@@ -66,6 +66,154 @@ def admin_inicio():
 def sup_inicio():
     return render_template('sup/inicio.html')
 
+
+@ app.route('/admin/conformarOferta00')
+def cargaOferta():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('admin/conformarOferta00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+
+
+@ app.route('/admin/conformarOferta01/drogueria/', methods=['POST'])
+def ofer01():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('admin/conformarOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/admin/conformarOferta02/cliente/', methods=['POST'])
+def ofer02():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/admin/clientes')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('admin/conformarOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/admin/conformarOferta04/cliente/', methods=['POST'])
+def ofer04():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria2']
+
+    _cliente = request.form['txtCliente2']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in ofertas:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    print(listaUnidades)
+    ancho = len(ofertas)
+    print("Ancho:", ancho)
+    conexion.commit()
+    print(usuarios)
+    print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
+    for i in ofertas:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    listaFinal = []
+
+    for i in listaModOfer:
+        listaModulo = []
+        for x in ofertas:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    print(salidaModulos)
+    return render_template('admin/conformarOferta05.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho)
+
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
@@ -307,7 +455,7 @@ def sup_cargaOferta01_droguerias():
     return render_template('sup/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
-@ app.route('/sup/cargaOfert02/cliente/', methods=['POST'])
+@ app.route('/sup/cargaOferta02/cliente/', methods=['POST'])
 def sup_cargaOferta02_droguerias():
     usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
@@ -332,9 +480,7 @@ def sup_cargaOferta02_droguerias():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        print("Nuevo")
-        print(f"{_drogueria}")
-        return render_template('sup/cargaOferta03.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+        return redirect('/sup/clientes/')
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -346,7 +492,7 @@ def sup_cargaOferta02_droguerias():
     return render_template('sup/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
-@ app.route('/sup/cargaOfert04/cliente/', methods=['POST'])
+@ app.route('/sup/cargaOferta04/cliente/', methods=['POST'])
 # @ app.route('/sup/cargaOfert02/cliente/', methods=['POST'])
 def sup_cargaOferta04_d_c():
     usuario = request.form['hashUsuarioO']
@@ -355,12 +501,9 @@ def sup_cargaOferta04_d_c():
     cursor.execute(
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
-    print(f"usuario: {usuario}")
     _drogueria = request.form['txtDrogueria2']
-    print(f"drogueria: {_drogueria}")
 
     _cliente = request.form['txtCliente2']
-    print(f"clientes: {_cliente}")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -374,12 +517,12 @@ def sup_cargaOferta04_d_c():
         uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
         listaUnidades.append(uniList)
         listaOfertaVigente.append(i)
-    print(listaUnidades)
+    # print(listaUnidades)
     ancho = len(ofertas)
-    print("Ancho:", ancho)
+    #print("Ancho:", ancho)
     conexion.commit()
-    print(usuarios)
-    print(listaOfertaVigente)
+    # print(usuarios)
+    # print(listaOfertaVigente)
     # aca saco los modulos unicos
     modulos_ofertas = set()
     for i in ofertas:
@@ -387,6 +530,8 @@ def sup_cargaOferta04_d_c():
     # ---------------------------
     listaModOfer = list(modulos_ofertas)
     listaModOfer.sort()
+    sumaMod = "SumarAutomatico"
+
     modulosT = len(listaModOfer)
     listaFinal = []
 
@@ -399,7 +544,7 @@ def sup_cargaOferta04_d_c():
     listaTerminal = zip(listaModOfer, listaFinal)
     salidaModulos = list(listaTerminal)
     print(salidaModulos)
-    return render_template('sup/pedidos.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho)
+    return render_template('sup/cargaOferta05.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho, sumaMod=sumaMod)
 
 
 @ app.route('/sup/clientes/')
@@ -1265,6 +1410,6 @@ def pagina_no_encontrada(error):
 
 if __name__ == '__main__':
     app.register_error_handler(404, pagina_no_encontrada)
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(host="192.168.0.79", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,

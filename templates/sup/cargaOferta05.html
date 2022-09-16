@@ -29,8 +29,9 @@
             <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
 
         </div>
-        {% for salida in salidas %}
-        <div class="card-body" style="margin-left: 0%;">
+        {% for salida in salidas %}{% for i in sumaMod %}
+
+        <div class="card-body" style="padding: 16px 0px ;">
 
 
             <table id="tblContact" class="table table-sm table-hover table-bordered">
@@ -77,8 +78,10 @@
                             {{i[14]}}%
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
-
-                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}" value="">
+                            {% for i in salidas %}
+                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}"
+                                onchange="{{ sumaMod }}{{i[0]}}(this.valor)">
+                            {% endfor %}
                         </td>
                     </tr>
 
@@ -98,8 +101,26 @@
 
                         </td>
                         <td style="text-align: center;" scope="col" class="table-secondary">
-                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:60px;"
-                                id="totalModulo{{salida[0]}}" disabled>
+                            <script type="text/javascript">
+                                /* Funcion suma. */
+                                function { { sumaMod[0] } } (valor) {
+
+                                    var TotalSuma = 0;
+
+                                    // Convertir a numero entero (número).
+                                    TotalSuma = document.getElementById('{{salidas[0][0]}}').value;
+
+                                    // Valida y pone en cero "0".
+                                    TotalSuma = (TotalSuma == null || TotalSuma == undefined || TotalSuma == "") ? 0 : TotalSuma;
+                                    /* Variable genrando la suma. */
+                                    TotalSuma = (parseInt(TotalSuma) + parseInt(valor));
+                                    // Escribir el resultado en una etiqueta "span".
+                                    document.getElementById('{{salidas[0][0]}}').value = TotalSuma;
+                                }
+                            </script>
+                            Total:<input type="text" min="{{salida[1][0][7]}}" style="width:100px;"
+                                id="{{salidas[0][0]}}" disabled>
+
                         </td>
                     </tr>
                 </tbody>
@@ -114,6 +135,8 @@
 
         </div>
 
+
+        {% endfor %}
         {% endfor %}
         <div class="card-footer text-muted">
             <div class="card-footer text-muted" align="center">

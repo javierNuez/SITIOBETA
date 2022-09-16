@@ -1,4 +1,4 @@
-{% include 'sup/cabecera.html' %}
+{% include 'admin/cabecera.html' %}
 {% with messages= get_flashed_messages() %}
 
 {% if messages %}
@@ -11,7 +11,7 @@
 <br>
 <br>
 
-<form action="/sup/cargaOferta04/cliente/" method="post" enctype="multipart/form-data">
+<form action="/admin/conformarOferta04/cliente/" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuarioO" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");
@@ -140,4 +140,4 @@
 </form>
 <!--Javier actualización-->
 
-{% include 'sup/pie.html' %}
+{% include 'admin/pie.html' %}
