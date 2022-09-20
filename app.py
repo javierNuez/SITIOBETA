@@ -396,20 +396,7 @@ def admin_ofertas_update(id):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 @ app.route('/sup/pedidos/')
 def sup_pedidos_layout():
-    """
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `pedidos` WHERE p_usuario=%s;", (usuario))
-    ofertas = cursor.fetchall()
-    conexion.commit()
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
-    usuarios = cursor.fetchall()
-    conexion.commit()
-    """
+
     return render_template('sup/pedidos.html')
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
@@ -521,9 +508,7 @@ def sup_cargaOferta04_d_c():
         "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
     usuarios = cursor.fetchall()
     _drogueria = request.form['txtDrogueria2']
-
     _cliente = request.form['txtCliente2']
-
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -560,11 +545,11 @@ def sup_cargaOferta04_d_c():
         listaFinal.append(listaModulo)
     listaTerminal = zip(listaModOfer, listaFinal)
     salidaModulos = list(listaTerminal)
-    print(salidaModulos)
+    # print(salidaModulos)
     anchoModulos = len(salidaModulos)
     listaInput = []
     modulosFuncion = list(zip(listaModOfer, listaFinal))
-    count = 0
+
     for i in modulosFuncion:
         m = i[0]  # el_modulo
         e = i[1]
@@ -576,11 +561,30 @@ def sup_cargaOferta04_d_c():
         elScript = f"{scriptTxt}"
         listaInput.append(f'{m}:{elScript}')
 
-    print(anchoModulos)
+    # print(anchoModulos)
     listaInput = json.dumps(listaInput)
-    print(listaInput)
+    # print(listaInput)
 
     return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
+
+
+@ app.route('/sup/pedidos/template', methods=['POST'])
+def pedidosTemplate():
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    #print("Oferta Comercial", salidas)
+    pedido = f"""
+    Usuario: {usuario}.
+    Drogueria: {drogueria}
+    Cliente: {cliente}
+    Ofertas: {salidas}
+    """
+    return render_template('sup/pedidos.html', pedido=pedido)
 
 
 @ app.route('/sup/clientes/')
@@ -672,6 +676,25 @@ def sup_clientes_guardar(usuario):
     return redirect(f'../{usuario}')
 
 
+@ app.route('/admin/pedidos/template', methods=['POST'])
+def pedidosTemplateA():
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    #print("Oferta Comercial", salidas)
+    pedido = f"""
+    Usuario: {usuario}.
+    Drogueria: {drogueria}
+    Cliente: {cliente}
+    Ofertas: {salidas}
+    """
+    return render_template('admin/pedidos.html', pedido=pedido)
+
+
 @ app.route('/admin/usuarios')
 def admin_usuarios():
     conexion = mysql.connect()
@@ -682,19 +705,6 @@ def admin_usuarios():
     conexion.commit()
 
     return render_template('admin/usuarios.html', usuarios=usuarios)
-
-
-@ app.route('/admin/usuariosj')
-def admin_usuariosJ():
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT id_u, u_nombre,u_apellido, u_rrdzz, u_mail FROM `usuarios`;")
-    usuarios = cursor.fetchall()
-
-    conexion.commit()
-    usuariosJ = json.dumps(usuarios)
-    return render_template('admin/usuariosJ.html', usuariosJ=usuariosJ)
 
 
 @ app.route('/admin/editarUsuarios/<int:id>')

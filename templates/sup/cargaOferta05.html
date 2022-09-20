@@ -1,149 +1,163 @@
 {% include 'sup/cabecera.html' %}
-<input type="text" id="hashUsuarioO" hidden>
-<script>
-    var hashUsuario = sessionStorage.getItem("hash");
-    console.log(hashUsuario);
-    document.getElementById("hashUsuarioO").value = hashUsuario;
+<form action="/sup/pedidos/template" method="post" enctype="multipart/form-data">
+    <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
+    <script>
+        var hashUsuario = sessionStorage.getItem("hash");
+        document.getElementById("hashUsuarioO").value = hashUsuario;
 
-    if (!(hashUsuario)) {
-        window.location.href = "/";
-    }
+        if (!(hashUsuario)) {
+            window.location.href = "/";
+        }
 
-</script>
-{% with messages= get_flashed_messages() %}
+    </script>
+    {% with messages= get_flashed_messages() %}
 
-{% if messages %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
-</div>
-{% endif %}
-{% endwith %}
+    {% if messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
-<div class="card-body">
-    <div class="card border-info">
-        <div class="card-header">
-            <h4>Informacion del pedido:</h4>
-            <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
-            <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
-            <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
+    <div class="card-body">
 
-        </div>
-        {% for salida in salidas %}
+        <div class="card border-info">
+            <div class="card-header">
+                <h4>Informacion del pedido:</h4>
+                <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
+                <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
+                <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
+                {% if usuario %}
+                <input type="text" name="pedidoUsuario" value="{{usuario[-5:]}}" hidden>
+                {% endif %}
+                {% if drogueria %}
+                <input type="text" name="pedidoDrogueria" value="{{drogueria}}" hidden>
+                {% endif %}
+                {% if cliente %}
+                <input type="text" name="pedidoCliente" value="{{cliente}}" hidden>
+                {% endif %}
+            </div>
+            {% if salidas %}
+            <input type="text" name="pedidoOferta" value="{{salidas}}" hidden>
+            {% endif %}
+            {% for salida in salidas %}
 
-        <div class="card-body" style="padding: 16px 0px ;">
+            <div class="card-body" style="padding: 16px 0px ;">
 
 
-            <table id="tblContact" class="table table-sm table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
-                            {{salida[1][0][7]}}</th>
-                    </tr>
-                </thead>
-                <tbody id="">
-                    <!--<table id="tblContact" class="table table-sm">-->
+                <table id="tblContact" class="table table-sm table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Producto</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Código</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Cantidad mínima</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Descuento</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Unidades</th>
+                            <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
+                            <th style="text-align: left;" scope="col" class="table-primary"></th>
+                            <th style="text-align: left;" scope="col" class="table-primary"></th>
+                            <th style="text-align: left;" scope="col" class="table-primary"></th>
+                            <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
+                                {{salida[1][0][7]}}</th>
                         </tr>
                     </thead>
-                <tbody id="">
+                    <tbody id="">
+                        <!--<table id="tblContact" class="table table-sm">-->
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;" scope="col" class="table-info">
+                                    Producto</th>
+                                <th style="text-align: center;" scope="col" class="table-info">
+                                    Código</th>
+                                <th style="text-align: center;" scope="col" class="table-info">
+                                    Cantidad mínima</th>
+                                <th style="text-align: center;" scope="col" class="table-info">
+                                    Descuento</th>
+                                <th style="text-align: center;" scope="col" class="table-info">
+                                    Unidades</th>
+                            </tr>
+                        </thead>
+                    <tbody id="">
 
-                    {% for i in salida[1] %}
+                        {% for i in salida[1] %}
 
-                    <tr>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[10]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[9]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[13]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[14]}}%
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
+                        <tr>
+                            <td style="text-align: center;" scope="col" class="table-light">
+                                {{i[10]}}
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-light">
+                                {{i[9]}}
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-light">
+                                {{i[13]}}
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-light">
+                                {{i[14]}}%
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-light">
 
-                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}"
-                                oninput="sumarDocumento(this.value, {{i[1]}})" value="0">
+                                <input type="number" style="width:40px;text-align: center;" id="{{i[0]}}"
+                                    min="{{i[13]}}" oninput="sumarDocumento(this.value, {{i[1]}})" value="0">
 
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                    {% endfor %}
-                    <tr>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center;" scope="col" class="table-secondary">
 
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-secondary">
 
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-secondary">
 
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-secondary">
 
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:100px;"
-                                id="{{salida[1][0][1]}}" value="0" disabled>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        {% endfor %}
-        <div class="card-footer text-muted">
-            <div class="card-footer text-muted" align="center">
-                <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Enviar
-                    pedido</button>
+                            </td>
+                            <td style="text-align: center;" scope="col" class="table-secondary">Total:
+                                <input type="number" min="{{salida[1][0][7]}}" style="width:60px; text-align: center;"
+                                    id="{{salida[1][0][1]}}" value="0" disabled>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+            <div class="card-footer text-muted">
+                <div class="card-footer text-muted" align="center">
+                    <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Enviar
+                        pedido</button>
+                </div>
             </div>
         </div>
-    </div>
-    {% if anchoModulos %}
-    <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
-    {% endif %}
-    {% if listaInput %}
-    <input type="text" id="listaInput" value="{{listaInput}}" hidden>
-    {% endif %}
-    <script>
-        function sumarDocumento(valor, modulo) {
-            let anchoModulos = document.getElementById('anchoModulos').value;
-            let listaInput = document.getElementById('listaInput').value;
-            let listaInputArr = JSON.parse(listaInput);
-            for (var i = 0; i < anchoModulos; i++) {
-                let arr = listaInputArr[i].split(':');
-                if (arr[0] == modulo) {
-                    let listaArr = JSON.parse(arr[1]);
-                    suma = 0;
-                    for (var i = 0; i < listaArr.length; i++) {
-                        n = document.getElementById(listaArr[i]).value;
-                        n = parseInt(n)
-                        suma += n;
+        {% if anchoModulos %}
+        <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
+        {% endif %}
+        {% if listaInput %}
+        <input type="text" id="listaInput" value="{{listaInput}}" hidden>
+        {% endif %}
+
+        <script>
+            function sumarDocumento(valor, modulo) {
+                let anchoModulos = document.getElementById('anchoModulos').value;
+                let listaInput = document.getElementById('listaInput').value;
+                let listaInputArr = JSON.parse(listaInput);
+                for (var i = 0; i < anchoModulos; i++) {
+                    let arr = listaInputArr[i].split(':');
+                    if (arr[0] == modulo) {
+                        let listaArr = JSON.parse(arr[1]);
+                        suma = 0;
+                        for (var i = 0; i < listaArr.length; i++) {
+                            n = document.getElementById(listaArr[i]).value;
+                            n = parseInt(n)
+                            suma += n;
+                        }
+                        document.getElementById(arr[0]).value = suma;
                     }
-                    document.getElementById(arr[0]).value = suma;
-                }
-                else {
-                    console.log("No")
+                    else {
+                        console.log("No")
+                    }
                 }
             }
-        }
-    </script>
-</div>
+        </script>
+    </div>
+</form>
 {% include 'sup/pie.html' %}

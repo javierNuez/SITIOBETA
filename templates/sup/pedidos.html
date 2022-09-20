@@ -29,6 +29,9 @@
             <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
 
         </div>
+        {% if pedido %}
+        <textarea name="pedido" id="" cols="100" rows="14">{{pedido}}</textarea>
+        {% endif %}
         {% for salida in salidas %}
         <div class="card-body" style="margin-left: 0%;">
 
