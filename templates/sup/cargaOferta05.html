@@ -29,7 +29,7 @@
             <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
 
         </div>
-        {% for salida in salidas %}{% for i in sumaMod %}
+        {% for salida in salidas %}
 
         <div class="card-body" style="padding: 16px 0px ;">
 
@@ -62,6 +62,7 @@
                         </tr>
                     </thead>
                 <tbody id="">
+
                     {% for i in salida[1] %}
 
                     <tr>
@@ -78,15 +79,14 @@
                             {{i[14]}}%
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
-                            {% for i in salidas %}
+
                             <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}"
-                                onchange="{{ sumaMod }}{{i[0]}}(this.valor)">
-                            {% endfor %}
+                                oninput="sumarDocumento(this.value, {{i[1]}})" value="0">
+
                         </td>
                     </tr>
 
                     {% endfor %}
-
                     <tr>
                         <td style="text-align: center;" scope="col" class="table-secondary">
 
@@ -101,42 +101,13 @@
 
                         </td>
                         <td style="text-align: center;" scope="col" class="table-secondary">
-                            <script type="text/javascript">
-                                /* Funcion suma. */
-                                function { { sumaMod[0] } } (valor) {
-
-                                    var TotalSuma = 0;
-
-                                    // Convertir a numero entero (número).
-                                    TotalSuma = document.getElementById('{{salidas[0][0]}}').value;
-
-                                    // Valida y pone en cero "0".
-                                    TotalSuma = (TotalSuma == null || TotalSuma == undefined || TotalSuma == "") ? 0 : TotalSuma;
-                                    /* Variable genrando la suma. */
-                                    TotalSuma = (parseInt(TotalSuma) + parseInt(valor));
-                                    // Escribir el resultado en una etiqueta "span".
-                                    document.getElementById('{{salidas[0][0]}}').value = TotalSuma;
-                                }
-                            </script>
-                            Total:<input type="text" min="{{salida[1][0][7]}}" style="width:100px;"
-                                id="{{salidas[0][0]}}" disabled>
-
+                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:100px;"
+                                id="{{salida[1][0][1]}}" value="0" disabled>
                         </td>
                     </tr>
                 </tbody>
             </table>
-
-            {% if ancho %}
-            <input type="number" value="{{ancho}}" id="ancho" hidden>
-            {% endif %}
-            {% if modulosT %}
-            <input type="number" value="{{modulosT}}" id="modulosT" hidden>
-            {% endif %}
-
         </div>
-
-
-        {% endfor %}
         {% endfor %}
         <div class="card-footer text-muted">
             <div class="card-footer text-muted" align="center">
@@ -145,6 +116,43 @@
             </div>
         </div>
     </div>
-</div>
+    {% if anchoModulos %}
+    <input type="text" id="anchoModulos" value="{{anchoModulos}}">
+    {% endif %}
+    {% if listaInput %}
+    <input type="text" id="listaInput" value="{{listaInput}}">
+    {% endif %}
+    <script>
+        function sumarDocumento(valor, modulo) {
+            let anchoModulos = document.getElementById('anchoModulos').value;
+            let listaInput = document.getElementById('listaInput').value;
+            let listaInputArr = JSON.parse(listaInput);
+            /*console.log(listaInputArr);
+            console.log(typeof listaInputArr);*/
 
+            for (var i = 0; i < anchoModulos; i++) {
+                let arr = listaInputArr[i].split(':');
+                if (arr[0] == modulo) {
+                    console.log("Si")
+                    console.log(modulo)
+                    let listaArr = JSON.parse(arr[1]);
+                    console.log(listaArr)
+                    suma = 0;
+                    for (var i = 0; i < listaArr.length; i++) {
+                        n = document.getElementById(listaArr[i]).value;
+                        n = parseInt(n)
+                        suma += n;
+                    }
+                    document.getElementById(arr[0]).value = suma;
+                }
+                else {
+                    console.log("No")
+                    console.log(modulo)
+                }
+                /*console.log(arr[0]);modulos*/
+
+            }
+        }
+    </script>
+</div>
 {% include 'sup/pie.html' %}

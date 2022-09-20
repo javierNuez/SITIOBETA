@@ -30,6 +30,7 @@
 
         </div>
         {% for salida in salidas %}
+
         <div class="card-body" style="padding: 16px 0px ;">
 
 
@@ -61,6 +62,7 @@
                         </tr>
                     </thead>
                 <tbody id="">
+
                     {% for i in salida[1] %}
 
                     <tr>
@@ -78,12 +80,13 @@
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
 
-                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}" value="">
+                            <input type="number" style="width:40px;text-align: center;" id="{{i[0]}}" min="{{i[13]}}"
+                                oninput="sumarDocumento(this.value, {{i[1]}})" value="0">
+
                         </td>
                     </tr>
 
                     {% endfor %}
-
                     <tr>
                         <td style="text-align: center;" scope="col" class="table-secondary">
 
@@ -98,22 +101,13 @@
 
                         </td>
                         <td style="text-align: center;" scope="col" class="table-secondary">
-                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:60px;"
-                                id="totalModulo{{salida[0]}}" disabled>
+                            Total:<input type="number" min="{{salida[1][0][7]}}"
+                                style="width:100px; text-align: center;" id="{{salida[1][0][1]}}" value="0" disabled>
                         </td>
                     </tr>
                 </tbody>
             </table>
-
-            {% if ancho %}
-            <input type="number" value="{{ancho}}" id="ancho" hidden>
-            {% endif %}
-            {% if modulosT %}
-            <input type="number" value="{{modulosT}}" id="modulosT" hidden>
-            {% endif %}
-
         </div>
-
         {% endfor %}
         <div class="card-footer text-muted">
             <div class="card-footer text-muted" align="center">
@@ -122,6 +116,44 @@
             </div>
         </div>
     </div>
+    {% if anchoModulos %}
+    <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
+    {% endif %}
+    {% if listaInput %}
+    <input type="text" id="listaInput" value="{{listaInput}}" hidden>
+    {% endif %}
+    <script>
+        function sumarDocumento(valor, modulo) {
+            let anchoModulos = document.getElementById('anchoModulos').value;
+            let listaInput = document.getElementById('listaInput').value;
+            let listaInputArr = JSON.parse(listaInput);
+            /*console.log(listaInputArr);
+            console.log(typeof listaInputArr);*/
+
+            for (var i = 0; i < anchoModulos; i++) {
+                let arr = listaInputArr[i].split(':');
+                if (arr[0] == modulo) {
+                    console.log("Si")
+                    console.log(modulo)
+                    let listaArr = JSON.parse(arr[1]);
+                    console.log(listaArr)
+                    suma = 0;
+                    for (var i = 0; i < listaArr.length; i++) {
+                        n = document.getElementById(listaArr[i]).value;
+                        n = parseInt(n)
+                        suma += n;
+                    }
+                    document.getElementById(arr[0]).value = suma;
+                }
+                else {
+                    console.log("No")
+                    console.log(modulo)
+                }
+                /*console.log(arr[0]);modulos*/
+
+            }
+        }
+    </script>
 </div>
 
 {% include 'admin/pie.html' %}

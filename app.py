@@ -187,12 +187,12 @@ def ofer04():
         uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
         listaUnidades.append(uniList)
         listaOfertaVigente.append(i)
-    print(listaUnidades)
+    # print(listaUnidades)
     ancho = len(ofertas)
-    print("Ancho:", ancho)
+    #print("Ancho:", ancho)
     conexion.commit()
-    print(usuarios)
-    print(listaOfertaVigente)
+    # print(usuarios)
+    # print(listaOfertaVigente)
     # aca saco los modulos unicos
     modulos_ofertas = set()
     for i in ofertas:
@@ -201,8 +201,8 @@ def ofer04():
     listaModOfer = list(modulos_ofertas)
     listaModOfer.sort()
     modulosT = len(listaModOfer)
+    # print(listaModOfer)
     listaFinal = []
-
     for i in listaModOfer:
         listaModulo = []
         for x in ofertas:
@@ -212,7 +212,26 @@ def ofer04():
     listaTerminal = zip(listaModOfer, listaFinal)
     salidaModulos = list(listaTerminal)
     print(salidaModulos)
-    return render_template('admin/conformarOferta05.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    count = 0
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        listaInput.append(f'{m}:{elScript}')
+
+    print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    print(listaInput)
+
+    return render_template('admin/conformarOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -530,11 +549,9 @@ def sup_cargaOferta04_d_c():
     # ---------------------------
     listaModOfer = list(modulos_ofertas)
     listaModOfer.sort()
-    sumaMod = "SumarAutomatico"
-
     modulosT = len(listaModOfer)
+    # print(listaModOfer)
     listaFinal = []
-
     for i in listaModOfer:
         listaModulo = []
         for x in ofertas:
@@ -544,7 +561,26 @@ def sup_cargaOferta04_d_c():
     listaTerminal = zip(listaModOfer, listaFinal)
     salidaModulos = list(listaTerminal)
     print(salidaModulos)
-    return render_template('sup/cargaOferta05.html', modulosT=modulosT, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos, ancho=ancho, sumaMod=sumaMod)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    count = 0
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        listaInput.append(f'{m}:{elScript}')
+
+    print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    print(listaInput)
+
+    return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
 
 
 @ app.route('/sup/clientes/')
@@ -1410,6 +1446,6 @@ def pagina_no_encontrada(error):
 
 if __name__ == '__main__':
     app.register_error_handler(404, pagina_no_encontrada)
-    app.run(host="192.168.0.79", port=8000, debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
