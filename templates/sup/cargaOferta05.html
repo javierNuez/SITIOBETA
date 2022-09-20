@@ -117,26 +117,20 @@
         </div>
     </div>
     {% if anchoModulos %}
-    <input type="text" id="anchoModulos" value="{{anchoModulos}}">
+    <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
     {% endif %}
     {% if listaInput %}
-    <input type="text" id="listaInput" value="{{listaInput}}">
+    <input type="text" id="listaInput" value="{{listaInput}}" hidden>
     {% endif %}
     <script>
         function sumarDocumento(valor, modulo) {
             let anchoModulos = document.getElementById('anchoModulos').value;
             let listaInput = document.getElementById('listaInput').value;
             let listaInputArr = JSON.parse(listaInput);
-            /*console.log(listaInputArr);
-            console.log(typeof listaInputArr);*/
-
             for (var i = 0; i < anchoModulos; i++) {
                 let arr = listaInputArr[i].split(':');
                 if (arr[0] == modulo) {
-                    console.log("Si")
-                    console.log(modulo)
                     let listaArr = JSON.parse(arr[1]);
-                    console.log(listaArr)
                     suma = 0;
                     for (var i = 0; i < listaArr.length; i++) {
                         n = document.getElementById(listaArr[i]).value;
@@ -147,10 +141,7 @@
                 }
                 else {
                     console.log("No")
-                    console.log(modulo)
                 }
-                /*console.log(arr[0]);modulos*/
-
             }
         }
     </script>
