@@ -813,11 +813,12 @@ def admin_usuarios_guardar():
     cursor.execute("SELECT * FROM usuarios WHERE u_rrdzz=%s;", (_rrdzz))
     _existeUsuario = cursor.fetchall()
     conexion.commit()
-    desde = datetime.strptime(f"{_existeUsuario[0][5]}", "%Y-%m-%d")
-    hasta = datetime.strptime(f"{_existeUsuario[0][6]}", "%Y-%m-%d")
-    if desde <= now and hasta >= now:
-        flash('El usuario está vigente, modifique vigencia o elimine el usuario.')
-        return redirect('/admin/usuarios')
+    if _existeUsuario:
+        desde = datetime.strptime(f"{_existeUsuario[0][5]}", "%Y-%m-%d")
+        hasta = datetime.strptime(f"{_existeUsuario[0][6]}", "%Y-%m-%d")
+        if desde <= now and hasta >= now:
+            flash('El usuario está vigente, modifique vigencia o elimine el usuario.')
+            return redirect('/admin/usuarios')
 
 
 # condicional para usar mensajes
