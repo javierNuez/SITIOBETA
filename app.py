@@ -549,7 +549,7 @@ def sup_cargaOferta04_d_c():
     anchoModulos = len(salidaModulos)
     listaInput = []
     modulosFuncion = list(zip(listaModOfer, listaFinal))
-
+    # print(modulosFuncion)
     for i in modulosFuncion:
         m = i[0]  # el_modulo
         e = i[1]
@@ -559,6 +559,7 @@ def sup_cargaOferta04_d_c():
             listaScript.append(q)
         scriptTxt = str(listaScript)
         elScript = f"{scriptTxt}"
+        print(elScript)
         listaInput.append(f'{m}:{elScript}')
 
     # print(anchoModulos)

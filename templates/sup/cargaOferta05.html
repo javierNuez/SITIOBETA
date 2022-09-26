@@ -94,7 +94,7 @@
                             <td style="text-align: center;" scope="col" class="table-light">
 
                                 <input class="inputs" type="number" style="width:40px;text-align: center;" id="{{i[0]}}"
-                                    min="{{i[13]}}" oninput="sumarDocumento(this.value, {{i[1]}})" value="0">
+                                    oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}})" value="0">
                                 <!--min="{{i[13]}}" -->
                             </td>
                         </tr>
@@ -114,8 +114,7 @@
                             </td>
                             <td style="text-align: center;" scope="col" class="table-secondary">Total:
                                 <input type="number" min="{{salida[1][0][7]}}" style="width:60px; text-align: center;"
-                                    id="{{salida[1][0][1]}}" value="0" onchange="processChange({{salida[1][0][1]}})"
-                                    disabled>
+                                    id="{{salida[1][0][1]}}" value="0" onchange="sumarDocumento({{salida[1][0][1]}})">
 
                             </td>
                         </tr>
@@ -139,45 +138,30 @@
         {% endif %}
 
         <script>
-            function processChange(ide) {
-                document.getElementById(ide).value = 0;
-            }
             function sacarMinimo() {
+                let anchoModulos = document.getElementById('anchoModulos').value;
+                let listaInput = document.getElementById('listaInput').value;
+                let listaInputArr = JSON.parse(listaInput);
 
-                let anchoModulos0 = document.getElementById('anchoModulos').value;
-                let listaInput0 = document.getElementById('listaInput').value;
-                let listaInputArr0 = JSON.parse(listaInput0);
-                for (let i = 0; i < anchoModulos0; i++) {
-                    let arr0 = listaInputArr0[i].split(':');
+                for (let i = 0; i < anchoModulos; i++) {
+                    let arr = listaInputArr[i].split(':');
+                    console.log(arr[0]);
+                    totales = document.getElementById(arr[0]).value;
 
-                    let listaArr0 = JSON.parse(arr0[1]); /*la lista de elementos input del modulo*/
-                    let listaArr00 = JSON.parse(arr0[0]);
-                    console.log(listaArr00);
-                    document.getElementById(listaArr00).disabled = false;
-                    let n00 = document.getElementById(listaArr00).value;
-                    n00 = parseInt(n00);
-                    invalido = document.getElementsByTagName("input").value;
-                    console.log("1" + invalido);
-                    if (n00 == 0) {
-
-                        document.getElementById(listaArr00).setAttribute("min", "");
-                    }
-                    invalido = document.getElementsByTagName("input").invalid;
-                    console.log("2" + invalido);
-
-
-                    for (let i = 0; i < listaArr0.length; i++) {
-                        let n0 = document.getElementById(listaArr0[i]).value;
-                        n0 = parseInt(n0);
-                        if (n0 == 0) {
-                            document.getElementById(listaArr0[i]).setAttribute("min", "");
-                        }
-
+                    if (totales == 0) {
+                        document.getElementById(arr[0]).setAttribute("min", "");
                     }
                 }
             }
-
-            function sumarDocumento(valor, modulo) {
+            function ponerMinimo(input, minimo, modulo) {
+                let elInput = document.getElementById(input).value;/*el valor del input*/
+                let elMinimo = minimo;/*el valor del minimo*/
+                if (elInput < minimo && elInput != 0) {
+                    document.getElementById(input).value = minimo;
+                }
+                sumarDocumento(modulo);
+            }
+            function sumarDocumento(modulo) {
                 let anchoModulos = document.getElementById('anchoModulos').value;
                 let listaInput = document.getElementById('listaInput').value;
                 let listaInputArr = JSON.parse(listaInput);
@@ -196,6 +180,7 @@
                     }
                 }
             }
+
         </script>
     </div>
 </form>
