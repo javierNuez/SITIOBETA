@@ -62,6 +62,11 @@ def admin_inicio():
     return render_template('admin/inicio.html')
 
 
+@app.route('/admin/mensaje')
+def admin_mensaje():
+    return render_template('admin/mensaje.html')
+
+
 @app.route('/sup/inicio')
 def sup_inicio():
     return render_template('sup/inicio.html')
@@ -189,7 +194,7 @@ def ofer04():
         listaOfertaVigente.append(i)
     # print(listaUnidades)
     ancho = len(ofertas)
-    #print("Ancho:", ancho)
+    # print("Ancho:", ancho)
     conexion.commit()
     # print(usuarios)
     # print(listaOfertaVigente)
@@ -523,7 +528,7 @@ def sup_cargaOferta04_d_c():
         listaOfertaVigente.append(i)
     # print(listaUnidades)
     ancho = len(ofertas)
-    #print("Ancho:", ancho)
+    # print("Ancho:", ancho)
     conexion.commit()
     # print(usuarios)
     # print(listaOfertaVigente)
@@ -578,7 +583,7 @@ def pedidosTemplate():
     cliente = request.form['pedidoCliente']
     # print(cliente)
     salidas = request.form['pedidoOferta']
-    #print("Oferta Comercial", salidas)
+    # print("Oferta Comercial", salidas)
     pedido = f"""
     Usuario: {usuario}.
     Drogueria: {drogueria}
@@ -679,6 +684,24 @@ def sup_clientes_guardar(usuario):
 
 @ app.route('/admin/pedidos/template', methods=['POST'])
 def pedidosTemplateA():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+    ofertasSi = cursor.fetchall()
+    conexion.commit()
+    for i in ofertasSi:
+        input = str(i[0])
+        modulo = str(i[1])
+        inputPagina = request.form[input]
+        inputPagina = int(inputPagina)
+        totalModulo = request.form[modulo]
+        totalModulo = int(totalModulo)
+        if inputPagina == 0 and totalModulo > 0:
+            flash('El modulo tiene al menos un producto obligatorio.')
+
+            return redirect('../../admin/mensaje')
+
     usuario = request.form['pedidoUsuario']
     # print(usuario)
     drogueria = request.form['pedidoDrogueria']
@@ -686,7 +709,8 @@ def pedidosTemplateA():
     cliente = request.form['pedidoCliente']
     # print(cliente)
     salidas = request.form['pedidoOferta']
-    #print("Oferta Comercial", salidas)
+
+    # print("Oferta Comercial", salidas)
     pedido = f"""
     Usuario: {usuario}.
     Drogueria: {drogueria}
