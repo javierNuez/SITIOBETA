@@ -1,5 +1,5 @@
 {% include 'sup/cabecera.html' %}
-<form action="/sup/pedidos/template" method="post" enctype="multipart/form-data">
+<form action="/sup/cargaOferta04/cliente/" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");
@@ -78,26 +78,32 @@
                         {% for i in salida[1] %}
 
                         <tr>
-                            <td style="text-align: center;" scope="col" class="table-light">
-                                {{i[10]}}
+                            <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
+                                endif %}" scope="col" class="table-light">
+                                {{i[10]}} {% if i[16] == 'si' %}(Obligatorio){%
+                                endif %}
                             </td>
-                            <td style="text-align: center;" scope="col" class="table-light">
+                            <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
+                                endif %}" scope="col" class="table-light">
                                 {{i[9]}}
                             </td>
-                            <td style="text-align: center;" scope="col" class="table-light" id="min{{i[0]}}"
-                                value="{{i[13]}}">
+                            <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
+                                endif %}" scope="col" class="table-light" id="min{{i[0]}}" value="{{i[13]}}">
                                 {{i[13]}}
                             </td>
-                            <td style="text-align: center;" scope="col" class="table-light">
+                            <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
+                                endif %}" scope="col" class="table-light">
                                 {{i[14]}}%
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">
 
                                 <input class="inputs" type="number" style="width:40px;text-align: center;" id="{{i[0]}}"
-                                    oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}})" value="0">
+                                    oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}},{{salida[1][0][7]}})"
+                                    value="0" name="{{i[0]}}">
                                 <!--min="{{i[13]}}" -->
                             </td>
                         </tr>
+
                         {% endfor %}
                         <tr>
                             <td style="text-align: center;" scope="col" class="table-secondary">
@@ -114,7 +120,8 @@
                             </td>
                             <td style="text-align: center;" scope="col" class="table-secondary">Total:
                                 <input type="number" min="{{salida[1][0][7]}}" style="width:60px; text-align: center;"
-                                    id="{{salida[1][0][1]}}" value="0" onchange="sumarDocumento({{salida[1][0][1]}})">
+                                    id="{{salida[1][0][1]}}" value="0" onchange="sumarDocumento({{salida[1][0][1]}})"
+                                    name="{{salida[1][0][1]}}">
 
                             </td>
                         </tr>
@@ -124,8 +131,10 @@
             {% endfor %}
             <div class="card-footer text-muted">
                 <div class="card-footer text-muted" align="center">
+
+                    <button class="btn btn-dark btn-md" onclick="history.back()">Volver</button>
                     <button class="btn btn-success btn-md" type="submit" id="enviarBoton" style="margin:auto ;"
-                        onclick="sacarMinimo()">Enviar
+                        onclick="sacarMinimo()" disabled>Enviar
                         pedido</button>
                 </div>
             </div>
@@ -138,6 +147,24 @@
         {% endif %}
 
         <script>
+            enviarDocumento = true;
+            function verificarObligatorio(modulo, minimo) {
+
+                let total = document.getElementById(modulo).value;
+                let obligatorio = document.getElementsByName(modulo).value;
+                if (total >= minimo && enviarDocumento) {
+
+                    document.getElementById("enviarBoton").removeAttribute("disabled");
+                }
+
+            }
+            function permitirEnvio(modulo, minimo) {
+                let total = document.getElementById(modulo).value;
+                let minimoModulo = minimo;
+                if (total >= minimoModulo) {
+                    verificarObligatorio(modulo, minimo);
+                }
+            }
             function sacarMinimo() {
                 let anchoModulos = document.getElementById('anchoModulos').value;
                 let listaInput = document.getElementById('listaInput').value;
@@ -153,13 +180,16 @@
                     }
                 }
             }
-            function ponerMinimo(input, minimo, modulo) {
+            function ponerMinimo(input, minimo, modulo, minModulo) {
                 let elInput = document.getElementById(input).value;/*el valor del input*/
                 let elMinimo = minimo;/*el valor del minimo*/
                 if (elInput < minimo && elInput != 0) {
                     document.getElementById(input).value = minimo;
+
                 }
                 sumarDocumento(modulo);
+                permitirEnvio(modulo, minModulo);
+
             }
             function sumarDocumento(modulo) {
                 let anchoModulos = document.getElementById('anchoModulos').value;
@@ -168,17 +198,27 @@
 
                 for (let i = 0; i < anchoModulos; i++) {
                     let arr = listaInputArr[i].split(':');
+
                     if (arr[0] == modulo) {
                         let listaArr = JSON.parse(arr[1]); /*la lista de elementos input del modulo*/
                         suma = 0;
+
                         for (let i = 0; i < listaArr.length; i++) {
                             let n = document.getElementById(listaArr[i]).value;
+                            let o = document.getElementsByName(listaArr[i]).value;
+                            let t = document.getElementById(arr[0]).value;
+                            if (o == "si" && t > 0) {
+                                let enviarD = false;
+                            }
+
                             n = parseInt(n);
                             suma += n;
                         }
                         document.getElementById(arr[0]).value = suma;
                     }
+
                 }
+
             }
 
         </script>
