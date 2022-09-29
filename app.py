@@ -554,7 +554,7 @@ def sup_cargaOferta04_d_c():
     anchoModulos = len(salidaModulos)
     listaInput = []
     modulosFuncion = list(zip(listaModOfer, listaFinal))
-    # print(modulosFuncion)
+    print(modulosFuncion)
     for i in modulosFuncion:
         m = i[0]  # el_modulo
         e = i[1]
@@ -564,32 +564,55 @@ def sup_cargaOferta04_d_c():
             listaScript.append(q)
         scriptTxt = str(listaScript)
         elScript = f"{scriptTxt}"
-        print(elScript)
+        # print(elScript)
         listaInput.append(f'{m}:{elScript}')
 
     # print(anchoModulos)
     listaInput = json.dumps(listaInput)
-    # print(listaInput)
+    print(listaInput)
 
     return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
 
 
 @ app.route('/sup/pedidos/template', methods=['POST'])
 def pedidosTemplate():
-    usuario = request.form['pedidoUsuario']
-    # print(usuario)
-    drogueria = request.form['pedidoDrogueria']
-    # print(drogueria)
-    cliente = request.form['pedidoCliente']
-    # print(cliente)
-    salidas = request.form['pedidoOferta']
-    # print("Oferta Comercial", salidas)
-    pedido = f"""
-    Usuario: {usuario}.
-    Drogueria: {drogueria}
-    Cliente: {cliente}
-    Ofertas: {salidas}
-    """
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+    ofertasSi = cursor.fetchall()
+    conexion.commit()
+    for i in ofertasSi:
+        input = str(i[0])
+        modulo = str(i[1])
+        inputPagina = request.form[input]
+        inputPagina = int(inputPagina)
+        totalModulo = request.form[modulo]
+        totalModulo = int(totalModulo)
+        if inputPagina == 0 and totalModulo > 0:
+            flash('El modulo tiene al menos un producto obligatorio.')
+
+            return redirect('../../admin/mensaje')
+
+        usuario = request.form['pedidoUsuario']
+        # print(usuario)
+        drogueria = request.form['pedidoDrogueria']
+        # print(drogueria)
+        cliente = request.form['pedidoCliente']
+        # print(cliente)
+        salidas = request.form['pedidoOferta']
+
+        items = []
+        for i in salidas:
+            items.append(i)
+        pedido = f"""
+        Usuario: {usuario}.
+        Drogueria: {drogueria}
+        Cliente: {cliente}
+        Ofertas: {salidas}
+        pruebaInt: {items}
+        """
+
     return render_template('sup/pedidos.html', pedido=pedido)
 
 
@@ -710,12 +733,15 @@ def pedidosTemplateA():
     # print(cliente)
     salidas = request.form['pedidoOferta']
 
-    # print("Oferta Comercial", salidas)
+    items = []
+    for i in salidas:
+        items.append(i)
     pedido = f"""
     Usuario: {usuario}.
     Drogueria: {drogueria}
     Cliente: {cliente}
     Ofertas: {salidas}
+    pruebaInt: {items}
     """
     return render_template('admin/pedidos.html', pedido=pedido)
 
