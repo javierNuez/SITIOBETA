@@ -1,5 +1,5 @@
 {% include 'sup/cabecera.html' %}
-<form action="/sup/pedidos/template" method="post" enctype="multipart/form-data">
+<form action="/sup/guardar/pedidosaaprobar" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");
@@ -142,9 +142,9 @@
         <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
         {% endif %}
         {% if listaInput %}
-        <input type="text" id="listaInput" value="{{listaInput}}" hidden>
+        <input type="text" id="listaInput" value="{{listaInput}}">
         {% endif %}
-
+        <input type="text" id="listaValores">
         <script>
             enviarDocumento = true;
             function verificarObligatorio(modulo, minimo) {

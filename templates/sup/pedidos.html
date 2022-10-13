@@ -22,107 +22,71 @@
 
 <div class="card-body">
     <div class="card border-info">
-        <div class="card-header">
-            <h4>Informacion del pedido:</h4>
-            <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
-            <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
-            <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
-
-        </div>
-        {% if pedido %}
-        <textarea name="pedido" id="" cols="100" rows="14">{{pedido}}</textarea>
-        {% endif %}
-        {% for salida in salidas %}
         <div class="card-body" style="margin-left: 0%;">
 
 
             <table id="tblContact" class="table table-sm table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary"></th>
-                        <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
-                            {{salida[1][0][7]}}</th>
-                    </tr>
-                </thead>
+
                 <tbody id="">
                     <!--<table id="tblContact" class="table table-sm">-->
                     <thead>
                         <tr>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Producto</th>
+                                Pedido nº</th>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Código</th>
+                                Usuario</th>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Cantidad mínima</th>
+                                Drogueria</th>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Descuento</th>
+                                Cliente</th>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Unidades</th>
+                                Oferta</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Pedido</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Fecha</th>
+                            <th style="text-align: center;" scope="col" class="table-info">
+                                Aprobado</th>
                         </tr>
                     </thead>
                 <tbody id="">
-                    {% for i in salida[1] %}
+                    {% for i in lospedidos %}
 
                     <tr>
                         <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[10]}}
+                            {{i[0]}}
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[9]}}
+                            {{i[1]}}
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[13]}}
+                            {{i[2]}}
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[14]}}%
+                            {{i[3]}}
                         </td>
                         <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[4]}}
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[5]}}
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[6]}}
+                        </td>
+                        <td style="text-align: center;" scope="col" class="table-light">
+                            {{i[7]}}
+                        </td>
 
-                            <input type="number" style="width:40px;" id="{{i[0]}}" min="{{i[13]}}" value="">
-                        </td>
                     </tr>
 
                     {% endfor %}
 
-                    <tr>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-secondary">
-                            Total:<input type="number" min="{{salida[1][0][7]}}" style="width:60px;"
-                                id="totalModulo{{salida[0]}}" disabled>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
 
-            {% if ancho %}
-            <input type="number" value="{{ancho}}" id="ancho" hidden>
-            {% endif %}
-            {% if modulosT %}
-            <input type="number" value="{{modulosT}}" id="modulosT" hidden>
-            {% endif %}
-
         </div>
 
-        {% endfor %}
-        <div class="card-footer text-muted">
-            <div class="card-footer text-muted" align="center">
-                <button class="btn btn-success btn-md" type="submit" style="margin:auto ;">Aprobar</button>
-            </div>
-        </div>
     </div>
 </div>
 

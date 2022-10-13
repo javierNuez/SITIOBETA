@@ -13,12 +13,13 @@ from datetime import date
 import json
 from datetime import date
 from datetime import datetime
+import ast
 
 # Día actual
 # today = date.today()
 
 # Fecha actual y hora
-# now = datetime.now()
+#now = datetime.now()
 
 
 app = Flask(__name__)
@@ -257,7 +258,7 @@ def sup_of():
         "SELECT * FROM `pedidos` WHERE o_usuario_hash=%s;", (usuarios))
     pedidos = cursor.fetchall()
     conexion.commit()
-    print(pedidos)
+    # print(pedidos)
 
     return render_template('sup/pedidos.html', pedidos=pedidos)
     # return render_template('sup/index.html')
@@ -399,10 +400,7 @@ def admin_ofertas_update(id):
 
 # funciones de usuarios:
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
-@ app.route('/sup/pedidos/')
-def sup_pedidos_layout():
 
-    return render_template('sup/pedidos.html')
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -574,14 +572,26 @@ def sup_cargaOferta04_d_c():
     return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
 
 
-@ app.route('/sup/pedidos/template', methods=['POST'])
+@ app.route('/sup/pedidos', methods=['GET'])
 def pedidosTemplate():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `pedidosaaprobar`;")
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    return render_template('/sup/pedidos.html', lospedidos=lospedidos)
+
+
+# guardamos el pedido del usuario.
+@ app.route('/sup/guardar/pedidosaaprobar', methods=['POST'])
+def pedidosAprobar():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
     ofertasSi = cursor.fetchall()
     conexion.commit()
+
     for i in ofertasSi:
         input = str(i[0])
         modulo = str(i[1])
@@ -592,28 +602,42 @@ def pedidosTemplate():
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
 
-            return redirect('../../admin/mensaje')
+            return redirect('../../sup/mensaje')
 
-        usuario = request.form['pedidoUsuario']
-        # print(usuario)
-        drogueria = request.form['pedidoDrogueria']
-        # print(drogueria)
-        cliente = request.form['pedidoCliente']
-        # print(cliente)
-        salidas = request.form['pedidoOferta']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`;")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+    listaInputs = []
+    listaValor = []
+    for oferta in ofertas:
+        listaInputs.append(oferta[0])
+        listaValor.append(request.form[f"{oferta[0]}"])
+    losInputs = zip(listaInputs, listaValor)
+    pedidoUser = list(losInputs)
 
-        items = []
-        for i in salidas:
-            items.append(i)
-        pedido = f"""
-        Usuario: {usuario}.
-        Drogueria: {drogueria}
-        Cliente: {cliente}
-        Ofertas: {salidas}
-        pruebaInt: {items}
-        """
-
-    return render_template('sup/pedidos.html', pedido=pedido)
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    output = ast.literal_eval(salidas)  # convertimos un string a lista.
+    ofertaCompleta = output
+    pedido = pedidoUser
+    fecha = datetime.now()
+    estado = "no"
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_ofertacompleta`,`pa_pedido`,`pa_fecha`,`pa_estado`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, str(
+        ofertaCompleta), str(pedido), str(fecha), estado)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    return redirect('/sup/pedidos')
 
 
 @ app.route('/sup/clientes/')
