@@ -1,5 +1,5 @@
 {% include 'admin/cabecera.html' %}
-<form action="/admin/pedidos/template" method="post" enctype="multipart/form-data">
+<form action="/admin/guardar/pedidosaaprobar" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");

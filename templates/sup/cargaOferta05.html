@@ -1,4 +1,5 @@
 {% include 'sup/cabecera.html' %}
+
 <form action="/sup/guardar/pedidosaaprobar" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
@@ -96,7 +97,7 @@
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">
 
-                                <input class="inputs" type="number" style="width:40px;text-align: center;" id="{{i[0]}}"
+                                <input class="inputs" type="number" style="width:50px;text-align: center;" id="{{i[0]}}"
                                     oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}},{{salida[1][0][7]}})"
                                     value="0" name="{{i[0]}}">
                                 <!--min="{{i[13]}}" -->
