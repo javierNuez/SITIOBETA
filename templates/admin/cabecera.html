@@ -44,8 +44,15 @@
       <a class="nav-item nav-link" href="/admin/conformarOferta00">Gestionar pedido</a>
       <a class="nav-item nav-link" href="/admin/pedidos">Pedidos</a>
       <a class="nav-item nav-link" href="/admin/clientes">Clientes</a>
-      <a class="nav-item nav-link" href="/" onclick="return sessionStorage.clear()">Cerrar sesión</a>
+      <a class="nav-item nav-link" href="/" onclick="return salirSession()">Cerrar sesión</a>
+
     </div>
+    <script>
+      function salirSession() {
+        sessionStorage.clear()
+        document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+    </script>
   </nav>
 
   <div class="container">

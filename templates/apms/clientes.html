@@ -1,16 +1,22 @@
 {% include 'apms/cabecera.html' %}
+<script>
+	var hashUsuario = sessionStorage.getItem("hash");
+	if (!(hashUsuario)) {
+		window.location.href = "/";
+	}
+</script>
 <br>
-<div class="card-body" style="min-height: 500px;">
+<div class="card-body" style="min-height: 500px; min-width: 700px;">
 	<div class="card border-info">
 		<div class="card-header">
 			<h4>Clientes:</h4>
 		</div>
-		<div class="card-body">
+		<div class="card-body" style="padding: 16px 0px ;">
 			<form action="/apms/clientes/guardar" method="post" enctype="multipart/form-data">
 				<table id="tblContact" class="table table-sm">
 					<thead>
 						<tr>
-							<th style="text-align: center;" scope="col" class="table-info">Cód.Drogueria</th>
+							<th style="text-align: center;" scope="col" class="table-info">Cód. Drogueria</th>
 							<th style="text-align: center;" scope="col" class="table-info">Cuenta</th>
 							<th style="text-align: center;" scope="col" class="table-info">Nombre</th>
 							<th style="text-align: center;" scope="col" class="table-info">CUIT</th>
@@ -34,7 +40,7 @@
 							<td id="c_postal"><input type="text" class="form-control form-control-sm" name="c_postal"
 									id="#" aria-describedby="helpId" placeholder=""></td>
 							<td id="acciones">
-								<div class="d-grid gap-2 col-6 mx-auto">
+								<div class="d-grid gap-2 col mx-auto">
 									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
 								</div>
 							</td>
@@ -54,12 +60,12 @@
 							<td id="acciones" align="center">
 
 								<div class="row">
-									<div class="col-6">
-										<a class="btn btn-info btn-sm" href="/apms/editarCliente/{{cliente[0]}}"
+									<div class="col">
+										<a class="btn btn-info btn-sm" href="/admin/editarCliente/{{cliente[0]}}"
 											role="button" style="display:center;">Editar</a>
 									</div>
-									<div class="col-6">
-										<a class="btn btn-danger btn-sm" href="/apms/clientes/borrar/{{cliente[0]}}"
+									<div class="col">
+										<a class="btn btn-danger btn-sm" href="/admin/clientes/borrar/{{cliente[0]}}"
 											role="button" style="display:center;">Borrar</a>
 									</div>
 								</div>

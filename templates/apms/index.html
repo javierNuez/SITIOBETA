@@ -1,17 +1,11 @@
 {% include 'apms/cabecera.html' %}
 {% if usuarioStorage %}
-<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}">
+<input type="text" id="hashUsuario" name="hashUsuario" value="{{usuarioStorage}}" hidden>
 <script src="{{ url_for( 'static', filename='js/javaLogin.js' ) }}"></script>
-<script src="{{ url_for( 'static', filename='js/javaUsuario.js' ) }}"></script>
-<input type="text" id="hashUsuario" name="hashUsuarioO">
-
-
-
-
 
 <div class="p-5" style="background-color: rgba(200, 221, 241, 0.333);">
     <div class="container">
-        <h1 class="display-2">Oces Apm</h1>
+        <h1 class="display-2">Oces Apm.</h1>
         <div>
 
             <strong>¡Bienvenido usuario: {{ usuarioStorage[-5:].capitalize() }}</strong>

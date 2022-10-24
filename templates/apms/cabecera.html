@@ -22,12 +22,18 @@
     <nav class="navbar navbar-expand navbar-light bg-light">
         <div class="nav navbar-nav" style="margin:auto;">
             <a class="nav-item nav-link active" href="/apms/inicio">Inicio</a>
-            <a class="nav-item nav-link" href="../apms/pedidos">Pedidos</a>
-            <a class="nav-item nav-link" href="../apms/clientes">Clientes</a>
-            <a class="nav-item nav-link" href="../apms/modulos">Módulos</a>
-            <a class="nav-item nav-link" href="/" onclick="return sessionStorage.clear()">Cerrar sesión</a>
+            <a class="nav-item nav-link" href="/apms/pedidos">Pedidos</a>
+            <a class="nav-item nav-link" href="/apms/ofertas/">Gestionar pedido</a>
+            <a class="nav-item nav-link" href="/apms/clientes/">Clientes</a>
+            <a class="nav-item nav-link" href="/" onclick="return salirSession()">Cerrar sesión</a>
 
         </div>
+        <script>
+            function salirSession() {
+                sessionStorage.clear()
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        </script>
     </nav>
 
     <div class="container">

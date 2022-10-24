@@ -7,8 +7,9 @@ from datetime import datetime
 from lib2to3.pytree import convert
 from tokenize import Number
 from unicodedata import numeric
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session
 from flask import render_template, request, redirect, flash
+import requests
 from flaskext.mysql import MySQL
 from datetime import date
 import json
@@ -265,6 +266,10 @@ def sup_of():
     # return render_template('sup/index.html')
 
 
+def traerUsuario(usuario):
+    session['hash'] = usuario
+
+
 @app.route('/sup')
 def sup_index():
     usuario = request.form['hasUsuario']
@@ -281,10 +286,11 @@ def sup_index():
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@app.route('/admin/', methods=['POST'])
+@app.route('/login/', methods=['POST'])
 def admin_index():
     now = datetime.now()
     usuario = request.form['txtUsuario']
+    traerUsuario(usuario)
     contraseña = request.form['txtPassword']
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -431,6 +437,31 @@ def sup_ofertas():
     return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
 
 
+@app.route('/apms/ofertas/')
+def apms_ofertas():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('apms/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+
+
 @ app.route('/sup/cargaOfert01/drogueria/', methods=['POST'])
 def sup_cargaOferta01_droguerias():
     usuario = request.form['hashUsuarioO']
@@ -463,6 +494,40 @@ def sup_cargaOferta01_droguerias():
     conexion.commit()
 
     return render_template('sup/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/apms/cargaOfert01/drogueria/', methods=['POST'])
+def apms_cargaOferta01_droguerias():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('apms/cargaOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
 @ app.route('/sup/cargaOferta02/cliente/', methods=['POST'])
@@ -500,6 +565,43 @@ def sup_cargaOferta02_droguerias():
 
     conexion.commit()
     return render_template('sup/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/apms/cargaOferta02/cliente/', methods=['POST'])
+def apms_cargaOferta02_droguerias():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/apms/clientes/')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('apms/cargaOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/sup/cargaOferta04/cliente/', methods=['POST'])
@@ -573,12 +675,90 @@ def sup_cargaOferta04_d_c():
     return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
 
 
-@ app.route('/sup/pedidos', methods=['GET'])
-def pedidosTemplate():
+@ app.route('/apms/cargaOferta04/cliente/', methods=['POST'])
+# @ app.route('/sup/cargaOfert02/cliente/', methods=['POST'])
+def apms_cargaOferta04_d_c():
+    usuario = request.form['hashUsuarioO']
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `pedidosaaprobar`;")
-    lospedidos = cursor.fetchall()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente2']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in ofertas:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    # print(listaUnidades)
+    ancho = len(ofertas)
+    # print("Ancho:", ancho)
+    conexion.commit()
+    # print(usuarios)
+    # print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
+    for i in ofertas:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    # print(listaModOfer)
+    listaFinal = []
+    for i in listaModOfer:
+        listaModulo = []
+        for x in ofertas:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    # print(salidaModulos)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    # print(modulosFuncion)
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        # print(elScript)
+        listaInput.append(f'{m}:{elScript}')
+
+    # print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    # print(listaInput)
+
+    return render_template('apms/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
+
+
+@ app.route('/sup/pedidos', methods=['GET'])
+def pedidosTemplate():
+    usuario = session['hash']
+    usuarioEntero = int(usuario)
+    desdeU = usuarioEntero
+    hastaU = usuarioEntero + 999
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario BETWEEN %s AND %s;"
+    datos = (desdeU, hastaU)
+    cursor.execute(sql, datos)
+    pedidosTotales = cursor.fetchall()
+    lospedidos = pedidosTotales
     conexion.commit()
     return render_template('/sup/pedidos.html', lospedidos=lospedidos)
 
@@ -672,6 +852,94 @@ def pedidosAprobar():
     return redirect('/sup/pedidos')
 
 
+@ app.route('/apms/guardar/pedidosaaprobar', methods=['POST'])
+def apmspedidosAprobar():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+    ofertasSi = cursor.fetchall()
+    conexion.commit()
+
+    for i in ofertasSi:
+        input = str(i[0])
+        modulo = str(i[1])
+        inputPagina = request.form[input]
+        inputPagina = int(inputPagina)
+        totalModulo = request.form[modulo]
+        totalModulo = int(totalModulo)
+        if inputPagina == 0 and totalModulo > 0:
+            flash('El modulo tiene al menos un producto obligatorio.')
+
+            return redirect('../../apms/mensaje')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`;")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+    listaInputs = []
+    listaValor = []
+    for oferta in ofertas:
+        listaInputs.append(oferta[0])
+        listaValor.append(request.form[f"{oferta[0]}"])
+    losInputs = zip(listaInputs, listaValor)
+    pedidoUser = list(losInputs)
+
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    output = ast.literal_eval(salidas)  # convertimos un string a lista.
+    ofertaCompleta = output
+    pedido = pedidoUser
+    fecha = datetime.now()
+    estado = "no"
+    # print(ofertaCompleta[0][1][0][0])
+    # print(pedido)
+    conta = 0
+    listaDelPedido = []
+    for m in ofertaCompleta:
+
+        # print(m)
+        for i in m:
+
+            try:
+                if int(i) == i:
+                    pass
+            except TypeError:
+                # print(i)  # los modulos
+
+                for elementoModulo in i:
+                    pedidosUnidades = list(elementoModulo)
+                    pedidosUnidades.append(pedido[conta][1])
+                    listaDelPedido.append(pedidosUnidades)
+
+                    # print(pedidosUnidades)
+                    # print(elementoModulo[0])
+                    # print(pedido[conta][1])
+                    # print(elementoModulo[0])
+                    # print(pedido)
+                    conta = conta+1
+                    # print(conta)
+
+    # print(len(listaDelPedido))
+    jsonPedido = json.dumps(listaDelPedido)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`,`pa_fecha`,`pa_estado`) VALUES (null, %s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido, str(fecha), estado)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    # print(jsonPedido)
+    return redirect('/apms/pedidos')
+
+
 @ app.route('/admin/guardar/pedidosaaprobar', methods=['POST'])
 def pedidosAprobarA():
     conexion = mysql.connect()
@@ -758,6 +1026,29 @@ def pedidosAprobarA():
     conexion.commit()
     # print(jsonPedido)
     return redirect('/admin/pedidos')
+
+
+@ app.route('/apms/clientes/')
+def apms_clientes():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    usuarios = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`;")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('apms/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
 
 @ app.route('/sup/clientes/')
@@ -1087,19 +1378,59 @@ def admin_productos_editar():
 
 @ app.route('/apms/pedidos')
 def apms_pedidos():
+    usuario = session['hash']
+    usuarioEntero = int(usuario)
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `pedidos`;")
-    pedidos = cursor.fetchall()
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario = %s;"
+    datos = (usuarioEntero)
+    cursor.execute(sql, datos)
+    pedidosTotales = cursor.fetchall()
+    lospedidos = pedidosTotales
+    conexion.commit()
+    return render_template('/apms/pedidos.html', lospedidos=lospedidos)
+
+
+@ app.route('/apms/clientes/guardar/<int:usuario>', methods=['POST'])
+def apms_clientes_guardar(usuario):
+
+    conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `droguerias`;")
     droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
     conexion.commit()
-    cursor.execute("SELECT * FROM `ofertas`;")
-    ofertas = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria']
+    _cuenta = request.form['txtCuenta']
+    _nombre = request.form['txtNombre']
+    _cuit = request.form['txtCuit']
+    _localidad = request.form['txtLocalidad']
+    _postal = request.form['txtPostal']
+    datos_drogueria = [_drogueria.split('#')]
+    if _drogueria == 'Seleccione':
+        flash('¡Por favor elija una Droguería!')
+        return redirect(f'../{usuario}')
+
+    sql = "INSERT INTO `clientes` (`id_c`, `c_id_drogueria`, `c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, `c_nombre`, `c_cuit`, `c_localidad`, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (datos_drogueria[0][0], datos_drogueria[0][1],
+             datos_drogueria[0][2], _cuenta, _nombre, _cuit, _localidad, _postal)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
     conexion.commit()
 
-    return render_template('apms/pedidos.html', pedidos=pedidos, droguerias=droguerias, ofertas=ofertas)
+    return redirect(f'../{usuario}')
 
 
 @ app.route('/admin/pedidos')
@@ -1151,17 +1482,6 @@ def admin_pedidos_borrar():
     return redirect('/admin/pedidos')
 
 # funciones de clientes:
-
-
-@ app.route('/apms/clientes')
-def apms_clientes():
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `clientes`;")
-    clientes = cursor.fetchall()
-    conexion.commit()
-
-    return render_template('apms/clientes.html', clientes=clientes)
 
 
 @ app.route('/admin/clientes')

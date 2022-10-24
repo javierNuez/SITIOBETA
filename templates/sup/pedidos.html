@@ -1,5 +1,5 @@
 {% include 'sup/cabecera.html' %}
-<input type="text" id="hashUsuarioO" hidden>
+<input type="text" id="hashUsuarioO" name="hashUsuarioO" hidden>
 <script>
     var hashUsuario = sessionStorage.getItem("hash");
     console.log(hashUsuario);
@@ -10,6 +10,7 @@
     }
 
 </script>
+
 {% with messages= get_flashed_messages() %}
 
 {% if messages %}
@@ -42,7 +43,7 @@
                             <th style="text-align: center;" scope="col" class="table-info">
                                 Pedido</th>
                             <th style="text-align: center;" scope="col" class="table-info">
-                                Fecha</th>
+                                Fecha/Hora</th>
                             <th style="text-align: center;" scope="col" class="table-info">
                                 Aprobado</th>
                         </tr>
