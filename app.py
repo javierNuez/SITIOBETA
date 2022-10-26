@@ -188,22 +188,32 @@ def ofer04():
     cursor.execute(
         "SELECT * FROM `ofertas`")
     ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaUnidades = []
     listaOfertaVigente = []
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         uniList = {}
         uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
         listaUnidades.append(uniList)
         listaOfertaVigente.append(i)
     # print(listaUnidades)
-    ancho = len(ofertas)
+    # ancho = len(ofertas)
     # print("Ancho:", ancho)
     conexion.commit()
     # print(usuarios)
     # print(listaOfertaVigente)
     # aca saco los modulos unicos
     modulos_ofertas = set()
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         modulos_ofertas.add(i[1])
     # ---------------------------
     listaModOfer = list(modulos_ofertas)
@@ -213,7 +223,7 @@ def ofer04():
     listaFinal = []
     for i in listaModOfer:
         listaModulo = []
-        for x in ofertas:
+        for x in listaOfertaVigenteO:
             if i == x[1]:
                 listaModulo.append(x)
         listaFinal.append(listaModulo)
@@ -223,7 +233,7 @@ def ofer04():
     anchoModulos = len(salidaModulos)
     listaInput = []
     modulosFuncion = list(zip(listaModOfer, listaFinal))
-    count = 0
+    # print(modulosFuncion)
     for i in modulosFuncion:
         m = i[0]  # el_modulo
         e = i[1]
@@ -233,13 +243,15 @@ def ofer04():
             listaScript.append(q)
         scriptTxt = str(listaScript)
         elScript = f"{scriptTxt}"
+        # print(elScript)
         listaInput.append(f'{m}:{elScript}')
 
     # print(anchoModulos)
     listaInput = json.dumps(listaInput)
     # print(listaInput)
 
-    return render_template('admin/conformarOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
+    return render_template('admin/conformarOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
+
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -374,23 +386,47 @@ def admin_ofertas_guardar():
 
     return redirect('/admin/ofertas')
 
+# ofertas control
+
 
 @app.route('/admin/ofertas')
 def admin_ofertas():
+    now = datetime.now()
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
     ofertas = cursor.fetchall()
+    listaOfertaVigente = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigente.append(i)
 
     cursor.execute("SELECT * FROM `modulos`;")
     modulos = cursor.fetchall()
+    listaModuloVigente = []
+    for i in modulos:
+        desdeM = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        hastaM = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        if desdeM <= now and hastaM > now:
+            listaModuloVigente.append(i)
 
     cursor.execute("SELECT * FROM `productos`;")
     productos = cursor.fetchall()
+    listaProductoVigente = []
+    for i in productos:
+        desdeP = datetime.strptime(f"{i[3]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaProductoVigente.append(i)
 
     conexion.commit()
 
-    return render_template('admin/ofertas.html', ofertas=ofertas, modulos=modulos, productos=productos)
+    return render_template('admin/ofertas.html', ofertas=listaOfertaVigente, modulos=listaModuloVigente, productos=listaProductoVigente)
 
 
 @ app.route('/admin/editarOfertas/<int:id>')
@@ -425,6 +461,13 @@ def sup_ofertas():
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigente = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            listaOfertaVigente.append(i)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -434,7 +477,7 @@ def sup_ofertas():
 
     conexion.commit()
     # , usuarios=usuarios, _usuario=_usuario
-    return render_template('sup/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+    return render_template('sup/ofertas.html', ofertas=listaOfertaVigente, droguerias=droguerias, clientes=clientes)
 
 
 @app.route('/apms/ofertas/')
@@ -450,6 +493,13 @@ def apms_ofertas():
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigente = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            listaOfertaVigente.append(i)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -459,7 +509,7 @@ def apms_ofertas():
 
     conexion.commit()
     # , usuarios=usuarios, _usuario=_usuario
-    return render_template('apms/ofertas.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+    return render_template('apms/ofertas.html', ofertas=listaOfertaVigente, droguerias=droguerias, clientes=clientes)
 
 
 @ app.route('/sup/cargaOfert01/drogueria/', methods=['POST'])
@@ -620,22 +670,32 @@ def sup_cargaOferta04_d_c():
     cursor.execute(
         "SELECT * FROM `ofertas`")
     ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaUnidades = []
     listaOfertaVigente = []
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         uniList = {}
         uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
         listaUnidades.append(uniList)
         listaOfertaVigente.append(i)
     # print(listaUnidades)
-    ancho = len(ofertas)
+    # ancho = len(ofertas)
     # print("Ancho:", ancho)
     conexion.commit()
     # print(usuarios)
     # print(listaOfertaVigente)
     # aca saco los modulos unicos
     modulos_ofertas = set()
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         modulos_ofertas.add(i[1])
     # ---------------------------
     listaModOfer = list(modulos_ofertas)
@@ -645,7 +705,7 @@ def sup_cargaOferta04_d_c():
     listaFinal = []
     for i in listaModOfer:
         listaModulo = []
-        for x in ofertas:
+        for x in listaOfertaVigenteO:
             if i == x[1]:
                 listaModulo.append(x)
         listaFinal.append(listaModulo)
@@ -672,7 +732,7 @@ def sup_cargaOferta04_d_c():
     listaInput = json.dumps(listaInput)
     # print(listaInput)
 
-    return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=ofertas, salidas=salidaModulos)
+    return render_template('sup/cargaOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
 
 
 @ app.route('/apms/cargaOferta04/cliente/', methods=['POST'])
@@ -691,22 +751,32 @@ def apms_cargaOferta04_d_c():
     cursor.execute(
         "SELECT * FROM `ofertas`")
     ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaUnidades = []
     listaOfertaVigente = []
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         uniList = {}
         uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
         listaUnidades.append(uniList)
         listaOfertaVigente.append(i)
     # print(listaUnidades)
-    ancho = len(ofertas)
+    # ancho = len(ofertas)
     # print("Ancho:", ancho)
     conexion.commit()
     # print(usuarios)
     # print(listaOfertaVigente)
     # aca saco los modulos unicos
     modulos_ofertas = set()
-    for i in ofertas:
+    for i in listaOfertaVigenteO:
         modulos_ofertas.add(i[1])
     # ---------------------------
     listaModOfer = list(modulos_ofertas)
@@ -716,7 +786,7 @@ def apms_cargaOferta04_d_c():
     listaFinal = []
     for i in listaModOfer:
         listaModulo = []
-        for x in ofertas:
+        for x in listaOfertaVigenteO:
             if i == x[1]:
                 listaModulo.append(x)
         listaFinal.append(listaModulo)
@@ -1412,11 +1482,13 @@ def admin_productos_editar():
     _id = request.form['txtID']
 
     sql = "UPDATE productos SET p_cod=%s, p_descripcion=%s, p_desde =%s, p_hasta=%s WHERE id_p=%s;"
+    sql2 = "UPDATE ofertas SET o_prod_cod=%s, o_prod_des=%s, o_prod_d=%s, o_prod_h=%s WHERE o_producto=%s;"
     datos = (_cod, _desc, _desde, _hasta, _id)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
+    cursor.execute(sql2, datos)
     conexion.commit()
 
     return redirect('/admin/productos')
@@ -1975,10 +2047,11 @@ def admin_modulo_editar():
 
     sql = "UPDATE modulos SET m_nombre=%s, m_titulo=%s, m_pie=%s, m_desde=%s, m_hasta=%s, m_cantidad_minima=%s WHERE id_m=%s;"
     datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad, _id)
-
+    sql2 = "UPDATE ofertas SET o_mod_nom=%s, o_mod_tit=%s, o_mod_pie=%s, o_mod_d=%s, o_mod_h=%s, o_mod_minima=%s WHERE o_modulo=%s;"
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
+    cursor.execute(sql2, datos)
     conexion.commit()
 
     return redirect('/admin/modulos')
