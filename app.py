@@ -750,8 +750,14 @@ def apms_cargaOferta04_d_c():
 def pedidosTemplate():
     usuario = session['hash']
     usuarioEntero = int(usuario)
+    listaRegionMetro = [1200, 1300, 1400, 1500]
+    listaRegionNacional = [4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000]
     desdeU = usuarioEntero
-    hastaU = usuarioEntero + 999
+    if desdeU in listaRegionMetro:
+        hastaU = usuarioEntero + 99
+    elif desdeU in listaRegionNacional:
+        hastaU = usuarioEntero + 999
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario BETWEEN %s AND %s;"
@@ -1033,7 +1039,7 @@ def apms_clientes():
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `clientes`;")
+    cursor.execute("SELECT * FROM `usuarios`;")
     usuarios = cursor.fetchall()
 
     conexion = mysql.connect()
@@ -1098,6 +1104,46 @@ def sup_clientes_editar():
     return render_template('sup/editarClientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
 
+@ app.route('/sup/clientes/guardar', methods=['POST'])
+def sup_clientes_guardar():
+
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
+    _cuenta = request.form['c_cuenta']
+    _nombre = request.form['c_nombre']
+    _cuit = request.form['c_cuit']
+    _domicilio = request.form['c_domicilio']
+    _localidad = request.form['c_localidad']
+    _postal = request.form['c_postal']
+
+    sql = "INSERT INTO `clientes` (`id_c`, c_id_drogueria,`c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, c_nombre, c_cuit, c_domicilio, c_localidad, c_postal) VALUES (NULL, %s, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/sup/clientes')
+
+
+@ app.route('/admin/clientes/borrar/<int:id>')
+def admin_clientes_borrar(id):
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("DELETE FROM clientes where id_c=%s;", (id))
+    clientes = cursor.fetchall()
+    conexion.commit()
+
+    return redirect('/admin/clientes')
+
+
+"""
 @ app.route('/sup/clientes/guardar/<int:usuario>', methods=['POST'])
 def sup_clientes_guardar(usuario):
 
@@ -1138,6 +1184,7 @@ def sup_clientes_guardar(usuario):
     conexion.commit()
 
     return redirect(f'../{usuario}')
+"""
 
 
 @ app.route('/admin/pedidos', methods=['GET'])
@@ -1391,6 +1438,34 @@ def apms_pedidos():
     return render_template('/apms/pedidos.html', lospedidos=lospedidos)
 
 
+@ app.route('/apms/clientes/guardar', methods=['POST'])
+def apms_clientes_guardar():
+
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
+    _cuenta = request.form['c_cuenta']
+    _nombre = request.form['c_nombre']
+    _cuit = request.form['c_cuit']
+    _domicilio = request.form['c_domicilio']
+    _localidad = request.form['c_localidad']
+    _postal = request.form['c_postal']
+
+    sql = "INSERT INTO `clientes` (`id_c`, c_id_drogueria,`c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, c_nombre, c_cuit, c_domicilio, c_localidad, c_postal) VALUES (NULL, %s, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/apms/clientes')
+
+
+"""
 @ app.route('/apms/clientes/guardar/<int:usuario>', methods=['POST'])
 def apms_clientes_guardar(usuario):
 
@@ -1431,6 +1506,7 @@ def apms_clientes_guardar(usuario):
     conexion.commit()
 
     return redirect(f'../{usuario}')
+"""
 
 
 @ app.route('/admin/pedidos')
@@ -1488,11 +1564,21 @@ def admin_pedidos_borrar():
 def admin_clientes():
     conexion = mysql.connect()
     cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `usuarios`;")
+    usuarios = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`;")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `clientes`;")
     clientes = cursor.fetchall()
     conexion.commit()
 
-    return render_template('admin/clientes.html', clientes=clientes)
+    return render_template('admin/clientes.html', clientes=clientes, droguerias=droguerias, usuarios=usuarios)
 
 
 @ app.route('/admin/editarCliente/<int:id>')
@@ -1531,15 +1617,21 @@ def admin_cliente_editar():
 @ app.route('/admin/clientes/guardar', methods=['POST'])
 def admin_clientes_guardar():
 
-    _codigo = request.form['c_cod']
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
     _cuenta = request.form['c_cuenta']
     _nombre = request.form['c_nombre']
     _cuit = request.form['c_cuit']
+    _domicilio = request.form['c_domicilio']
     _localidad = request.form['c_localidad']
     _postal = request.form['c_postal']
 
-    sql = "INSERT INTO `clientes` (`id_c`, `c_cod`, `c_cuenta`, c_nombre, c_cuit, c_localidad, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
-    datos = (_codigo, _cuenta, _nombre, _cuit, _localidad, _postal)
+    sql = "INSERT INTO `clientes` (`id_c`, c_id_drogueria,`c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, c_nombre, c_cuit, c_domicilio, c_localidad, c_postal) VALUES (NULL, %s, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1549,6 +1641,7 @@ def admin_clientes_guardar():
     return redirect('/admin/clientes')
 
 
+"""
 @ app.route('/admin/clientes/borrar/<int:id>')
 def admin_clientes_borrar(id):
 
@@ -1559,7 +1652,7 @@ def admin_clientes_borrar(id):
     conexion.commit()
 
     return redirect('/admin/clientes')
-
+"""
 # funciones de droguerias:
 
 
