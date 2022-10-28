@@ -26,10 +26,10 @@
         <div class="card-body" style="margin-left: 0%;">
 
 
-            <table id="tblContact" class="table table-sm table-hover table-bordered">
+            <table id="tblPedidos" class="table table-sm table-hover table-bordered">
 
                 <tbody id="">
-                    <!--<table id="tblContact" class="table table-sm">-->
+
                     <thead>
                         <tr>
                             <th style="text-align: center;" scope="col" class="table-info">
@@ -83,10 +83,15 @@
             </table>
 
         </div>
-
     </div>
+
+</div>
 </div>
 <script>
+    var myTable = document.querySelector("#myTable");
+    var dataTable = new DataTable(myTable);
+
+
     const listaPedidos = document.getElementsByTagName("h5");
     //console.log(listaPedidos[0].textContent);
     //console.log(listaPedidos.length);
@@ -96,16 +101,22 @@
         const p = JSON.parse(listaProductosa);
         ancho = p.length;
         //console.log(ancho);
+        total = 0;
 
         for (x = 0; x < ancho; x++) {
             // Create an "li" node:
             const node = document.createElement("li");
 
+
             // Create a text node:
             const textnode = document.createTextNode(p[x][10] + " " + p[x][17] + "u.");
 
+
+
+
             // Append the text node to the "li" node:
             if (p[x][17] != 0) {
+
                 node.appendChild(textnode);
                 nombreL = "lista" + pedido;
                 // Append the "li" node to the list:

@@ -45,8 +45,6 @@
             {% for salida in salidas %}
 
             <div class="card-body" style="padding: 16px 0px ;">
-
-
                 <table id="tblContact" class="table table-sm table-hover table-bordered">
                     <thead>
                         <tr>
@@ -175,7 +173,6 @@
                     let arr = listaInputArr[i].split(':');
                     console.log(arr[0]);
                     totales = document.getElementById(arr[0]).value;
-
                     if (totales == 0) {
                         document.getElementById(arr[0]).setAttribute("min", "");
                     }

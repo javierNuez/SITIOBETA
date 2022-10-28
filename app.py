@@ -848,8 +848,17 @@ def pedidosAprobar():
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
     ofertasSi = cursor.fetchall()
     conexion.commit()
-
+    now = datetime.now()
+    listaOfertaVigenteO = []
     for i in ofertasSi:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    for i in listaOfertaVigenteO:
         input = str(i[0])
         modulo = str(i[1])
         inputPagina = request.form[input]
@@ -867,11 +876,21 @@ def pedidosAprobar():
         "SELECT * FROM `ofertas`;")
     ofertas = cursor.fetchall()
     conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaInputs = []
     listaValor = []
-    for oferta in ofertas:
+    for oferta in listaOfertaVigenteO:
         listaInputs.append(oferta[0])
-        listaValor.append(request.form[f"{oferta[0]}"])
+        listaValor.append(request.form[f"{listaOfertaVigenteO[0]}"])
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
 
@@ -936,8 +955,18 @@ def apmspedidosAprobar():
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
     ofertasSi = cursor.fetchall()
     conexion.commit()
-
+    now = datetime.now()
+    listaOfertaVigenteO = []
     for i in ofertasSi:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+
+    for i in listaOfertaVigenteO:
         input = str(i[0])
         modulo = str(i[1])
         inputPagina = request.form[input]
@@ -955,10 +984,20 @@ def apmspedidosAprobar():
         "SELECT * FROM `ofertas`;")
     ofertas = cursor.fetchall()
     conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaInputs = []
     listaValor = []
-    for oferta in ofertas:
-        listaInputs.append(oferta[0])
+    for oferta in listaOfertaVigenteO:
+        listaInputs.append(listaOfertaVigenteO[0])
         listaValor.append(request.form[f"{oferta[0]}"])
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
@@ -1022,10 +1061,21 @@ def pedidosAprobarA():
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+
     ofertasSi = cursor.fetchall()
     conexion.commit()
-
+    now = datetime.now()
+    listaOfertaVigenteO = []
     for i in ofertasSi:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    for i in listaOfertaVigenteO:
+
         input = str(i[0])
         modulo = str(i[1])
         inputPagina = request.form[input]
@@ -1043,9 +1093,19 @@ def pedidosAprobarA():
         "SELECT * FROM `ofertas`;")
     ofertas = cursor.fetchall()
     conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
     listaInputs = []
     listaValor = []
-    for oferta in ofertas:
+    for oferta in listaOfertaVigenteO:
         listaInputs.append(oferta[0])
         listaValor.append(request.form[f"{oferta[0]}"])
     losInputs = zip(listaInputs, listaValor)
