@@ -836,7 +836,31 @@ def pedidosTemplate():
     pedidosTotales = cursor.fetchall()
     lospedidos = pedidosTotales
     conexion.commit()
-    return render_template('/sup/pedidos.html', lospedidos=lospedidos)
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+    return render_template('/sup/pedidos.html', lospedidos=pedidosDC)
 
 
 # guardamos el pedido del usuario.
@@ -846,6 +870,7 @@ def pedidosAprobar():
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+
     ofertasSi = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -859,6 +884,7 @@ def pedidosAprobar():
             if desdeP <= now and hastaP > now:
                 listaOfertaVigenteO.append(i)
     for i in listaOfertaVigenteO:
+
         input = str(i[0])
         modulo = str(i[1])
         inputPagina = request.form[input]
@@ -868,7 +894,7 @@ def pedidosAprobar():
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
 
-            return redirect('../../sup/mensaje')
+            return redirect('../../admin/mensaje')
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -890,7 +916,7 @@ def pedidosAprobar():
     listaValor = []
     for oferta in listaOfertaVigenteO:
         listaInputs.append(oferta[0])
-        listaValor.append(request.form[f"{listaOfertaVigenteO[0]}"])
+        listaValor.append(request.form[f"{oferta[0]}"])
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
 
@@ -907,7 +933,14 @@ def pedidosAprobar():
     fecha = datetime.now()
     estado = "no"
     # print(ofertaCompleta[0][1][0][0])
-    # print(pedido)
+    print(pedido)
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+
     conta = 0
     listaDelPedido = []
     for m in ofertaCompleta:
@@ -936,8 +969,9 @@ def pedidosAprobar():
 
     # print(len(listaDelPedido))
     jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`,`pa_fecha`,`pa_estado`) VALUES (null, %s,%s,%s,%s,%s,%s);"
-    datos = (usuario, drogueria, cliente, jsonPedido, str(fecha), estado)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -953,6 +987,7 @@ def apmspedidosAprobar():
     cursor = conexion.cursor()
     cursor.execute(
         "SELECT * FROM `ofertas` WHERE o_obligatorio = 'si';")
+
     ofertasSi = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -965,8 +1000,8 @@ def apmspedidosAprobar():
         if desdeO <= now and hastaO > now:
             if desdeP <= now and hastaP > now:
                 listaOfertaVigenteO.append(i)
-
     for i in listaOfertaVigenteO:
+
         input = str(i[0])
         modulo = str(i[1])
         inputPagina = request.form[input]
@@ -976,7 +1011,7 @@ def apmspedidosAprobar():
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
 
-            return redirect('../../apms/mensaje')
+            return redirect('../../admin/mensaje')
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -997,7 +1032,7 @@ def apmspedidosAprobar():
     listaInputs = []
     listaValor = []
     for oferta in listaOfertaVigenteO:
-        listaInputs.append(listaOfertaVigenteO[0])
+        listaInputs.append(oferta[0])
         listaValor.append(request.form[f"{oferta[0]}"])
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
@@ -1015,7 +1050,14 @@ def apmspedidosAprobar():
     fecha = datetime.now()
     estado = "no"
     # print(ofertaCompleta[0][1][0][0])
-    # print(pedido)
+    print(pedido)
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+
     conta = 0
     listaDelPedido = []
     for m in ofertaCompleta:
@@ -1044,8 +1086,9 @@ def apmspedidosAprobar():
 
     # print(len(listaDelPedido))
     jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`,`pa_fecha`,`pa_estado`) VALUES (null, %s,%s,%s,%s,%s,%s);"
-    datos = (usuario, drogueria, cliente, jsonPedido, str(fecha), estado)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1124,7 +1167,14 @@ def pedidosAprobarA():
     fecha = datetime.now()
     estado = "no"
     # print(ofertaCompleta[0][1][0][0])
-    # print(pedido)
+    print(pedido)
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+
     conta = 0
     listaDelPedido = []
     for m in ofertaCompleta:
@@ -1153,8 +1203,9 @@ def pedidosAprobarA():
 
     # print(len(listaDelPedido))
     jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`,`pa_fecha`,`pa_estado`) VALUES (null, %s,%s,%s,%s,%s,%s);"
-    datos = (usuario, drogueria, cliente, jsonPedido, str(fecha), estado)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1324,7 +1375,32 @@ def pedidosTemplateA():
     cursor.execute("SELECT * FROM `pedidosaaprobar`;")
     lospedidos = cursor.fetchall()
     conexion.commit()
-    return render_template('/admin/pedidos.html', lospedidos=lospedidos)
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/admin/pedidos.html', lospedidos=pedidosDC)
 
 
 @ app.route('/admin/usuarios')
@@ -1567,7 +1643,32 @@ def apms_pedidos():
     pedidosTotales = cursor.fetchall()
     lospedidos = pedidosTotales
     conexion.commit()
-    return render_template('/apms/pedidos.html', lospedidos=lospedidos)
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/apms/pedidos.html', lospedidos=pedidosDC)
 
 
 @ app.route('/apms/clientes/guardar', methods=['POST'])

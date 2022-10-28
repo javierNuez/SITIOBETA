@@ -23,69 +23,87 @@
 <div class="card-body">
     <div class="card border-info">
         <div class="card-body" style="margin-left: 0%;">
-
-
-            <table id="tblContact" class="table table-sm table-hover table-bordered">
-
-                <tbody id="">
-                    <!--<table id="tblContact" class="table table-sm">-->
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Pedido nº</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Usuario</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Drogueria</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Cliente</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Pedido</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Fecha</th>
-                            <th style="text-align: center;" scope="col" class="table-info">
-                                Aprobado</th>
-                        </tr>
-                    </thead>
-                <tbody id="">
-                    {% for i in lospedidos %}
-
-                    <tr>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            <h5>{{i[0]}}</h5>
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[1]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[2]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[3]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            <input type="text" value="{{i[4]}}" id="{{i[0]}}" hidden>
-                            <ul id="lista{{i[0]}}">
-                            </ul>
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[5]}}
-                        </td>
-                        <td style="text-align: center;" scope="col" class="table-light">
-                            {{i[6]}}
-                        </td>
+            <table id="myTable" class="table-light">
+                <thead>
+                    <tr class="table-light">
+                        <th scope="col" style="text-align:center;">Pedido nº</th>
+                        <th scope="col" style="text-align:center;">Usuario</th>
+                        <th scope="col" style="text-align:center;">Cod.Drog</th>
+                        <th scope="col" style="text-align:center;">Drogueria</th>
+                        <th scope="col" style="text-align:center;">Cod.Cli.</th>
+                        <th scope="col" style="text-align:center;">Cliente.</th>
+                        <th scope="col" style="text-align:center;">Unidades</th>
+                        <th scope="col" style="text-align:center;">Fecha</th>
+                        <th scope="col" style="text-align:center;">Aprobado</th>
+                        <th scope="col" style="text-align:center;">Acciones</th>
                     </tr>
+                </thead>
+                {% for i in lospedidos %}
+                <tr class="table-light">
 
-                    {% endfor %}
+                    <td style="text-align: center;" scope="col" class="table-light">
 
-                </tbody>
+                        <h5>{{i[0]}}</h5>
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[1]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[2]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[8]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[3]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[9]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[7]}}
+                        <!--<input type="text" value="{{i[4]}}" id="{{i[0]}}" hidden>
+                        <ul id="lista{{i[0]}}">
+                        </ul>-->
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[5]}}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+
+                        {{i[6]}}
+                    </td>
+                    <td id="acciones" align="center">
+
+                        <div class="row">
+                            <div class="col">
+                                <a class="btn btn-success btn-sm" href="#" role="button"
+                                    style="display:center;width: 69px;">Ver</a>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-info btn-sm" href="#" role="button"
+                                    style="display:center;">Aprobar</a>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>{% endfor %}
             </table>
 
         </div>
 
     </div>
 </div>
+<!--
 <script>
+
     const listaPedidos = document.getElementsByTagName("h5");
     //console.log(listaPedidos[0].textContent);
     //console.log(listaPedidos.length);
@@ -114,4 +132,5 @@
     }
 
 </script>
+-->
 {% include 'admin/pie.html' %}
