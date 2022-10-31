@@ -1318,7 +1318,7 @@ def admin_clientes_borrar(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM clientes where id_c=%s;", (id))
-    clientes = cursor.fetchall()
+    #clientes = cursor.fetchall()
     conexion.commit()
 
     return redirect('/admin/clientes')
@@ -1698,50 +1698,6 @@ def apms_clientes_guardar():
     return redirect('/apms/clientes')
 
 
-"""
-@ app.route('/apms/clientes/guardar/<int:usuario>', methods=['POST'])
-def apms_clientes_guardar(usuario):
-
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `droguerias`;")
-    droguerias = cursor.fetchall()
-
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `clientes`")
-    clientes = cursor.fetchall()
-
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(
-        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
-    usuarios = cursor.fetchall()
-    conexion.commit()
-    _drogueria = request.form['txtDrogueria']
-    _cuenta = request.form['txtCuenta']
-    _nombre = request.form['txtNombre']
-    _cuit = request.form['txtCuit']
-    _localidad = request.form['txtLocalidad']
-    _postal = request.form['txtPostal']
-    datos_drogueria = [_drogueria.split('#')]
-    if _drogueria == 'Seleccione':
-        flash('¡Por favor elija una Droguería!')
-        return redirect(f'../{usuario}')
-
-    sql = "INSERT INTO `clientes` (`id_c`, `c_id_drogueria`, `c_cod_drogueria`, `c_desc_drogueria`, `c_cuenta`, `c_nombre`, `c_cuit`, `c_localidad`, c_postal) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (datos_drogueria[0][0], datos_drogueria[0][1],
-             datos_drogueria[0][2], _cuenta, _nombre, _cuit, _localidad, _postal)
-
-    conexion = mysql.connect()
-    cursor = conexion.cursor()
-    cursor.execute(sql, datos)
-    conexion.commit()
-
-    return redirect(f'../{usuario}')
-"""
-
-
 @ app.route('/admin/pedidos')
 def admin_pedidos():
     conexion = mysql.connect()
@@ -1820,25 +1776,112 @@ def admin_cliente_update(id):
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `clientes` WHERE id_c=%s;", (id))
     clientes = cursor.fetchall()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
     conexion.commit()
 
-    return render_template('admin/editarClientes.html', clientes=clientes)
+    return render_template('admin/editarClientes.html', clientes=clientes, droguerias=droguerias)
 
 
-@ app.route('/admin/editarCliente/editar', methods=['POST'])
-def admin_cliente_editar():
+@ app.route('/sup/editarCliente/<int:id>')
+def sup_cliente_update(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes` WHERE id_c=%s;", (id))
+    clientes = cursor.fetchall()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+    conexion.commit()
 
-    _cod = request.form['c_cod']
+    return render_template('sup/editarClientes.html', clientes=clientes, droguerias=droguerias)
+
+
+@ app.route('/apms/editarCliente/<int:id>')
+def apms_cliente_update(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `clientes` WHERE id_c=%s;", (id))
+    clientes = cursor.fetchall()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+    conexion.commit()
+
+    return render_template('apms/editarClientes.html', clientes=clientes, droguerias=droguerias)
+
+
+@ app.route('/sup/editarCliente/editar', methods=['POST'])
+def sup_cliente_editar():
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
     _cuenta = request.form['c_cuenta']
     _nombre = request.form['c_nombre']
     _cuit = request.form['c_cuit']
     _postal = request.form['c_postal']
+    _domicilio = request.form['c_domicilio']
     _localidad = request.form['c_localidad']
     _id = request.form['txtID']
+    sql = "UPDATE clientes SET c_id_drogueria=%s, c_cod_drogueria=%s, c_desc_drogueria=%s, c_cuenta=%s, c_nombre =%s, c_cuit=%s, c_domicilio=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal, _id)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
 
-    sql = "UPDATE clientes SET c_cod=%s, c_cuenta=%s, c_nombre =%s, c_cuit=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
-    datos = (_cod, _cuenta, _nombre, _cuit, _localidad, _postal, _id)
+    return redirect('/sup/clientes')
 
+
+@ app.route('/apms/editarCliente/editar', methods=['POST'])
+def apms_cliente_editar():
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
+    _cuenta = request.form['c_cuenta']
+    _nombre = request.form['c_nombre']
+    _cuit = request.form['c_cuit']
+    _postal = request.form['c_postal']
+    _domicilio = request.form['c_domicilio']
+    _localidad = request.form['c_localidad']
+    _id = request.form['txtID']
+    sql = "UPDATE clientes SET c_id_drogueria=%s, c_cod_drogueria=%s, c_desc_drogueria=%s, c_cuenta=%s, c_nombre =%s, c_cuit=%s, c_domicilio=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal, _id)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/apms/clientes')
+
+
+@ app.route('/admin/editarCliente/editar', methods=['POST'])
+def admin_cliente_editar():
+    drogueria = request.form['c_cod']
+    drog = drogueria.split('#')
+    _idDrogueria = drog[0]
+    _codigo = drog[1]
+    _descrip = drog[2]
+    _cuenta = request.form['c_cuenta']
+    _nombre = request.form['c_nombre']
+    _cuit = request.form['c_cuit']
+    _postal = request.form['c_postal']
+    _domicilio = request.form['c_domicilio']
+    _localidad = request.form['c_localidad']
+    _id = request.form['txtID']
+    sql = "UPDATE clientes SET c_id_drogueria=%s, c_cod_drogueria=%s, c_desc_drogueria=%s, c_cuenta=%s, c_nombre =%s, c_cuit=%s, c_domicilio=%s, c_localidad=%s, c_postal=%s WHERE id_c=%s;"
+    datos = (_idDrogueria, _codigo, _descrip, _cuenta, _nombre,
+             _cuit, _domicilio, _localidad, _postal, _id)
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)

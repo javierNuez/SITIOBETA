@@ -23,15 +23,17 @@
         <div class="col" style="padding-top: 30px">
             <img src="{{ url_for( 'static', filename='img/LogoBeta.png' ) }}" alt="laboratoriosbeta.com">
         </div>
-
+        <div>
+            <h3 align="center">Supervisor</h3>
+        </div>
         <nav class="navbar navbar-expand navbar-light bg-light">
-            <div class="nav navbar-nav" style="margin:auto;">
+
+            <div id="links" class="nav navbar-nav" style="margin:auto;">
                 <a class="nav-item nav-link active" href="/sup/inicio">Inicio</a>
                 <a class="nav-item nav-link" href="/sup/pedidos">Pedidos</a>
                 <a class="nav-item nav-link" href="/sup/ofertas/">Gestionar pedido</a>
                 <a class="nav-item nav-link" href="/sup/clientes/">Clientes</a>
                 <a class="nav-item nav-link" href="/" onclick="return salirSession()">Cerrar sesión</a>
-
             </div>
             <script>
                 function salirSession() {

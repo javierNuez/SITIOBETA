@@ -31,7 +31,7 @@
                 <div class="col-2"></div>
                 <div class="col-8" style="max-width: 800px;">
                     {%for cliente in clientes %}
-                    <form action="/sup/editarCliente/editar" method="post" enctype="multipart/form-data">
+                    <form action="/apms/editarCliente/editar" method="post" enctype="multipart/form-data">
                         <div id="" name="">
                             <div class="card-header">
                                 <h4>Editar Cliente:</h4>
@@ -93,7 +93,7 @@
                                             </div>
                                             <div class="col-2">
                                                 <p class="lead">
-                                                    <a class="btn btn-secondary btn-mg" href="/sup/clientes"
+                                                    <a class="btn btn-secondary btn-mg" href="/apms/clientes"
                                                         role="button" style="display:center;">Volver</a>
                                                 </p>
                                             </div>
@@ -117,4 +117,4 @@
         </div>
 
 
-        {% include 'sup/pie.html' %}
+        {% include 'apms/pie.html' %}
