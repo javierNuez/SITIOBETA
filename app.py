@@ -2294,6 +2294,36 @@ def admin_modulos_borrar(id):
     return redirect('/admin/modulos')
 
 
+@ app.route('/admin/pedidorealizado/<int:id>')
+def admin_pedido_realizado(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    usuario = lospedidos[0][1]
+    drogueria = lospedidos[0][2]
+    cliente = lospedidos[0][3]
+    lospedidosU = lospedidos[0][4]
+    lista = json.loads(lospedidosU)
+    listaModulosPedidos = []
+    for i in lista:
+        listaModulosPedidos.append(i[1])
+    listaModulos = set(listaModulosPedidos)
+    print(listaModulos)
+    listaGeneral = []
+    for i in listaModulos:
+        listaM = []
+        for x in lista:
+            if i == x[1]:
+                listaM.append(x)
+        listaGeneral.append(listaM)
+    total = lospedidos[0][7]
+
+    return render_template('admin/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total)
+
+
 @ app.route('/admin/editarModulos/<int:id>')
 def admin_modulos_update(id):
     conexion = mysql.connect()
