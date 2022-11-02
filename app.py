@@ -2395,6 +2395,17 @@ def admin_modulos_update(id):
     return render_template('admin/editarModulo.html', modulos=modulos)
 
 
+@ app.route('/admin/aprobar/<int:id>')
+def admin_aprobar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='si' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/admin/pedidos')
+
+
 def pagina_no_encontrada(error):
     return "<h2>La página no existe.</h2>", 404
 
