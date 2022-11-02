@@ -931,7 +931,7 @@ def pedidosAprobar():
     ofertaCompleta = output
     pedido = pedidoUser
     fecha = datetime.now()
-    estado = "no"
+    estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
     print(pedido)
     totalUnidades = 0
@@ -1048,7 +1048,7 @@ def apmspedidosAprobar():
     ofertaCompleta = output
     pedido = pedidoUser
     fecha = datetime.now()
-    estado = "no"
+    estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
     print(pedido)
     totalUnidades = 0
@@ -1165,7 +1165,7 @@ def pedidosAprobarA():
     ofertaCompleta = output
     pedido = pedidoUser
     fecha = datetime.now()
-    estado = "no"
+    estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
     print(pedido)
     totalUnidades = 0
@@ -2400,10 +2400,65 @@ def admin_aprobar_pedido(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "UPDATE `pedidosaaprobar` SET `pa_estado`='si' WHERE id_pedidoA=%s;", (id))
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Aprobado' WHERE id_pedidoA=%s;", (id))
     conexion.commit()
 
     return redirect('/admin/pedidos')
+
+
+@ app.route('/admin/rechazar/<int:id>')
+def admin_rechazar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Sin aprobar' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/admin/pedidos')
+
+
+@ app.route('/admin/revisar/<int:id>')
+def admin_revisar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Revisar' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/admin/pedidos')
+
+
+@ app.route('/sup/aprobar/<int:id>')
+def sup_aprobar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Aprobado' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/sup/pedidos')
+
+
+@ app.route('/sup/rechazar/<int:id>')
+def sup_rechazar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Sin aprobar' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/sup/pedidos')
+
+
+@ app.route('/sup/revisar/<int:id>')
+def sup_revisar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "UPDATE `pedidosaaprobar` SET `pa_estado`='Revisar' WHERE id_pedidoA=%s;", (id))
+    conexion.commit()
+
+    return redirect('/sup/pedidos')
 
 
 def pagina_no_encontrada(error):

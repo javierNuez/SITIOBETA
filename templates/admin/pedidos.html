@@ -35,7 +35,7 @@
                         <th scope="col" style="text-align:center;">Cliente.</th>
                         <th scope="col" style="text-align:center;">Unidades</th>
                         <th scope="col" style="text-align:center;">Fecha</th>
-                        <th scope="col" style="text-align:center;">Aprobado</th>
+                        <th scope="col" style="text-align:center;">Estado</th>
                         <th scope="col" style="text-align:center;">Acciones</th>
                     </tr>
                 </thead>
@@ -78,18 +78,74 @@
 
                         {{i[5]}}
                     </td>
-                    <td style="text-align: center;" scope="col" class="table-light">
 
-                        {{i[6]}}
+                    <td style="text-align: center;" scope="col" class="table-light">
+                        {% if i[6]=="Aprobado" %}
+
+                        <h6 style="color: rgb(23, 120, 14);">Aprobado</h6>
+
+                        {% endif %}
+                        {% if i[6]=="Sin aprobar" %}
+
+                        <h6 style="color: rgb(226, 55, 55);">Sin aprobar</h6>
+
+                        {% endif %}
+                        {% if i[6]=="Procesado" %}
+
+                        <h6 style="color: rgb(193, 60, 230);">Procesado</h6>
+
+                        {% endif %}
+                        {% if i[6]=="Revisar" %}
+
+                        <h6 style="color: rgb(230, 156, 60);">Revisar</h6>
+
+                        {% endif %}
+
                     </td>
+
                     <td id="acciones" align="center">
                         <div class="row">
-                            {% if i[6]=="no" %}
-                            <a class="btn btn-success btn-sm" href="/admin/aprobar/{{i[0]}}">
-                                <h6>Aprobar</h6>
-                            </a>
+                            {% if i[6]=="Sin aprobar" %}
+                            <div class="col-4">
+                                <a href="/sup/aprobar/{{i[0]}}">
+                                    <img src="{{ url_for( 'static', filename='img/caja_check.svg' ) }}"
+                                        style="height: 28px;width: 28px;">
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="/sup/revisar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/exclamacion.svg' ) }}"
+                                        style="height: 28px;width: 28px;"></a>
+                            </div>
+                            <div class="col-4">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/circulo-cruzado.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;"></a>
+                            </div>
+
+                            {% endif %}
+
+                            {% if i[6]=="Aprobado" %}
+                            <div class="col-4">
+                                <a href="#">
+                                    <img src="{{ url_for( 'static', filename='img/caja_check.svg' ) }}"
+                                        style="height: 28px;width: 28px; opacity: 25%;">
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/exclamacion.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;"></a>
+                            </div>
+                            <div class="col-4">
+                                <a href="/sup/rechazar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/circulo-cruzado.svg' ) }}"
+                                        style="height: 28px;width: 28px;"></a>
+                            </div>
+
+
                             {% endif %}
                         </div>
+
+
                     </td>
 
                 </tr>{% endfor %}
