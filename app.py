@@ -100,6 +100,31 @@ def cargaOferta():
     return render_template('admin/conformarOferta00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
 
 
+@ app.route('/admin/conformarEspecial00')
+def cargaEspecial():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('admin/conformarEspecial00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+
+
 @ app.route('/admin/conformarOferta01/drogueria/', methods=['POST'])
 def ofer01():
     usuario = request.form['hashUsuarioO']
@@ -132,6 +157,40 @@ def ofer01():
     conexion.commit()
 
     return render_template('admin/conformarOferta02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/admin/conformarEspecial01/drogueria/', methods=['POST'])
+def especial01():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('admin/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
 @ app.route('/admin/conformarOferta02/cliente/', methods=['POST'])
@@ -169,6 +228,43 @@ def ofer02():
 
     conexion.commit()
     return render_template('admin/conformarOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/admin/conformarEspecial02/cliente/', methods=['POST'])
+def especial02():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/admin/clientes')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('admin/conformarEspecial04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/admin/conformarOferta04/cliente/', methods=['POST'])
@@ -252,6 +348,87 @@ def ofer04():
 
     return render_template('admin/conformarOferta05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
 
+
+@ app.route('/admin/conformarEspecial04/cliente/', methods=['POST'])
+def especial04():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria2']
+
+    _cliente = request.form['txtCliente2']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in listaOfertaVigenteO:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    # print(listaUnidades)
+    # ancho = len(ofertas)
+    # print("Ancho:", ancho)
+    conexion.commit()
+    # print(usuarios)
+    # print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
+    for i in listaOfertaVigenteO:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    # print(listaModOfer)
+    listaFinal = []
+    for i in listaModOfer:
+        listaModulo = []
+        for x in listaOfertaVigenteO:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    # print(salidaModulos)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    # print(modulosFuncion)
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        # print(elScript)
+        listaInput.append(f'{m}:{elScript}')
+
+    # print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    # print(listaInput)
+
+    return render_template('admin/conformarEspecial05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
 
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -1580,14 +1757,14 @@ def admin_producto_update(id):
 
 @ app.route('/admin/productos/guardar', methods=['POST'])
 def admin_productos_guardar():
-
+    _restringido = request.form['txtRestringido']
     _codigo = request.form['p_cod']
     _desc = request.form['p_descripcion']
     _desde = request.form['p_desde']
     _hasta = request.form['p_hasta']
 
-    sql = "INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`, p_desde, p_hasta) VALUES (NULL, %s,%s,%s,%s);"
-    datos = (_codigo, _desc, _desde, _hasta)
+    sql = "INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`, p_desde, p_hasta, p_restringido) VALUES (NULL, %s,%s,%s,%s,%s);"
+    datos = (_codigo, _desc, _desde, _hasta, _restringido)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -2264,6 +2441,21 @@ def admin_modulo_editar():
 
 @ app.route('/admin/modulos/guardar', methods=['POST'])
 def admin_modulos_guardar():
+    _especial = request.form['txtEspecial']
+    if _especial == "si":
+        _nombre = request.form['m_nombre']
+        _titulo = request.form['m_titulo']
+        _pie = request.form['m_pie']
+        _desde = request.form['m_desde']
+        _hasta = request.form['m_hasta']
+        _cantidad = request.form['txtCantidad']
+
+        sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`, `m_cantidad_minima`, `m_especial`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s);"
+        datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad, _especial)
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute(sql, datos)
+        conexion.commit()
 
     _nombre = request.form['m_nombre']
     _titulo = request.form['m_titulo']
@@ -2272,7 +2464,7 @@ def admin_modulos_guardar():
     _hasta = request.form['m_hasta']
     _cantidad = request.form['txtCantidad']
 
-    sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`, `m_cantidad_minima`) VALUES (NULL, %s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `modulos` (`id_m`, `m_nombre`, `m_titulo`, `m_pie`, `m_desde`, `m_hasta`, `m_cantidad_minima`, `m_especial`) VALUES (NULL, %s,%s,%s,%s,%s,%s,'no');"
     datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad)
 
     conexion = mysql.connect()
