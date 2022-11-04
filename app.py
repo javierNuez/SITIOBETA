@@ -819,6 +819,7 @@ def apms_cargaOferta04_d_c():
 @ app.route('/sup/pedidos', methods=['GET'])
 def pedidosTemplate():
     usuario = session['hash']
+
     usuarioEntero = int(usuario)
     listaRegionMetro = [1200, 1300, 1400, 1500]
     listaRegionNacional = [4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000]
@@ -860,7 +861,7 @@ def pedidosTemplate():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
-    return render_template('/sup/pedidos.html', lospedidos=pedidosDC)
+    return render_template('/sup/pedidos.html', lospedidos=pedidosDC, usuario=usuario)
 
 
 # guardamos el pedido del usuario.
@@ -933,7 +934,7 @@ def pedidosAprobar():
     fecha = datetime.now()
     estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
-    print(pedido)
+
     totalUnidades = 0
     conta = 0
     for i in pedido:
@@ -1050,7 +1051,7 @@ def apmspedidosAprobar():
     fecha = datetime.now()
     estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
-    print(pedido)
+
     totalUnidades = 0
     conta = 0
     for i in pedido:
@@ -1167,7 +1168,7 @@ def pedidosAprobarA():
     fecha = datetime.now()
     estado = "Sin aprobar"
     # print(ofertaCompleta[0][1][0][0])
-    print(pedido)
+
     totalUnidades = 0
     conta = 0
     for i in pedido:
@@ -1318,7 +1319,7 @@ def admin_clientes_borrar(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("DELETE FROM clientes where id_c=%s;", (id))
-    #clientes = cursor.fetchall()
+    # clientes = cursor.fetchall()
     conexion.commit()
 
     return redirect('/admin/clientes')
@@ -2311,7 +2312,7 @@ def admin_pedido_realizado(id):
     for i in lista:
         listaModulosPedidos.append(i[1])
     listaModulos = set(listaModulosPedidos)
-    print(listaModulos)
+
     listaGeneral = []
     for i in listaModulos:
         listaM = []
@@ -2341,7 +2342,7 @@ def sup_pedido_realizado(id):
     for i in lista:
         listaModulosPedidos.append(i[1])
     listaModulos = set(listaModulosPedidos)
-    print(listaModulos)
+
     listaGeneral = []
     for i in listaModulos:
         listaM = []
@@ -2371,7 +2372,7 @@ def apms_pedido_realizado(id):
     for i in lista:
         listaModulosPedidos.append(i[1])
     listaModulos = set(listaModulosPedidos)
-    print(listaModulos)
+
     listaGeneral = []
     for i in listaModulos:
         listaM = []
@@ -2400,6 +2401,18 @@ def admin_aprobar_pedido(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/admin/pedidos')
+    if estadoPedido[0][6] != "Sin aprobar":
+        flash('Pedido debe estar en estado "Sin aprobar".')
+        return redirect('/admin/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
         "UPDATE `pedidosaaprobar` SET `pa_estado`='Aprobado' WHERE id_pedidoA=%s;", (id))
     conexion.commit()
 
@@ -2408,6 +2421,15 @@ def admin_aprobar_pedido(id):
 
 @ app.route('/admin/rechazar/<int:id>')
 def admin_rechazar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/admin/pedidos')
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -2422,6 +2444,15 @@ def admin_revisar_pedido(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/admin/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
         "UPDATE `pedidosaaprobar` SET `pa_estado`='Revisar' WHERE id_pedidoA=%s;", (id))
     conexion.commit()
 
@@ -2430,6 +2461,18 @@ def admin_revisar_pedido(id):
 
 @ app.route('/sup/aprobar/<int:id>')
 def sup_aprobar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/sup/pedidos')
+    if estadoPedido[0][6] != "Sin aprobar":
+        flash('Pedido debe estar en estado "Sin aprobar".')
+        return redirect('/sup/pedidos')
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -2444,6 +2487,15 @@ def sup_rechazar_pedido(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/sup/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
         "UPDATE `pedidosaaprobar` SET `pa_estado`='Sin aprobar' WHERE id_pedidoA=%s;", (id))
     conexion.commit()
 
@@ -2455,10 +2507,87 @@ def sup_revisar_pedido(id):
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/sup/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
         "UPDATE `pedidosaaprobar` SET `pa_estado`='Revisar' WHERE id_pedidoA=%s;", (id))
     conexion.commit()
 
     return redirect('/sup/pedidos')
+
+
+@ app.route('/sup/eliminar/<int:id>')
+def sup_eliminar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/sup/pedidos')
+    if estadoPedido[0][6] != "Revisar":
+        flash('Pedido debe estar en estado "Revisar".')
+        return redirect('/sup/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "DELETE FROM `pedidosaaprobar` WHERE id_pedidoA='%s';", (id))
+    conexion.commit()
+    return redirect('/sup/pedidos')
+
+
+@ app.route('/admin/eliminar/<int:id>')
+def admin_eliminar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/admin/pedidos')
+    if estadoPedido[0][6] != "Revisar":
+        flash('Pedido debe estar en estado "Revisar".')
+        return redirect('/admin/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "DELETE FROM `pedidosaaprobar` WHERE id_pedidoA='%s';", (id))
+    conexion.commit()
+
+    return redirect('/admin/pedidos')
+
+
+@ app.route('/apms/eliminar/<int:id>')
+def apms_eliminar_pedido(id):
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE id_pedidoA=%s;", (id))
+    estadoPedido = cursor.fetchall()
+    conexion.commit()
+    if estadoPedido[0][6] == "Procesado":
+        flash('El pedido fue procesado.')
+        return redirect('/admin/pedidos')
+    if estadoPedido[0][6] != "Revisar":
+        flash('Pedido debe estar en estado "Revisar".')
+        return redirect('/apms/pedidos')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "DELETE FROM `pedidosaaprobar` WHERE id_pedidoA='%s';", (id))
+    conexion.commit()
+
+    return redirect('/apms/pedidos')
 
 
 def pagina_no_encontrada(error):

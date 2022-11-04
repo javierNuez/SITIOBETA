@@ -30,13 +30,14 @@
                         <th scope="col" style="text-align:center;">Usuario</th>
                         <th scope="col" style="text-align:center;">Cod.Drog</th>
                         <th scope="col" style="text-align:center;">Drogueria</th>
-                        <th scope="col" style="text-align:center;"></th>
+
                         <th scope="col" style="text-align:center;">Cod.Cli.</th>
                         <th scope="col" style="text-align:center;">Cliente.</th>
                         <th scope="col" style="text-align:center;">Unidades</th>
                         <th scope="col" style="text-align:center;">Fecha</th>
                         <th scope="col" style="text-align:center;">Estado</th>
                         <th scope="col" style="text-align:center;">Acciones</th>
+                        <th scope="col" style="text-align:center;"></th>
                     </tr>
                 </thead>
                 {% for i in lospedidos %}
@@ -57,12 +58,7 @@
 
                         {{i[8]}}
                     </td>
-                    <td style="text-align: center;" scope="col" class="table-light">
-                        <a class="btn btn-dark btn-sm"
-                            href="javascript:finestraSecundaria('/admin/pedidorealizado/{{i[0]}}')">
-                            <h6>ver</h6>
-                        </a>
-                    </td>
+
                     <td style="text-align: center;" scope="col" class="table-light">
                         {{i[3]}}
                     </td>
@@ -92,7 +88,7 @@
                         {% endif %}
                         {% if i[6]=="Procesado" %}
 
-                        <h6 style="color: rgb(193, 60, 230);">Procesado</h6>
+                        <h6 style="color: rgb(28, 145, 223);">Procesado</h6>
 
                         {% endif %}
                         {% if i[6]=="Revisar" %}
@@ -106,48 +102,96 @@
                     <td id="acciones" align="center">
                         <div class="row">
                             {% if i[6]=="Sin aprobar" %}
-                            <div class="col-4">
-                                <a href="/sup/aprobar/{{i[0]}}">
-                                    <img src="{{ url_for( 'static', filename='img/caja_check.svg' ) }}"
-                                        style="height: 28px;width: 28px;">
+                            <div class="col-3">
+                                <a href="/admin/aprobar/{{i[0]}}">
+                                    <img src="{{ url_for( 'static', filename='img/ok2.png' ) }}"
+                                        style="height: 28px;width: 28px;" title="Aprobar">
                                 </a>
                             </div>
-                            <div class="col-4">
-                                <a href="/sup/revisar/{{i[0]}}"><img
-                                        src="{{ url_for( 'static', filename='img/exclamacion.svg' ) }}"
-                                        style="height: 28px;width: 28px;"></a>
+                            <div class="col-3">
+                                <a href="/admin/revisar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/revisar.svg' ) }}"
+                                        style="height: 28px;width: 28px;" title="Revisar"></a>
                             </div>
-                            <div class="col-4">
-                                <a href="#"><img src="{{ url_for( 'static', filename='img/circulo-cruzado.svg' ) }}"
-                                        style="height: 28px;width: 28px;opacity: 25%;"></a>
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/cuidado3.png' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;" title="Sin aprobar"></a>
+                            </div>
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;" title="Eliminar"></a>
                             </div>
 
                             {% endif %}
 
                             {% if i[6]=="Aprobado" %}
-                            <div class="col-4">
+                            <div class="col-3">
                                 <a href="#">
-                                    <img src="{{ url_for( 'static', filename='img/caja_check.svg' ) }}"
-                                        style="height: 28px;width: 28px; opacity: 25%;">
+                                    <img src="{{ url_for( 'static', filename='img/ok2.png' ) }}"
+                                        style="height: 28px;width: 28px; opacity: 25%;" title="Aprobar">
                                 </a>
                             </div>
-                            <div class="col-4">
-                                <a href="#"><img src="{{ url_for( 'static', filename='img/exclamacion.svg' ) }}"
-                                        style="height: 28px;width: 28px;opacity: 25%;"></a>
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/revisar.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;" title="Revisar"></a>
                             </div>
-                            <div class="col-4">
-                                <a href="/sup/rechazar/{{i[0]}}"><img
-                                        src="{{ url_for( 'static', filename='img/circulo-cruzado.svg' ) }}"
-                                        style="height: 28px;width: 28px;"></a>
+                            <div class="col-3">
+                                <a href="/admin/rechazar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/cuidado3.png' ) }}"
+                                        style="height: 28px;width: 28px;" title="Sin aprobar"></a>
+                            </div>
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;" title="Eliminar"></a>
                             </div>
 
 
                             {% endif %}
-                        </div>
+                            {% if i[6]=="Revisar" %}
+                            <div class="col-3">
+                                <a href="#">
+                                    <img src="{{ url_for( 'static', filename='img/ok2.png' ) }}"
+                                        style="height: 28px;width: 28px; opacity: 25%;" title="Aprobar">
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/revisar.svg' ) }}"
+                                        style="height: 28px;width: 28px;opacity: 25%;" title="Revisar"></a>
+                            </div>
+                            <div class="col-3">
+                                <a href="/admin/rechazar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/cuidado3.png' ) }}"
+                                        style="height: 28px;width: 28px;" title="Sin aprobar"></a>
+                            </div>
+                            <div class="col-3">
+                                <a href="/admin/eliminar/{{i[0]}}"><img
+                                        src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                        style="height: 28px;width: 28px;" title="Eliminar"></a>
+                            </div>
 
+                            {% endif %}
+                            {% if i[6]=="Procesado" %}
+                            <div class="col-3">
+                                <a href="#"><img src="{{ url_for( 'static', filename='img/verificado.png' ) }}"
+                                        style="height: 28px;width: 28px;" title="Procesado"></a>
+                            </div>
+                            <div class="col-3">
+
+                            </div>
+                            <div class="col-3">
+                            </div>
+                            <div class="col-3">
+                            </div>
+                            {% endif %}
 
                     </td>
-
+                    <td style="text-align: center;" scope="col" class="table-light">
+                        <a class="btn btn-dark btn-sm"
+                            href="javascript:finestraSecundaria('/admin/pedidorealizado/{{i[0]}}')"
+                            style="width: 50px; height: 27.99px; padding-top: 2px;">
+                            <h6>ver</h6>
+                        </a>
+                    </td>
                 </tr>{% endfor %}
             </table>
 

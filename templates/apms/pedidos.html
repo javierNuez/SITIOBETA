@@ -30,13 +30,14 @@
                         <th scope="col" style="text-align:center;">Usuario</th>
                         <th scope="col" style="text-align:center;">Cod.Drog</th>
                         <th scope="col" style="text-align:center;">Drogueria</th>
-                        <th scope="col" style="text-align:center;"></th>
+
                         <th scope="col" style="text-align:center;">Cod.Cli.</th>
                         <th scope="col" style="text-align:center;">Cliente.</th>
                         <th scope="col" style="text-align:center;">Unidades</th>
                         <th scope="col" style="text-align:center;">Fecha</th>
                         <th scope="col" style="text-align:center;">Aprobado</th>
                         <th scope="col" style="text-align:center;">Acciones</th>
+                        <th scope="col" style="text-align:center;"></th>
                     </tr>
                 </thead>
                 {% for i in lospedidos %}
@@ -57,12 +58,7 @@
 
                         {{i[8]}}
                     </td>
-                    <td style="text-align: center;" scope="col" class="table-light">
-                        <a class="btn btn-primary btn-sm"
-                            href="javascript:finestraSecundaria('/apms/pedidorealizado/{{i[0]}}')">
-                            <h6>ver</h6>
-                        </a>
-                    </td>
+
                     <td style="text-align: center;" scope="col" class="table-light">
                         {{i[3]}}
                     </td>
@@ -92,7 +88,7 @@
                         {% endif %}
                         {% if i[6]=="Procesado" %}
 
-                        <h6 style="color: rgb(193, 60, 230);">Procesado</h6>
+                        <h6 style="color: rgb(28, 145, 223);">Procesado</h6>
 
                         {% endif %}
                         {% if i[6]=="Revisar" %}
@@ -104,16 +100,56 @@
                     </td>
 
                     <td id="acciones" align="center">
-                        <div class="row">
+                        {% if i[6]=="Revisar" %}
+                        <div class="col-4">
 
-
-
-
-
+                        </div>
+                        <div class="col-4">
+                            <a href="/apms/eliminar/{{i[0]}}"><img
+                                    src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                    style="height: 28px;width: 28px;" title="Eliminar"></a>
+                        </div>
+                        <div class="col-4">
 
                         </div>
 
 
+                        {% endif %}
+                        {% if i[6]=="Sin aprobar" %}
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-4">
+                            <a href="/apms/eliminar/{{i[0]}}"><img
+                                    src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                    style="height: 28px;width: 28px;" title="Eliminar"></a>
+                        </div>
+                        <div class="col-4">
+
+                        </div>
+
+
+                        {% endif %}
+                        {% if i[6]=="Procesado" %}
+                        <div class="col-3">
+                            <a href="#"><img src="{{ url_for( 'static', filename='img/verificado.png' ) }}"
+                                    style="height: 28px;width: 28px;" title="Procesado"></a>
+                        </div>
+                        <div class="col-3">
+
+                        </div>
+                        <div class="col-3">
+                        </div>
+                        <div class="col-3">
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;" scope="col" class="table-light">
+                        <a class="btn btn-dark btn-sm"
+                            href="javascript:finestraSecundaria('/apms/pedidorealizado/{{i[0]}}')"
+                            style="width: 50px; height: 27.99px; padding-top: 2px;">
+                            <h6>ver</h6>
+                        </a>
                     </td>
 
                 </tr>{% endfor %}
