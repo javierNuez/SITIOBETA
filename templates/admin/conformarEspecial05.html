@@ -52,7 +52,7 @@
                             <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
                             <th style="text-align: left;" scope="col" class="table-primary"></th>
                             <th style="text-align: left;" scope="col" class="table-primary"></th>
-                            <th style="text-align: left;" scope="col" class="table-primary"></th>
+
                             <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
                                 {{salida[1][0][7]}}</th>
                         </tr>
@@ -65,8 +65,7 @@
                                     Producto</th>
                                 <th style="text-align: center;" scope="col" class="table-info">
                                     Código</th>
-                                <th style="text-align: center;" scope="col" class="table-info">
-                                    Cantidad mínima</th>
+
                                 <th style="text-align: center;" scope="col" class="table-info">
                                     Descuento</th>
                                 <th style="text-align: center;" scope="col" class="table-info">
@@ -86,20 +85,27 @@
                                 endif %}" scope="col" class="table-light">
                                 {{i[9]}}
                             </td>
-                            <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
-                                endif %}" scope="col" class="table-light" id="min{{i[0]}}" value="{{i[13]}}">
-                                {{i[13]}}
-                            </td>
+
                             <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
                                 endif %}" scope="col" class="table-light">
-                                {{i[14]}}%
+                                {% if i[18] == 'no' %}
+                                <input type="number" style="width:70px; text-align: center;" value="0">
+                                {% endif %}
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">
 
+                                {% if i[18] == 'no' %}
                                 <input class="inputs" type="number" style="width:70px; text-align: center;"
                                     id="{{i[0]}}"
-                                    oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}},{{salida[1][0][7]}})"
-                                    value="0" name="{{i[0]}}">
+                                    oninput="ponerMinimo({{i[0]}}, 0,{{salida[1][0][1]}},{{salida[1][0][7]}})" value="0"
+                                    name="{{i[0]}}">
+                                {% endif %}
+                                {% if i[18] == 'si' %}
+                                <input class="inputs" type="number" style="width:70px; text-align: center;"
+                                    id="{{i[0]}}"
+                                    oninput="ponerMinimo({{i[0]}}, 0,{{salida[1][0][1]}},{{salida[1][0][7]}})" value="0"
+                                    name="{{i[0]}}" disabled>
+                                {% endif %}
                                 <!--min="{{i[13]}}" -->
                             </td>
                         </tr>
@@ -112,9 +118,7 @@
                             <td style="text-align: center;" scope="col" class="table-secondary">
 
                             </td>
-                            <td style="text-align: center;" scope="col" class="table-secondary">
 
-                            </td>
                             <td style="text-align: center;" scope="col" class="table-secondary">
                                 <h5>Total:</h5>
                             </td>

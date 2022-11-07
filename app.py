@@ -282,7 +282,7 @@ def ofer04():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`")
+        "SELECT * FROM `ofertas` where o_especial = 'no';")
     ofertas = cursor.fetchall()
     now = datetime.now()
     listaOfertaVigenteO = []
@@ -407,7 +407,7 @@ def especial04():
         listaFinal.append(listaModulo)
     listaTerminal = zip(listaModOfer, listaFinal)
     salidaModulos = list(listaTerminal)
-    # print(salidaModulos)
+    print(salidaModulos)
     anchoModulos = len(salidaModulos)
     listaInput = []
     modulosFuncion = list(zip(listaModOfer, listaFinal))
@@ -552,9 +552,9 @@ def admin_ofertas_guardar():
     if _modulo == '' or _producto == '' or _minima == '' or _descuento == '':
         flash('¡Por favor llenar todos los campos!')
         return redirect('/admin/ofertas')
-    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
-             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio)
+             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7])
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -566,7 +566,7 @@ def admin_ofertas_guardar():
 # ofertas control
 
 
-@app.route('/admin/ofertas')
+@ app.route('/admin/ofertas')
 def admin_ofertas():
     now = datetime.now()
     conexion = mysql.connect()
@@ -618,6 +618,29 @@ def admin_ofertas_update(id):
     return render_template('admin/editarOferta.html', ofertas=ofertas)
 
 
+@app.route('/admin/editarOfertas/editar', methods=['POST'])
+def admin_ofertas_editar():
+
+    _modulo = request.form['txtModulo']
+    _producto = request.form['txtProducto']
+    _minima = request.form['txtMinima']
+    _descuento = request.form['txtDescuento']
+    datos_modulo = [_modulo.split('#')]
+    datos_producto = [_producto.split('#')]
+    _obligatorio = request.form['txtObligatorio']
+    if _modulo == '' or _producto == '' or _minima == '' or _descuento == '':
+        flash('¡Por favor llenar todos los campos!')
+        return redirect('/admin/ofertas')
+    sql = "UPDATE `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
+             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7])
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+
+    return redirect('/admin/ofertas')
 # funciones de usuarios:
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
@@ -625,7 +648,7 @@ def admin_ofertas_update(id):
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@app.route('/sup/ofertas/')
+@ app.route('/sup/ofertas/')
 def sup_ofertas():
 
     conexion = mysql.connect()
@@ -657,7 +680,7 @@ def sup_ofertas():
     return render_template('sup/ofertas.html', ofertas=listaOfertaVigente, droguerias=droguerias, clientes=clientes)
 
 
-@app.route('/apms/ofertas/')
+@ app.route('/apms/ofertas/')
 def apms_ofertas():
 
     conexion = mysql.connect()
@@ -1793,11 +1816,12 @@ def admin_productos_editar():
     _desc = request.form['p_descripcion']
     _desde = request.form['p_desde']
     _hasta = request.form['p_hasta']
+    _restringido = request.form['txtRestringido']
     _id = request.form['txtID']
 
-    sql = "UPDATE productos SET p_cod=%s, p_descripcion=%s, p_desde =%s, p_hasta=%s WHERE id_p=%s;"
-    sql2 = "UPDATE ofertas SET o_prod_cod=%s, o_prod_des=%s, o_prod_d=%s, o_prod_h=%s WHERE o_producto=%s;"
-    datos = (_cod, _desc, _desde, _hasta, _id)
+    sql = "UPDATE productos SET p_cod=%s, p_descripcion=%s, p_desde =%s, p_hasta=%s, p_restringido=%s WHERE id_p=%s;"
+    sql2 = "UPDATE ofertas SET o_prod_cod=%s, o_prod_des=%s, o_prod_d=%s, o_prod_h=%s, o_restringido=%s WHERE o_producto=%s;"
+    datos = (_cod, _desc, _desde, _hasta, _restringido, _id)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -2265,7 +2289,7 @@ def usuarios_oces_uno(id):
         return jsonify({'mensaje': "Error"})
 
 
-@app.route('/apibeta', methods=['POST'])
+@ app.route('/apibeta', methods=['POST'])
 def registrar_modulos_api():
     respuesta = request.json
     try:
@@ -2287,7 +2311,7 @@ def registrar_modulos_api():
         return jsonify({'mensaje': f"Error {respuesta}"})
 
 
-@app.route('/apibeta2', methods=['DELETE'])
+@ app.route('/apibeta2', methods=['DELETE'])
 def registrar_modulos_api_DELETE_():
     respuesta = request.json
     try:
@@ -2309,7 +2333,7 @@ def registrar_modulos_api_DELETE_():
         return jsonify({'mensaje': f"Error {respuesta}"})
 
 
-@app.route('/apibeta2', methods=['PUT'])
+@ app.route('/apibeta2', methods=['PUT'])
 def registrar_modulos_api_put_():
     try:
         _mensaje = request.json['mensaje']
@@ -2386,7 +2410,7 @@ def registrar_modulos_api_put_():
         return jsonify({'mensaje': "Error"})
 
 
-@app.route('/apibeta2', methods=['POST'])
+@ app.route('/apibeta2', methods=['POST'])
 def registrar_modulos_api_sin_():
 
     try:
@@ -2426,10 +2450,10 @@ def admin_modulo_editar():
     _hasta = request.form['txtHasta']
     _id = request.form['txtID']
     _cantidad = request.form['txtCantidad']
-
-    sql = "UPDATE modulos SET m_nombre=%s, m_titulo=%s, m_pie=%s, m_desde=%s, m_hasta=%s, m_cantidad_minima=%s WHERE id_m=%s;"
-    datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad, _id)
-    sql2 = "UPDATE ofertas SET o_mod_nom=%s, o_mod_tit=%s, o_mod_pie=%s, o_mod_d=%s, o_mod_h=%s, o_mod_minima=%s WHERE o_modulo=%s;"
+    _especial = request.form['txtEspecial']
+    sql = "UPDATE modulos SET m_nombre=%s, m_titulo=%s, m_pie=%s, m_desde=%s, m_hasta=%s, m_cantidad_minima=%s, m_especial=%s WHERE id_m=%s;"
+    datos = (_nombre, _titulo, _pie, _desde, _hasta, _cantidad, _especial, _id)
+    sql2 = "UPDATE ofertas SET o_mod_nom=%s, o_mod_tit=%s, o_mod_pie=%s, o_mod_d=%s, o_mod_h=%s, o_mod_minima=%s,o_especial=%s WHERE o_modulo=%s;"
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
@@ -2456,6 +2480,7 @@ def admin_modulos_guardar():
         cursor = conexion.cursor()
         cursor.execute(sql, datos)
         conexion.commit()
+        return redirect('/admin/modulos')
 
     _nombre = request.form['m_nombre']
     _titulo = request.form['m_titulo']

@@ -61,7 +61,15 @@
                                     <div class="card-body">
                                         <label for="p_hasta" class="form-label">Hasta:</label>
                                         <input class="form-control" value="{{producto[4]}}" type="date" name="p_hasta"
-                                            id="txtDescripcion">
+                                            id="">
+                                    </div>
+                                    <div class="card-body">
+                                        <label for="txtRestringido" class="form-label">Prod. Restringido:</label>
+                                        <select name="txtRestringido" id="txtRestringido">
+                                            <option value="{{producto[5]}}">{{producto[5]}}</option>
+                                            <option value="si">Si</option>
+                                            <option value="no">No</option>
+                                        </select>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -89,8 +97,9 @@
 
 
                     </form>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+
                 <div class="col-2"></div>
             </div>
         </div>

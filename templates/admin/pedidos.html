@@ -44,7 +44,11 @@
                 <tr class="table-light">
 
                     <td style="text-align: center;" scope="col" class="table-light">
-                        <h5>{{i[0]}}</h5>
+
+                        {% if i[0] < 100 %} 00{{i[0]}} {% endif %} {% if i[0]>= 100 %}
+                            0{{i[0]}}
+                            {% endif %}
+
                     </td>
                     <td style="text-align: center;" scope="col" class="table-light">
 
@@ -78,22 +82,25 @@
                     <td style="text-align: center;" scope="col" class="table-light">
                         {% if i[6]=="Aprobado" %}
 
-                        <h6 style="color: rgb(23, 120, 14);">Aprobado</h6>
-
+                        <!--<h6 style="color: rgb(23, 120, 14);">Aprobado</h6>-->
+                        <h6 style="color: rgb(0, 0, 0);" hidden>Aprobado</h6>
+                        Aprobado
                         {% endif %}
                         {% if i[6]=="Sin aprobar" %}
-
-                        <h6 style="color: rgb(226, 55, 55);">Sin aprobar</h6>
+                        <!--<h6 style="color: rgb(226, 55, 55);">Sin aprobar</h6>-->
+                        <h6 style="color: rgb(0, 0, 0);" hidden>Sin aprobar</h6>
+                        Sin aprobar
 
                         {% endif %}
                         {% if i[6]=="Procesado" %}
-
-                        <h6 style="color: rgb(28, 145, 223);">Procesado</h6>
+                        <!--<h6 style="color: rgb(28, 145, 223);">Procesado</h6>-->
+                        <h6 style="color: rgb(0, 0, 0);">Procesado</h6>
 
                         {% endif %}
                         {% if i[6]=="Revisar" %}
-
-                        <h6 style="color: rgb(230, 156, 60);">Revisar</h6>
+                        <!--<h6 style="color: rgb(230, 156, 60);">Revisar</h6>-->
+                        <h6 style="color: rgb(0, 0, 0);" hidden>Revisar</h6>
+                        Revisar
 
                         {% endif %}
 
