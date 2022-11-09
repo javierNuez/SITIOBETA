@@ -1,5 +1,5 @@
-{% include 'admin/cabecera.html' %}
-<form action="/admin/guardar/pedidosaaprobarE" method="post" enctype="multipart/form-data">
+{% include 'sup/cabecera.html' %}
+<form action="/sup/guardar/pedidosaaprobarE" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");
@@ -243,4 +243,4 @@
         </script>
     </div>
 </form>
-{% include 'admin/pie.html' %}
+{% include 'sup/pie.html' %}

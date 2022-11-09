@@ -27,20 +27,46 @@
             <h3 align="center">Supervisor</h3>
         </div>
         <nav class="navbar navbar-expand navbar-light bg-light">
+            <div class="nav navbar-nav" style="margin:auto;">
+                <a class="nav-item nav-link" href="/sup/inicio">Inicio</a>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
 
-            <div id="links" class="nav navbar-nav" style="margin:auto;">
-                <a class="nav-item nav-link active" href="/sup/inicio">Inicio</a>
-                <a class="nav-item nav-link" href="/sup/pedidos">Pedidos</a>
-                <a class="nav-item nav-link" href="/sup/ofertas/">Gestionar pedido</a>
-                <a class="nav-item nav-link" href="/sup/clientes/">Clientes</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown">Pedidos</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/sup/pedidos">Ver Pedidos</a></li>
+                                <li><a class="dropdown-item" href="/sup/cargaOferta00">Pedidos comunes</a></li>
+                                <li><a class="dropdown-item" href="/sup/conformarEspecial00">Pedidos especiales</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <a class="nav-item nav-link" href="/admin/clientes">Clientes</a>
                 <a class="nav-item nav-link" href="/" onclick="return salirSession()">Cerrar sesión</a>
+
+
             </div>
-            <script>
-                function salirSession() {
-                    sessionStorage.clear()
-                    document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                }
-            </script>
+        </nav>
+        <!--
+                <div id="links" class="nav navbar-nav" style="margin:auto;">
+                    <a class="nav-item nav-link active" href="/sup/inicio">Inicio</a>
+                    <a class="nav-item nav-link" href="/sup/pedidos">Pedidos</a>
+                    <a class="nav-item nav-link" href="/sup/ofertas/">Gestionar pedido</a>
+                    <a class="nav-item nav-link" href="/sup/clientes/">Clientes</a>
+                    <a class="nav-item nav-link" href="/" onclick="return salirSession()">Cerrar sesión</a>
+                </div>-->
+        <script>
+            function salirSession() {
+                sessionStorage.clear()
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        </script>
         </nav>
 
         <div class="container">

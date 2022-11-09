@@ -1,5 +1,6 @@
 
 
+from http.client import BAD_REQUEST
 from locale import normalize
 from random import randint
 from audioop import add
@@ -125,6 +126,32 @@ def cargaEspecial():
     return render_template('admin/conformarEspecial00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
 
 
+@ app.route('/sup/conformarEspecial00')
+def supCargaEspecial():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM ofertas where o_especial='no' ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('sup/conformarEspecial00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+
+
 @ app.route('/admin/conformarOferta01/drogueria/', methods=['POST'])
 def ofer01():
     usuario = request.form['hashUsuarioO']
@@ -191,6 +218,40 @@ def especial01():
     conexion.commit()
 
     return render_template('admin/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/sup/conformarEspecial01/drogueria/', methods=['POST'])
+def supEspecial01():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('sup/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
 @ app.route('/admin/conformarOferta02/cliente/', methods=['POST'])
@@ -265,6 +326,43 @@ def especial02():
 
     conexion.commit()
     return render_template('admin/conformarEspecial04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/sup/conformarEspecial02/cliente/', methods=['POST'])
+def supEspecial02():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/sup/clientes')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('sup/conformarEspecial04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/admin/conformarOferta04/cliente/', methods=['POST'])
@@ -430,6 +528,87 @@ def especial04():
 
     return render_template('admin/conformarEspecial05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
 
+
+@ app.route('/sup/conformarEspecial04/cliente/', methods=['POST'])
+def supEspecial04():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria2']
+
+    _cliente = request.form['txtCliente2']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in listaOfertaVigenteO:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    # print(listaUnidades)
+    # ancho = len(ofertas)
+    # print("Ancho:", ancho)
+    conexion.commit()
+    # print(usuarios)
+    # print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
+    for i in listaOfertaVigenteO:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    # print(listaModOfer)
+    listaFinal = []
+    for i in listaModOfer:
+        listaModulo = []
+        for x in listaOfertaVigenteO:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    print(salidaModulos)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    # print(modulosFuncion)
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        # print(elScript)
+        listaInput.append(f'{m}:{elScript}')
+
+    # print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    # print(listaInput)
+
+    return render_template('sup/conformarEspecial05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
@@ -643,7 +822,7 @@ def admin_ofertas_editar():
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
-@ app.route('/sup/ofertas/')
+@ app.route('/sup/cargaOferta00/')
 def sup_ofertas():
 
     conexion = mysql.connect()
@@ -727,7 +906,7 @@ def sup_cargaOferta01_droguerias():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`")
+        "SELECT * FROM `ofertas` where o_especial = 'no';")
     ofertas = cursor.fetchall()
 
     conexion = mysql.connect()
@@ -795,7 +974,7 @@ def sup_cargaOferta02_droguerias():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`")
+        "SELECT * FROM `ofertas` where o_especial = 'no';")
     ofertas = cursor.fetchall()
     conexion.commit()
 
@@ -863,7 +1042,7 @@ def sup_cargaOferta04_d_c():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`")
+        "SELECT * FROM `ofertas` where o_especial='no';")
     ofertas = cursor.fetchall()
     now = datetime.now()
     listaOfertaVigenteO = []
@@ -1095,7 +1274,7 @@ def pedidosAprobar():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`;")
+        "SELECT * FROM `ofertas` where o_especial='no';")
     ofertas = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -1329,7 +1508,7 @@ def pedidosAprobarA():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`;")  # WHERE o_especial = 'no'
+        "SELECT * FROM `ofertas` WHERE o_especial = 'no';")
     ofertas = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -1348,6 +1527,200 @@ def pedidosAprobarA():
         listaInputs.append(oferta[0])
         listaValor.append(request.form[f"{oferta[0]}"])
     losInputs = zip(listaInputs, listaValor)
+    pedidoUser = list(losInputs)
+
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    output = ast.literal_eval(salidas)  # convertimos un string a lista.
+    ofertaCompleta = output
+    pedido = pedidoUser
+    fecha = datetime.now()
+    estado = "Sin aprobar"
+    # print(ofertaCompleta[0][1][0][0])
+
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+
+    conta = 0
+    listaDelPedido = []
+    for m in ofertaCompleta:
+
+        # print(m)
+        for i in m:
+
+            try:
+                if int(i) == i:
+                    pass
+            except TypeError:
+                # print(i)  # los modulos
+
+                for elementoModulo in i:
+                    pedidosUnidades = list(elementoModulo)
+                    pedidosUnidades.append(pedido[conta][1])
+                    listaDelPedido.append(pedidosUnidades)
+
+                    # print(pedidosUnidades)
+                    # print(elementoModulo[0])
+                    # print(pedido[conta][1])
+                    # print(elementoModulo[0])
+                    # print(pedido)
+                    conta = conta+1
+                    # print(conta)
+
+    # print(len(listaDelPedido))
+    jsonPedido = json.dumps(listaDelPedido)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    # print(jsonPedido)
+    return redirect('/admin/pedidos')
+
+
+@ app.route('/sup/guardar/pedidosaaprobarE', methods=['POST'])
+def supPedidosAprobarEspecial():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaInputs = []
+    listaValor = []
+    for oferta in listaOfertaVigenteO:
+        try:
+            listaInputs.append(oferta[0])
+            listaValor.append(request.form[f"{oferta[0]}"])
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    print(listaInputs, "inputs")
+    print(listaValor, "valores")
+    losInputs = zip(listaInputs, listaValor)
+    print(losInputs)
+    pedidoUser = list(losInputs)
+
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    output = ast.literal_eval(salidas)  # convertimos un string a lista.
+    ofertaCompleta = output
+    pedido = pedidoUser
+    fecha = datetime.now()
+    estado = "Sin aprobar"
+    # print(ofertaCompleta[0][1][0][0])
+
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+
+    conta = 0
+    listaDelPedido = []
+    for m in ofertaCompleta:
+
+        # print(m)
+        for i in m:
+
+            try:
+                if int(i) == i:
+                    pass
+            except TypeError:
+                # print(i)  # los modulos
+
+                for elementoModulo in i:
+                    pedidosUnidades = list(elementoModulo)
+                    pedidosUnidades.append(pedido[conta][1])
+                    listaDelPedido.append(pedidosUnidades)
+
+                    # print(pedidosUnidades)
+                    # print(elementoModulo[0])
+                    # print(pedido[conta][1])
+                    # print(elementoModulo[0])
+                    # print(pedido)
+                    conta = conta+1
+                    # print(conta)
+
+    # print(len(listaDelPedido))
+    jsonPedido = json.dumps(listaDelPedido)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    # print(jsonPedido)
+    return redirect('/sup/pedidos')
+
+
+@ app.route('/admin/guardar/pedidosaaprobarE', methods=['POST'])
+def pedidosAprobarEspecial():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaInputs = []
+    listaValor = []
+    for oferta in listaOfertaVigenteO:
+        try:
+            listaInputs.append(oferta[0])
+            listaValor.append(request.form[f"{oferta[0]}"])
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    print(listaInputs, "inputs")
+    print(listaValor, "valores")
+    losInputs = zip(listaInputs, listaValor)
+    print(losInputs)
     pedidoUser = list(losInputs)
 
     usuario = request.form['pedidoUsuario']
