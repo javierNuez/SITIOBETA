@@ -1577,10 +1577,12 @@ def pedidosAprobarA():
                     # print(conta)
 
     # print(len(listaDelPedido))
+
+    _detalle = request.form['txtDetalle']
     jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
-             str(fecha), estado, totalUnidades)
+             str(fecha), estado, totalUnidades, _detalle)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1765,16 +1767,16 @@ def pedidosAprobarEspecial():
     ofertaCompletaConDescuento = []
     contax = 0
     for o in ofertaCompleta:
-        item = list(o[1][0])
-        for p in pedidoUser:
-            print(item[0], "id ofertas")
-            print(p[0], "oferta")
-            if item[0] == p[0]:
-                item[14] = p[2]
-                print(p[2], "el descuento modificado")
-        item.append(pedidoUser[contax][1])
-        ofertaCompletaConDescuento.append(tuple(item))
-        contax = contax+1
+        for l in o[1]:
+            item = list(l)  # aca puede estar
+            print(item)
+            for p in pedidoUser:
+                if item[0] == p[0]:
+                    item[14] = p[2]
+
+            item.append(pedidoUser[contax][1])
+            ofertaCompletaConDescuento.append(tuple(item))
+            contax = contax+1
     # print(ofertaCompleta[0])
     # print(ofertaCompleta)
     pedido = pedidoUser
@@ -2979,8 +2981,9 @@ def sup_pedido_realizado(id):
                 listaM.append(x)
         listaGeneral.append(listaM)
     total = lospedidos[0][7]
+    detalle = lospedidos[0][8]
 
-    return render_template('sup/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total)
+    return render_template('sup/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total, detalle=detalle)
 
 
 @ app.route('/apms/pedidorealizado/<int:id>')

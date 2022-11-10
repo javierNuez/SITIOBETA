@@ -16,49 +16,51 @@
 		<div class="card-body">
 
 			<table id="tblContact" class="table table-sm">
-				<form action="/admin/productos/guardar" method="post" enctype="multipart/form-data"></form>
-				<thead>
-					<tr>
-						<!--<th scope="col" class="table-info">#</th>-->
+				<form action="/admin/productos/guardar" method="post" enctype="multipart/form-data">
+					<thead>
+						<tr>
+							<!--<th scope="col" class="table-info">#</th>-->
 
 
-						<th style="text-align: center;" scope="col" class="table-info">Código</th>
-						<th style="text-align: center;" scope="col" class="table-info">Descripción</th>
-						<th style="text-align: center;" scope="col" class="table-info">desde</th>
-						<th style="text-align: center;" scope="col" class="table-info">hasta</th>
-						<th style="text-align: center;" scope="col" class="table-info">Restringido</th>
-						<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
-					</tr>
-				</thead>
-				<tbody id="rowsProductos">
+							<th style="text-align: center;" scope="col" class="table-info">Código</th>
+							<th style="text-align: center;" scope="col" class="table-info">Descripción</th>
+							<th style="text-align: center;" scope="col" class="table-info">desde</th>
+							<th style="text-align: center;" scope="col" class="table-info">hasta</th>
+							<th style="text-align: center;" scope="col" class="table-info">Restringido</th>
+							<th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="rowsProductos">
 
-					<tr>
-						<!--<th scope="row">0</th>-->
+						<tr>
+							<!--<th scope="row">0</th>-->
 
 
-						<td id="p_cod"><input type="text" class="form-control form-control-sm" name="p_cod" id="#"
-								aria-describedby="helpId" placeholder=""></td>
-						<td id="p_descripcion"><input type="text" class="form-control form-control-sm"
-								name="p_descripcion" id="#" aria-describedby="helpId" placeholder=""></td>
-						<td id="p_desde"><input type="date" class="form-control form-control-sm" name="p_desde" id="#"
-								aria-describedby="helpId" placeholder=""></td>
-						<td id="p_hasta"><input type="date" class="form-control form-control-sm" name="p_hasta" id="#"
-								aria-describedby="helpId" placeholder=""></td>
-						<td id="">
-							<select type="text" class="form-control form-control-sm" name="txtRestringido" id="#"
-								aria-describedby="helpId" placeholder="" style="max-width: 50px; margin-left: 30px;">
-								<option>no</option>
-								<option>si</option>
-							</select>
-						</td>
-						<td id="acciones">
-							<div class="d-grid gap-2 col-6 mx-auto">
-								<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
-							</div>
-						</td>
-					</tr>
+							<td id="p_cod"><input type="text" class="form-control form-control-sm" name="p_cod" id="#"
+									aria-describedby="helpId" placeholder=""></td>
+							<td id="p_descripcion"><input type="text" class="form-control form-control-sm"
+									name="p_descripcion" id="#" aria-describedby="helpId" placeholder=""></td>
+							<td id="p_desde"><input type="date" class="form-control form-control-sm" name="p_desde"
+									id="#" aria-describedby="helpId" placeholder=""></td>
+							<td id="p_hasta"><input type="date" class="form-control form-control-sm" name="p_hasta"
+									id="#" aria-describedby="helpId" placeholder=""></td>
+							<td id="">
+								<select type="text" class="form-control form-control-sm" name="txtRestringido" id="#"
+									aria-describedby="helpId" placeholder=""
+									style="max-width: 50px; margin-left: 30px;">
+									<option>no</option>
+									<option>si</option>
+								</select>
+							</td>
+							<td id="acciones">
+								<div class="d-grid gap-2 col-6 mx-auto">
+									<button type="submit" class="btn btn-dark btn-sm">Agregar</button>
+								</div>
+							</td>
+						</tr>
 
-				</tbody>
+					</tbody>
+				</form>
 			</table>
 		</div>
 	</div>

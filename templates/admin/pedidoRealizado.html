@@ -57,25 +57,32 @@
 
 
                     <div class="card-header">
-                        <h4>Informacion del pedido:</h4>
-                        <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
-                        <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
-                        <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
-                        {% if usuario %}
-                        <input type="text" name="pedidoUsuario" value="{{usuario[-5:]}}" hidden>
-                        {% endif %}
-                        {% if drogueria %}
-                        <input type="text" name="pedidoDrogueria" value="{{drogueria}}" hidden>
-                        {% endif %}
-                        {% if cliente %}
-                        <input type="text" name="pedidoCliente" value="{{cliente}}" hidden>
-                        {% endif %}
-                        <div align="center">
-                            <textarea type="text" style="width: 100%;" disabled>
-                                {%if
-                                detalle
-                                %}{{detalle}}{% endif %}</textarea>
+                        <div class="row">
+                            <h4>Informacion del pedido:</h4>
+                            <div class="col">
+
+                                <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
+                                <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
+                                <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
+                                {% if usuario %}
+                                <input type="text" name="pedidoUsuario" value="{{usuario[-5:]}}" hidden>
+                                {% endif %}
+                                {% if drogueria %}
+                                <input type="text" name="pedidoDrogueria" value="{{drogueria}}" hidden>
+                                {% endif %}
+                                {% if cliente %}
+                                <input type="text" name="pedidoCliente" value="{{cliente}}" hidden>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <textarea type="text" style="width: 100%;" disabled>{%if
+                                            detalle
+                                            %}{{detalle}}{% endif %}                                    
+                                </textarea>
+                            </div>
                         </div>
+
+
                     </div>
 
 
