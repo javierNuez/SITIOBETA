@@ -1610,21 +1610,30 @@ def supPedidosAprobarEspecial():
                 listaOfertaVigenteO.append(i)
     listaInputs = []
     listaValor = []
+    listaDescuento = []
+
     for oferta in listaOfertaVigenteO:
         try:
             listaInputs.append(oferta[0])
-            listaValor.append(request.form[f"{oferta[0]}"])
+            valor = request.form[f"{oferta[0]}"]
+            # print(valor)
+            descuento = request.form[f"descuento{oferta[0]}"]
+            # print(str(descuento))
+            listaValor.append(valor)
+            listaDescuento.append(descuento)
         except KeyError:
             listaInputs.append(oferta[0])
             listaValor.append("0")
+            listaDescuento.append("0")
 
     listaInputs = set(listaInputs)
     listaInputs = list(listaInputs)
-    print(listaInputs, "inputs")
-    print(listaValor, "valores")
-    losInputs = zip(listaInputs, listaValor)
-    print(losInputs)
+    #print(listaInputs, "inputs")
+    #print(listaValor, "valores")
+    #print(listaDescuento, "Descuentos")
+    losInputs = zip(listaInputs, listaValor, listaDescuento)
     pedidoUser = list(losInputs)
+    print(pedidoUser)
 
     usuario = request.form['pedidoUsuario']
     # print(usuario)
@@ -1635,6 +1644,21 @@ def supPedidosAprobarEspecial():
     salidas = request.form['pedidoOferta']
     output = ast.literal_eval(salidas)  # convertimos un string a lista.
     ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    contax = 0
+    for o in ofertaCompleta:
+        item = list(o[1][0])
+        for p in pedidoUser:
+            print(item[0], "id ofertas")
+            print(p[0], "oferta")
+            if item[0] == p[0]:
+                item[14] = p[2]
+                print(p[2], "el descuento modificado")
+        item.append(pedidoUser[contax][1])
+        ofertaCompletaConDescuento.append(tuple(item))
+        contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
     pedido = pedidoUser
     fecha = datetime.now()
     estado = "Sin aprobar"
@@ -1646,38 +1670,35 @@ def supPedidosAprobarEspecial():
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
-
+    """
     conta = 0
     listaDelPedido = []
-    for m in ofertaCompleta:
-
-        # print(m)
+    for m in ofertaCompletaConDescuento:
+        m = list(m)
+        print(len(m), "ancho")
         for i in m:
+            print(i, "el i")
+            for elementoModulo in i:
+                pedidosUnidades = list(elementoModulo)
+                pedidosUnidades.append(pedido[conta][1])
 
-            try:
-                if int(i) == i:
-                    pass
-            except TypeError:
-                # print(i)  # los modulos
+                listaDelPedido.append(pedidosUnidades)
 
-                for elementoModulo in i:
-                    pedidosUnidades = list(elementoModulo)
-                    pedidosUnidades.append(pedido[conta][1])
-                    listaDelPedido.append(pedidosUnidades)
+                # print(pedidosUnidades)
+                # print(elementoModulo[0])
+                # print(pedido[conta][1])
+                # print(elementoModulo[0])
+                # print(pedido)
+                conta = conta+1
+                # print(conta)
 
-                    # print(pedidosUnidades)
-                    # print(elementoModulo[0])
-                    # print(pedido[conta][1])
-                    # print(elementoModulo[0])
-                    # print(pedido)
-                    conta = conta+1
-                    # print(conta)
-
-    # print(len(listaDelPedido))
-    jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    print(listaDelPedido)
+    """
+    _detalle = request.form['txtDetalle']
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
-             str(fecha), estado, totalUnidades)
+             str(fecha), estado, totalUnidades, _detalle)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1707,21 +1728,30 @@ def pedidosAprobarEspecial():
                 listaOfertaVigenteO.append(i)
     listaInputs = []
     listaValor = []
+    listaDescuento = []
+
     for oferta in listaOfertaVigenteO:
         try:
             listaInputs.append(oferta[0])
-            listaValor.append(request.form[f"{oferta[0]}"])
+            valor = request.form[f"{oferta[0]}"]
+            # print(valor)
+            descuento = request.form[f"descuento{oferta[0]}"]
+            # print(str(descuento))
+            listaValor.append(valor)
+            listaDescuento.append(descuento)
         except KeyError:
             listaInputs.append(oferta[0])
             listaValor.append("0")
+            listaDescuento.append("0")
 
     listaInputs = set(listaInputs)
     listaInputs = list(listaInputs)
-    print(listaInputs, "inputs")
-    print(listaValor, "valores")
-    losInputs = zip(listaInputs, listaValor)
-    print(losInputs)
+    #print(listaInputs, "inputs")
+    #print(listaValor, "valores")
+    #print(listaDescuento, "Descuentos")
+    losInputs = zip(listaInputs, listaValor, listaDescuento)
     pedidoUser = list(losInputs)
+    print(pedidoUser)
 
     usuario = request.form['pedidoUsuario']
     # print(usuario)
@@ -1732,6 +1762,21 @@ def pedidosAprobarEspecial():
     salidas = request.form['pedidoOferta']
     output = ast.literal_eval(salidas)  # convertimos un string a lista.
     ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    contax = 0
+    for o in ofertaCompleta:
+        item = list(o[1][0])
+        for p in pedidoUser:
+            print(item[0], "id ofertas")
+            print(p[0], "oferta")
+            if item[0] == p[0]:
+                item[14] = p[2]
+                print(p[2], "el descuento modificado")
+        item.append(pedidoUser[contax][1])
+        ofertaCompletaConDescuento.append(tuple(item))
+        contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
     pedido = pedidoUser
     fecha = datetime.now()
     estado = "Sin aprobar"
@@ -1743,38 +1788,35 @@ def pedidosAprobarEspecial():
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
-
+    """
     conta = 0
     listaDelPedido = []
-    for m in ofertaCompleta:
-
-        # print(m)
+    for m in ofertaCompletaConDescuento:
+        m = list(m)
+        print(len(m), "ancho")
         for i in m:
+            print(i, "el i")
+            for elementoModulo in i:
+                pedidosUnidades = list(elementoModulo)
+                pedidosUnidades.append(pedido[conta][1])
 
-            try:
-                if int(i) == i:
-                    pass
-            except TypeError:
-                # print(i)  # los modulos
+                listaDelPedido.append(pedidosUnidades)
 
-                for elementoModulo in i:
-                    pedidosUnidades = list(elementoModulo)
-                    pedidosUnidades.append(pedido[conta][1])
-                    listaDelPedido.append(pedidosUnidades)
+                # print(pedidosUnidades)
+                # print(elementoModulo[0])
+                # print(pedido[conta][1])
+                # print(elementoModulo[0])
+                # print(pedido)
+                conta = conta+1
+                # print(conta)
 
-                    # print(pedidosUnidades)
-                    # print(elementoModulo[0])
-                    # print(pedido[conta][1])
-                    # print(elementoModulo[0])
-                    # print(pedido)
-                    conta = conta+1
-                    # print(conta)
-
-    # print(len(listaDelPedido))
-    jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    print(listaDelPedido)
+    """
+    _detalle = request.form['txtDetalle']
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
-             str(fecha), estado, totalUnidades)
+             str(fecha), estado, totalUnidades, _detalle)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -2906,8 +2948,9 @@ def admin_pedido_realizado(id):
                 listaM.append(x)
         listaGeneral.append(listaM)
     total = lospedidos[0][7]
+    detalle = lospedidos[0][8]
 
-    return render_template('admin/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total)
+    return render_template('admin/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total, detalle=detalle)
 
 
 @ app.route('/sup/pedidorealizado/<int:id>')

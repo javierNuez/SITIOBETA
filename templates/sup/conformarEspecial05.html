@@ -87,14 +87,15 @@
                             <td style="text-align: center;" scope="col" class="table-light">
                                 {% if usuario[-5:] != "admin" %}
                                 {% if i[18] == 'no' %}
-                                <input type="number" style="width:70px; text-align: center;" value="0">
+                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;">
                                 {% endif %}
                                 {% if i[18] == 'si' %}
-                                <input type="number" style="width:70px; text-align: center;" value="0" disabled>
+                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;"
+                                    disabled>
                                 {% endif %}
                                 {% endif %}
                                 {% if usuario[-5:] == "admin" %}
-                                <input type="number" style="width:70px; text-align: center;" value="0">
+                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;">
                                 {% endif %}
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">
@@ -148,6 +149,10 @@
             </div>
             {% endfor %}
             <div class="card-footer text-muted">
+                <div>
+                    <label for="txtDetalle">Detalle del pedido:</label>
+                    <textarea name="txtDetalle" style="width: 100%;"></textarea>
+                </div>
                 <div class="card-footer text-muted" align="center">
 
                     <button class="btn btn-dark btn-md" onclick="history.back()">Volver</button>
@@ -155,13 +160,15 @@
                         onclick="sacarMinimo()" disabled>Enviar
                         pedido</button>
                 </div>
+
             </div>
         </div>
+
         {% if anchoModulos %}
-        <input type="text" id="anchoModulos" value="{{anchoModulos}}">
+        <input type="text" id="anchoModulos" value="{{anchoModulos}}" hidden>
         {% endif %}
         {% if listaInput %}
-        <input type="text" id="listaInput" value="{{listaInput}}">
+        <input type="text" id="listaInput" value="{{listaInput}}" hidden>
         {% endif %}
 
         <script>
@@ -187,7 +194,6 @@
                 let anchoModulos = document.getElementById('anchoModulos').value;
                 let listaInput = document.getElementById('listaInput').value;
                 let listaInputArr = JSON.parse(listaInput);
-
                 for (let i = 0; i < anchoModulos; i++) {
                     let arr = listaInputArr[i].split(':');
                     console.log(arr[0]);
