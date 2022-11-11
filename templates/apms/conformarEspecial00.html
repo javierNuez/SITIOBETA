@@ -1,4 +1,4 @@
-{% include 'sup/cabecera.html' %}
+{% include 'apms/cabecera.html' %}
 <script>
     var hashUsuario = sessionStorage.getItem("hash");
     if (!(hashUsuario)) {
@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-4"></div>
     <div class="col-4">
-        <h4 align="center">Pedidos comunes:</h4>
+        <h4 align="center">Pedidos especiales:</h4>
     </div>
     <div class="col-4"></div>
 </div>
@@ -35,7 +35,7 @@
                     <div class="col">
                         <label for="" class="form-label">Droguerías:</label>
 
-                        <form action="/sup/cargaOferta01/drogueria/" method="post" enctype="multipart/form-data">
+                        <form action="/apms/conformarEspecial01/drogueria/" method="post" enctype="multipart/form-data">
                             <input type="text" id="hashUsuarioO" name="hashUsuarioO" hidden>
                             <script>
                                 var hashUsuario = sessionStorage.getItem("hash");
@@ -88,7 +88,7 @@
                             <div class="col-5">
                             </div>
                             <div class="col-2">
-                                <a href="/sup/inicio" class="btn btn-dark btn-mg">Inicio</a>
+                                <a href="/apms/inicio" class="btn btn-dark btn-mg">Inicio</a>
 
                             </div>
                             <div class="col-5">
@@ -112,4 +112,4 @@
 
 
 
-{% include 'sup/pie.html' %}
+{% include 'apms/pie.html' %}

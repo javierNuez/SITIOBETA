@@ -57,19 +57,32 @@
 
 
                     <div class="card-header">
-                        <h4>Informacion del pedido:</h4>
-                        <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
-                        <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
-                        <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
-                        {% if usuario %}
-                        <input type="text" name="pedidoUsuario" value="{{usuario[-5:]}}" hidden>
-                        {% endif %}
-                        {% if drogueria %}
-                        <input type="text" name="pedidoDrogueria" value="{{drogueria}}" hidden>
-                        {% endif %}
-                        {% if cliente %}
-                        <input type="text" name="pedidoCliente" value="{{cliente}}" hidden>
-                        {% endif %}
+                        <div class="row">
+                            <h4>Informacion del pedido:</h4>
+                            <div class="col">
+
+                                <h6>Usuario: {% if usuario %} {{usuario[-5:]}} {% endif %}</h6>
+                                <h6>Código droguería: {% if drogueria %} {{drogueria}} {% endif %}</h6>
+                                <h6>Código cliente: {% if cliente %} {{cliente}} {% endif %}</h6>
+                                {% if usuario %}
+                                <input type="text" name="pedidoUsuario" value="{{usuario[-5:]}}" hidden>
+                                {% endif %}
+                                {% if drogueria %}
+                                <input type="text" name="pedidoDrogueria" value="{{drogueria}}" hidden>
+                                {% endif %}
+                                {% if cliente %}
+                                <input type="text" name="pedidoCliente" value="{{cliente}}" hidden>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <textarea type="text" style="width: 100%;" disabled>{%if
+                                            detalle
+                                            %}{{detalle}}{% endif %}                                    
+                                </textarea>
+                            </div>
+                        </div>
+
+
                     </div>
 
 
@@ -84,7 +97,7 @@
                                     </th>
                                     <th style="text-align: left;" scope="col" class="table-primary"></th>
                                     <th style="text-align: left;" scope="col" class="table-primary"></th>
-                                    <th style="text-align: left;" scope="col" class="table-primary"></th>
+
                                     <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
                                         {{pedidos[0][7]}}
                                     </th>
@@ -98,8 +111,6 @@
                                             Producto</th>
                                         <th style="text-align: center;" scope="col" class="table-info">
                                             Código</th>
-                                        <th style="text-align: center;" scope="col" class="table-info">
-                                            Cantidad mínima</th>
                                         <th style="text-align: center;" scope="col" class="table-info">
                                             Descuento</th>
                                         <th style="text-align: center;" scope="col" class="table-info">
@@ -116,15 +127,13 @@
                                     <td style="text-align: center;" scope="col" class="table-light">
                                         {{l[9]}}
                                     </td>
-                                    <td style="text-align: center;" scope="col" class="table-light">
-                                        {{l[13]}}
-                                    </td>
+
                                     <td style="text-align: center;" scope="col" class="table-light">
                                         {{l[14]}}%
                                     </td>
                                     <td style="text-align: center;" scope="col" class="table-light">
 
-                                        <input class="inputs" type="number" value="{{l[17]}}"
+                                        <input class="inputs" type="number" value="{{l[19]}}"
                                             style="width:70px; text-align: center;" disabled>
 
                                     </td>
@@ -134,9 +143,11 @@
                         </table>
 
                     </div>
+
                     {% endfor %}
 
                     <div class="card-footer text-muted">
+
                         <div>
                             <h3 style="text-align: right; margin: 10px 50px; color: rgb(23, 27, 115);">Total: {%if
                                 total

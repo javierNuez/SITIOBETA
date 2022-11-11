@@ -67,7 +67,7 @@
                                     Código</th>
 
                                 <th style="text-align: center;" scope="col" class="table-info">
-                                    Descuento</th>
+                                    Descuento %</th>
                                 <th style="text-align: center;" scope="col" class="table-info">
                                     Unidades</th>
                             </tr>
@@ -87,15 +87,17 @@
                             <td style="text-align: center;" scope="col" class="table-light">
                                 {% if usuario[-5:] != "admin" %}
                                 {% if i[18] == 'no' %}
-                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;">
+                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;"
+                                    value="0">
                                 {% endif %}
                                 {% if i[18] == 'si' %}
                                 <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;"
-                                    disabled>
+                                    value="0" disabled>
                                 {% endif %}
                                 {% endif %}
                                 {% if usuario[-5:] == "admin" %}
-                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;">
+                                <input type="number" name="descuento{{i[0]}}" style="width:70px; text-align: center;"
+                                    value="0">
                                 {% endif %}
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">

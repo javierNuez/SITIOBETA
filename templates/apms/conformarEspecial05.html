@@ -1,5 +1,5 @@
-{% include 'admin/cabecera.html' %}
-<form action="/admin/guardar/pedidosaaprobarE" method="post" enctype="multipart/form-data">
+{% include 'apms/cabecera.html' %}
+<form action="/apms/guardar/pedidosaaprobarE" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
         var hashUsuario = sessionStorage.getItem("hash");
@@ -52,7 +52,6 @@
                             <th style="text-align: left;" scope="col" class="table-primary">{{salida[1][0][2]}}</th>
                             <th style="text-align: left;" scope="col" class="table-primary"></th>
                             <th style="text-align: left;" scope="col" class="table-primary"></th>
-
                             <th style="text-align: left;" scope="col" class="table-primary">Can. mínima
                                 {{salida[1][0][7]}}</th>
                         </tr>
@@ -251,4 +250,4 @@
         </script>
     </div>
 </form>
-{% include 'admin/pie.html' %}
+{% include 'apms/pie.html' %}

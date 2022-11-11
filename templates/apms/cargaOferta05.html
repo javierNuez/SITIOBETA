@@ -1,4 +1,5 @@
 {% include 'apms/cabecera.html' %}
+
 <form action="/apms/guardar/pedidosaaprobar" method="post" enctype="multipart/form-data">
     <input type="text" id="hashUsuarioO" name="hashUsuario" hidden>
     <script>
@@ -44,8 +45,6 @@
             {% for salida in salidas %}
 
             <div class="card-body" style="padding: 16px 0px ;">
-
-
                 <table id="tblContact" class="table table-sm table-hover table-bordered">
                     <thead>
                         <tr>
@@ -91,13 +90,14 @@
                                 {{i[13]}}
                             </td>
                             <td style="text-align: center;{% if i[16] == 'si' %}color:#1254F7;{%
-                                endif %}" scope="col" class="table-light">
+                                endif %}" scope="col" class="table-light" name="descuento{{salida[1][0][1]}}"
+                                value="{{i[14]}}">
                                 {{i[14]}}%
                             </td>
                             <td style="text-align: center;" scope="col" class="table-light">
 
-                                <input class="inputs" type="number" style="width:70px; text-align: center;"
-                                    id="{{i[0]}}"
+                                <input class="inputs" type="number"
+                                    style="width: 70px;px;text-align: center; cursor:none;" id="{{i[0]}}"
                                     oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}},{{salida[1][0][7]}})"
                                     value="0" name="{{i[0]}}">
                                 <!--min="{{i[13]}}" -->
@@ -119,7 +119,8 @@
                                 <h5>Total:</h5>
                             </td>
                             <td style="text-align: center;" scope="col" class="table-secondary">
-                                <input type="number" min="{{salida[1][0][7]}}" style="width:70px; text-align: center;"
+                                <input type="number" min="{{salida[1][0][7]}}"
+                                    style="width:70px; text-align: center; pointer-events:none;"
                                     id="{{salida[1][0][1]}}" value="0" onchange="sumarDocumento({{salida[1][0][1]}})"
                                     name="{{salida[1][0][1]}}">
 
@@ -130,8 +131,11 @@
             </div>
             {% endfor %}
             <div class="card-footer text-muted">
+                <div>
+                    <label for="txtDetalle">Detalle del pedido:</label>
+                    <textarea name="txtDetalle" style="width: 100%;"></textarea>
+                </div>
                 <div class="card-footer text-muted" align="center">
-
                     <button class="btn btn-dark btn-md" onclick="history.back()">Volver</button>
                     <button class="btn btn-success btn-md" type="submit" id="enviarBoton" style="margin:auto ;"
                         onclick="sacarMinimo()" disabled>Enviar
@@ -145,7 +149,7 @@
         {% if listaInput %}
         <input type="text" id="listaInput" value="{{listaInput}}" hidden>
         {% endif %}
-
+        <input type="text" id="listaValores" hidden>
         <script>
             enviarDocumento = true;
             function verificarObligatorio(modulo, minimo) {
@@ -174,7 +178,6 @@
                     let arr = listaInputArr[i].split(':');
                     console.log(arr[0]);
                     totales = document.getElementById(arr[0]).value;
-
                     if (totales == 0) {
                         document.getElementById(arr[0]).setAttribute("min", "");
                     }

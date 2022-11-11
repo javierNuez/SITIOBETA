@@ -138,7 +138,7 @@ def supCargaEspecial():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM ofertas where o_especial='no' ORDER BY o_modulo;")
+        "SELECT * FROM ofertas where o_especial='si' ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
 
     conexion = mysql.connect()
@@ -220,6 +220,32 @@ def especial01():
     return render_template('admin/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
+@ app.route('/apms/conformarEspecial00')
+def apmsCargaEspecial():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM ofertas where o_especial='si' ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('apms/conformarEspecial00.html', ofertas=ofertas, droguerias=droguerias, clientes=clientes)
+
+
 @ app.route('/sup/conformarEspecial01/drogueria/', methods=['POST'])
 def supEspecial01():
     usuario = request.form['hashUsuarioO']
@@ -252,6 +278,40 @@ def supEspecial01():
     conexion.commit()
 
     return render_template('sup/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
+
+
+@ app.route('/apms/conformarEspecial01/drogueria/', methods=['POST'])
+def apmsEspecial01():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cod_drogueria = %s;", (_drogueria))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+
+    return render_template('apms/conformarEspecial02.html', clientes=clientes, droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas)
 
 
 @ app.route('/admin/conformarOferta02/cliente/', methods=['POST'])
@@ -289,6 +349,43 @@ def ofer02():
 
     conexion.commit()
     return render_template('admin/conformarOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/apms/conformarOferta02/cliente/', methods=['POST'])
+def apmsofer02():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas`")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/admin/clientes')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('apms/conformarOferta04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/admin/conformarEspecial02/cliente/', methods=['POST'])
@@ -363,6 +460,43 @@ def supEspecial02():
 
     conexion.commit()
     return render_template('sup/conformarEspecial04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
+
+
+@ app.route('/apms/conformarEspecial02/cliente/', methods=['POST'])
+def apmsEspecial02():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+
+    _drogueria = request.form['txtDrogueria2']
+    _cliente = request.form['txtCliente']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias` where d_cod = %s;", (_drogueria))
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+
+    if _cliente == "Nuevo":
+        return redirect('/apms/clientes')
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes` where c_cuenta = %s;", (_cliente))
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    return render_template('apms/conformarEspecial04.html', droguerias=droguerias, usuario=usuario, usuarios=usuarios, ofertas=ofertas, clientes=clientes)
 
 
 @ app.route('/admin/conformarOferta04/cliente/', methods=['POST'])
@@ -612,6 +746,88 @@ def supEspecial04():
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
 
+@ app.route('/apms/conformarEspecial04/cliente/', methods=['POST'])
+def apmsEspecial04():
+    usuario = request.form['hashUsuarioO']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `usuarios` WHERE u_hash=%s;", (usuario))
+    usuarios = cursor.fetchall()
+    _drogueria = request.form['txtDrogueria2']
+
+    _cliente = request.form['txtCliente2']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` where o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaUnidades = []
+    listaOfertaVigente = []
+    for i in listaOfertaVigenteO:
+        uniList = {}
+        uniList[f'{i[0]}'] = request.form[f'unidades{i[0]}']
+        listaUnidades.append(uniList)
+        listaOfertaVigente.append(i)
+    # print(listaUnidades)
+    # ancho = len(ofertas)
+    # print("Ancho:", ancho)
+    conexion.commit()
+    # print(usuarios)
+    # print(listaOfertaVigente)
+    # aca saco los modulos unicos
+    modulos_ofertas = set()
+    for i in listaOfertaVigenteO:
+        modulos_ofertas.add(i[1])
+    # ---------------------------
+    listaModOfer = list(modulos_ofertas)
+    listaModOfer.sort()
+    modulosT = len(listaModOfer)
+    # print(listaModOfer)
+    listaFinal = []
+    for i in listaModOfer:
+        listaModulo = []
+        for x in listaOfertaVigenteO:
+            if i == x[1]:
+                listaModulo.append(x)
+        listaFinal.append(listaModulo)
+    listaTerminal = zip(listaModOfer, listaFinal)
+    salidaModulos = list(listaTerminal)
+    print(salidaModulos)
+    anchoModulos = len(salidaModulos)
+    listaInput = []
+    modulosFuncion = list(zip(listaModOfer, listaFinal))
+    # print(modulosFuncion)
+    for i in modulosFuncion:
+        m = i[0]  # el_modulo
+        e = i[1]
+        listaScript = []
+        for x in e:  # elementos
+            q = x[0]  # elemento
+            listaScript.append(q)
+        scriptTxt = str(listaScript)
+        elScript = f"{scriptTxt}"
+        # print(elScript)
+        listaInput.append(f'{m}:{elScript}')
+
+    # print(anchoModulos)
+    listaInput = json.dumps(listaInput)
+    # print(listaInput)
+
+    return render_template('apms/conformarEspecial05.html', listaInput=listaInput, anchoModulos=anchoModulos, drogueria=_drogueria, cliente=_cliente, usuarios=usuarios, usuario=usuario, unidades=listaUnidades, ofertas=listaOfertaVigenteO, salidas=salidaModulos)
+
+
 @app.route('/sup')
 def sup_of():
     usuario = request.form["hashUsuario"]
@@ -854,6 +1070,38 @@ def sup_ofertas():
     return render_template('sup/ofertas.html', ofertas=listaOfertaVigente, droguerias=droguerias, clientes=clientes)
 
 
+@ app.route('/apms/cargaOferta00/')
+def apms_carga_ofertas():
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `droguerias`")
+    droguerias = cursor.fetchall()
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
+    ofertas = cursor.fetchall()
+    now = datetime.now()
+    listaOfertaVigente = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            listaOfertaVigente.append(i)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `clientes`")
+    clientes = cursor.fetchall()
+
+    conexion.commit()
+    # , usuarios=usuarios, _usuario=_usuario
+    return render_template('apms/ofertas.html', ofertas=listaOfertaVigente, droguerias=droguerias, clientes=clientes)
+
+
 @ app.route('/apms/ofertas/')
 def apms_ofertas():
 
@@ -865,7 +1113,8 @@ def apms_ofertas():
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM ofertas ORDER BY o_modulo;")
+    cursor.execute(
+        "SELECT * FROM ofertas where o_especial = 'no' ORDER BY o_modulo;")
     ofertas = cursor.fetchall()
     now = datetime.now()
     listaOfertaVigente = []
@@ -1123,7 +1372,7 @@ def apms_cargaOferta04_d_c():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`")
+        "SELECT * FROM `ofertas` where o_especial= 'no';")
     ofertas = cursor.fetchall()
     now = datetime.now()
     listaOfertaVigenteO = []
@@ -1268,13 +1517,12 @@ def pedidosAprobar():
         totalModulo = int(totalModulo)
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
-
             return redirect('../../admin/mensaje')
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas` where o_especial='no';")
+        "SELECT * FROM `ofertas` WHERE o_especial = 'no';")
     ofertas = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -1290,11 +1538,24 @@ def pedidosAprobar():
     listaInputs = []
     listaValor = []
     for oferta in listaOfertaVigenteO:
-        listaInputs.append(oferta[0])
-        listaValor.append(request.form[f"{oferta[0]}"])
+
+        try:
+            listaInputs.append(oferta[0])
+            valor = request.form[f"{oferta[0]}"]
+            listaValor.append(valor)
+
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
-
+    # print(pedidoUser)
     usuario = request.form['pedidoUsuario']
     # print(usuario)
     drogueria = request.form['pedidoDrogueria']
@@ -1304,6 +1565,23 @@ def pedidosAprobar():
     salidas = request.form['pedidoOferta']
     output = ast.literal_eval(salidas)  # convertimos un string a lista.
     ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    con = 0
+    for o in ofertaCompleta:
+        contax = 0
+        for l in o[1]:
+            for i in pedidoUser:
+                item = list(l)  # aca puede estar
+                print(item)
+                print(i)
+
+                if item[0] == i[0]:
+                    item.append(i[1])
+                    ofertaCompletaConDescuento.append(tuple(item))
+
+            contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
     pedido = pedidoUser
     fecha = datetime.now()
     estado = "Sin aprobar"
@@ -1311,42 +1589,17 @@ def pedidosAprobar():
 
     totalUnidades = 0
     conta = 0
+
     for i in pedido:
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
+    _detalle = request.form['txtDetalle']
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
 
-    conta = 0
-    listaDelPedido = []
-    for m in ofertaCompleta:
-
-        # print(m)
-        for i in m:
-
-            try:
-                if int(i) == i:
-                    pass
-            except TypeError:
-                # print(i)  # los modulos
-
-                for elementoModulo in i:
-                    pedidosUnidades = list(elementoModulo)
-                    pedidosUnidades.append(pedido[conta][1])
-                    listaDelPedido.append(pedidosUnidades)
-
-                    # print(pedidosUnidades)
-                    # print(elementoModulo[0])
-                    # print(pedido[conta][1])
-                    # print(elementoModulo[0])
-                    # print(pedido)
-                    conta = conta+1
-                    # print(conta)
-
-    # print(len(listaDelPedido))
-    jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
-             str(fecha), estado, totalUnidades)
+             str(fecha), estado, totalUnidades, _detalle)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1385,13 +1638,12 @@ def apmspedidosAprobar():
         totalModulo = int(totalModulo)
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
-
             return redirect('../../admin/mensaje')
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas`;")
+        "SELECT * FROM `ofertas` WHERE o_especial = 'no';")
     ofertas = cursor.fetchall()
     conexion.commit()
     now = datetime.now()
@@ -1407,11 +1659,24 @@ def apmspedidosAprobar():
     listaInputs = []
     listaValor = []
     for oferta in listaOfertaVigenteO:
-        listaInputs.append(oferta[0])
-        listaValor.append(request.form[f"{oferta[0]}"])
+
+        try:
+            listaInputs.append(oferta[0])
+            valor = request.form[f"{oferta[0]}"]
+            listaValor.append(valor)
+
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
-
+    # print(pedidoUser)
     usuario = request.form['pedidoUsuario']
     # print(usuario)
     drogueria = request.form['pedidoDrogueria']
@@ -1421,6 +1686,23 @@ def apmspedidosAprobar():
     salidas = request.form['pedidoOferta']
     output = ast.literal_eval(salidas)  # convertimos un string a lista.
     ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    con = 0
+    for o in ofertaCompleta:
+        contax = 0
+        for l in o[1]:
+            for i in pedidoUser:
+                item = list(l)  # aca puede estar
+                print(item)
+                print(i)
+
+                if item[0] == i[0]:
+                    item.append(i[1])
+                    ofertaCompletaConDescuento.append(tuple(item))
+
+            contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
     pedido = pedidoUser
     fecha = datetime.now()
     estado = "Sin aprobar"
@@ -1428,42 +1710,17 @@ def apmspedidosAprobar():
 
     totalUnidades = 0
     conta = 0
+
     for i in pedido:
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
+    _detalle = request.form['txtDetalle']
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
 
-    conta = 0
-    listaDelPedido = []
-    for m in ofertaCompleta:
-
-        # print(m)
-        for i in m:
-
-            try:
-                if int(i) == i:
-                    pass
-            except TypeError:
-                # print(i)  # los modulos
-
-                for elementoModulo in i:
-                    pedidosUnidades = list(elementoModulo)
-                    pedidosUnidades.append(pedido[conta][1])
-                    listaDelPedido.append(pedidosUnidades)
-
-                    # print(pedidosUnidades)
-                    # print(elementoModulo[0])
-                    # print(pedido[conta][1])
-                    # print(elementoModulo[0])
-                    # print(pedido)
-                    conta = conta+1
-                    # print(conta)
-
-    # print(len(listaDelPedido))
-    jsonPedido = json.dumps(listaDelPedido)
-    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`) VALUES (null, %s,%s,%s,%s,%s,%s,%s);"
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
-             str(fecha), estado, totalUnidades)
+             str(fecha), estado, totalUnidades, _detalle)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1502,7 +1759,6 @@ def pedidosAprobarA():
         totalModulo = int(totalModulo)
         if inputPagina == 0 and totalModulo > 0:
             flash('El modulo tiene al menos un producto obligatorio.')
-
             return redirect('../../admin/mensaje')
 
     conexion = mysql.connect()
@@ -1524,11 +1780,24 @@ def pedidosAprobarA():
     listaInputs = []
     listaValor = []
     for oferta in listaOfertaVigenteO:
-        listaInputs.append(oferta[0])
-        listaValor.append(request.form[f"{oferta[0]}"])
+
+        try:
+            listaInputs.append(oferta[0])
+            valor = request.form[f"{oferta[0]}"]
+            listaValor.append(valor)
+
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
     losInputs = zip(listaInputs, listaValor)
     pedidoUser = list(losInputs)
-
+    # print(pedidoUser)
     usuario = request.form['pedidoUsuario']
     # print(usuario)
     drogueria = request.form['pedidoDrogueria']
@@ -1538,6 +1807,23 @@ def pedidosAprobarA():
     salidas = request.form['pedidoOferta']
     output = ast.literal_eval(salidas)  # convertimos un string a lista.
     ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    con = 0
+    for o in ofertaCompleta:
+        contax = 0
+        for l in o[1]:
+            for i in pedidoUser:
+                item = list(l)  # aca puede estar
+                print(item)
+                print(i)
+
+                if item[0] == i[0]:
+                    item.append(i[1])
+                    ofertaCompletaConDescuento.append(tuple(item))
+
+            contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
     pedido = pedidoUser
     fecha = datetime.now()
     estado = "Sin aprobar"
@@ -1545,41 +1831,14 @@ def pedidosAprobarA():
 
     totalUnidades = 0
     conta = 0
+
     for i in pedido:
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
-
-    conta = 0
-    listaDelPedido = []
-    for m in ofertaCompleta:
-
-        # print(m)
-        for i in m:
-
-            try:
-                if int(i) == i:
-                    pass
-            except TypeError:
-                # print(i)  # los modulos
-
-                for elementoModulo in i:
-                    pedidosUnidades = list(elementoModulo)
-                    pedidosUnidades.append(pedido[conta][1])
-                    listaDelPedido.append(pedidosUnidades)
-
-                    # print(pedidosUnidades)
-                    # print(elementoModulo[0])
-                    # print(pedido[conta][1])
-                    # print(elementoModulo[0])
-                    # print(pedido)
-                    conta = conta+1
-                    # print(conta)
-
-    # print(len(listaDelPedido))
-
     _detalle = request.form['txtDetalle']
-    jsonPedido = json.dumps(listaDelPedido)
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
+
     sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
     datos = (usuario, drogueria, cliente, jsonPedido,
              str(fecha), estado, totalUnidades, _detalle)
@@ -1589,6 +1848,7 @@ def pedidosAprobarA():
     cursor.execute(sql, datos)
     conexion.commit()
     # print(jsonPedido)
+
     return redirect('/admin/pedidos')
 
 
@@ -1630,9 +1890,9 @@ def supPedidosAprobarEspecial():
 
     listaInputs = set(listaInputs)
     listaInputs = list(listaInputs)
-    #print(listaInputs, "inputs")
-    #print(listaValor, "valores")
-    #print(listaDescuento, "Descuentos")
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
     losInputs = zip(listaInputs, listaValor, listaDescuento)
     pedidoUser = list(losInputs)
     print(pedidoUser)
@@ -1649,16 +1909,16 @@ def supPedidosAprobarEspecial():
     ofertaCompletaConDescuento = []
     contax = 0
     for o in ofertaCompleta:
-        item = list(o[1][0])
-        for p in pedidoUser:
-            print(item[0], "id ofertas")
-            print(p[0], "oferta")
-            if item[0] == p[0]:
-                item[14] = p[2]
-                print(p[2], "el descuento modificado")
-        item.append(pedidoUser[contax][1])
-        ofertaCompletaConDescuento.append(tuple(item))
-        contax = contax+1
+        for l in o[1]:
+            item = list(l)  # aca puede estar
+            print(item)
+            for p in pedidoUser:
+                if item[0] == p[0]:
+                    item[14] = p[2]
+
+            item.append(pedidoUser[contax][1])
+            ofertaCompletaConDescuento.append(tuple(item))
+            contax = contax+1
     # print(ofertaCompleta[0])
     # print(ofertaCompleta)
     pedido = pedidoUser
@@ -1672,30 +1932,6 @@ def supPedidosAprobarEspecial():
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
-    """
-    conta = 0
-    listaDelPedido = []
-    for m in ofertaCompletaConDescuento:
-        m = list(m)
-        print(len(m), "ancho")
-        for i in m:
-            print(i, "el i")
-            for elementoModulo in i:
-                pedidosUnidades = list(elementoModulo)
-                pedidosUnidades.append(pedido[conta][1])
-
-                listaDelPedido.append(pedidosUnidades)
-
-                # print(pedidosUnidades)
-                # print(elementoModulo[0])
-                # print(pedido[conta][1])
-                # print(elementoModulo[0])
-                # print(pedido)
-                conta = conta+1
-                # print(conta)
-
-    print(listaDelPedido)
-    """
     _detalle = request.form['txtDetalle']
     jsonPedido = json.dumps(ofertaCompletaConDescuento)
     sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
@@ -1706,8 +1942,102 @@ def supPedidosAprobarEspecial():
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
     conexion.commit()
-    # print(jsonPedido)
+    # print(jsonPedido)a
     return redirect('/sup/pedidos')
+
+
+@ app.route('/apms/guardar/pedidosaaprobarE', methods=['POST'])
+def apmsPedidosAprobarEspecial():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `ofertas` WHERE o_especial = 'si';")
+    ofertas = cursor.fetchall()
+    conexion.commit()
+    now = datetime.now()
+    listaOfertaVigenteO = []
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigenteO.append(i)
+    listaInputs = []
+    listaValor = []
+    listaDescuento = []
+
+    for oferta in listaOfertaVigenteO:
+        try:
+            listaInputs.append(oferta[0])
+            valor = request.form[f"{oferta[0]}"]
+            # print(valor)
+            descuento = request.form[f"descuento{oferta[0]}"]
+            # print(str(descuento))
+            listaValor.append(valor)
+            listaDescuento.append(descuento)
+        except KeyError:
+            listaInputs.append(oferta[0])
+            listaValor.append("0")
+            listaDescuento.append("0")
+
+    listaInputs = set(listaInputs)
+    listaInputs = list(listaInputs)
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
+    losInputs = zip(listaInputs, listaValor, listaDescuento)
+    pedidoUser = list(losInputs)
+    print(pedidoUser)
+
+    usuario = request.form['pedidoUsuario']
+    # print(usuario)
+    drogueria = request.form['pedidoDrogueria']
+    # print(drogueria)
+    cliente = request.form['pedidoCliente']
+    # print(cliente)
+    salidas = request.form['pedidoOferta']
+    output = ast.literal_eval(salidas)  # convertimos un string a lista.
+    ofertaCompleta = output
+    ofertaCompletaConDescuento = []
+    contax = 0
+    for o in ofertaCompleta:
+        for l in o[1]:
+            item = list(l)  # aca puede estar
+            print(item)
+            for p in pedidoUser:
+                if item[0] == p[0]:
+                    item[14] = p[2]
+
+            item.append(pedidoUser[contax][1])
+            ofertaCompletaConDescuento.append(tuple(item))
+            contax = contax+1
+    # print(ofertaCompleta[0])
+    # print(ofertaCompleta)
+    pedido = pedidoUser
+    fecha = datetime.now()
+    estado = "Sin aprobar"
+    # print(ofertaCompleta[0][1][0][0])
+
+    totalUnidades = 0
+    conta = 0
+    for i in pedido:
+        unidad = int(pedido[conta][1])
+        conta = conta + 1
+        totalUnidades = totalUnidades + unidad
+    _detalle = request.form['txtDetalle']
+    jsonPedido = json.dumps(ofertaCompletaConDescuento)
+    sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
+    datos = (usuario, drogueria, cliente, jsonPedido,
+             str(fecha), estado, totalUnidades, _detalle)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql, datos)
+    conexion.commit()
+    # print(jsonPedido)a
+    return redirect('/apms/pedidos')
 
 
 @ app.route('/admin/guardar/pedidosaaprobarE', methods=['POST'])
@@ -1748,9 +2078,9 @@ def pedidosAprobarEspecial():
 
     listaInputs = set(listaInputs)
     listaInputs = list(listaInputs)
-    #print(listaInputs, "inputs")
-    #print(listaValor, "valores")
-    #print(listaDescuento, "Descuentos")
+    # print(listaInputs, "inputs")
+    # print(listaValor, "valores")
+    # print(listaDescuento, "Descuentos")
     losInputs = zip(listaInputs, listaValor, listaDescuento)
     pedidoUser = list(losInputs)
     print(pedidoUser)
@@ -1790,30 +2120,6 @@ def pedidosAprobarEspecial():
         unidad = int(pedido[conta][1])
         conta = conta + 1
         totalUnidades = totalUnidades + unidad
-    """
-    conta = 0
-    listaDelPedido = []
-    for m in ofertaCompletaConDescuento:
-        m = list(m)
-        print(len(m), "ancho")
-        for i in m:
-            print(i, "el i")
-            for elementoModulo in i:
-                pedidosUnidades = list(elementoModulo)
-                pedidosUnidades.append(pedido[conta][1])
-
-                listaDelPedido.append(pedidosUnidades)
-
-                # print(pedidosUnidades)
-                # print(elementoModulo[0])
-                # print(pedido[conta][1])
-                # print(elementoModulo[0])
-                # print(pedido)
-                conta = conta+1
-                # print(conta)
-
-    print(listaDelPedido)
-    """
     _detalle = request.form['txtDetalle']
     jsonPedido = json.dumps(ofertaCompletaConDescuento)
     sql = "INSERT INTO `pedidosaaprobar` (`id_pedidoA`,`pa_usuario`,`pa_drogueria`, `pa_cliente`, `pa_pedido`, `pa_fecha`,`pa_estado`, `pa_total`,`pa_detalle`) VALUES (null, %s,%s,%s,%s,%s,%s,%s,%s);"
@@ -1824,7 +2130,7 @@ def pedidosAprobarEspecial():
     cursor = conexion.cursor()
     cursor.execute(sql, datos)
     conexion.commit()
-    # print(jsonPedido)
+    # print(jsonPedido)a
     return redirect('/admin/pedidos')
 
 
@@ -2949,6 +3255,8 @@ def admin_pedido_realizado(id):
             if i == x[1]:
                 listaM.append(x)
         listaGeneral.append(listaM)
+    if listaGeneral[0][0][17] == "no":
+        listaGeneral = listaGeneral[::-1]  # para ver los pedidos comunes bien
     total = lospedidos[0][7]
     detalle = lospedidos[0][8]
 
@@ -2980,6 +3288,8 @@ def sup_pedido_realizado(id):
             if i == x[1]:
                 listaM.append(x)
         listaGeneral.append(listaM)
+    if listaGeneral[0][0][17] == "no":
+        listaGeneral = listaGeneral[::-1]  # para ver los pedidos comunes bien
     total = lospedidos[0][7]
     detalle = lospedidos[0][8]
 
@@ -3011,9 +3321,12 @@ def apms_pedido_realizado(id):
             if i == x[1]:
                 listaM.append(x)
         listaGeneral.append(listaM)
+    if listaGeneral[0][0][17] == "no":
+        listaGeneral = listaGeneral[::-1]  # para ver los pedidos comunes bien
     total = lospedidos[0][7]
+    detalle = lospedidos[0][8]
 
-    return render_template('apms/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total)
+    return render_template('apms/pedidoRealizado.html', lospedidos=lospedidos, usuario=usuario, drogueria=drogueria, cliente=cliente, lista=listaGeneral, total=total, detalle=detalle)
 
 
 @ app.route('/admin/editarModulos/<int:id>')
