@@ -70,7 +70,7 @@
                     </td>
                     <td style="text-align: center;" scope="col" class="table-light">
                         {{i[7]}}
-
+                        <input class="unidad" type="number" value="{{i[7]}}" hidden>
                     </td>
                     <td style="text-align: center;" scope="col" class="table-light">
 
@@ -199,7 +199,29 @@
             </table>
 
         </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2">
+                <h4>Unidades</h4>
+            </div>
+            <div class="col-2">
+                <h3 id="tot">u.</h3>
+            </div>
+            <div class="col-4">
 
+            </div>
+            <script>
+                let tot = document.getElementById("tot");
+                let total = 0;
+                let unidades = document.getElementsByClassName("unidad");
+
+                for (let i of unidades) total += parseInt(i.value);
+                tot.innerHTML = total;
+                console.log(total)
+
+            </script>
+
+        </div>
     </div>
 </div>
 <script>

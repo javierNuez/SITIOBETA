@@ -1441,6 +1441,8 @@ def apms_cargaOferta04_d_c():
 
 @ app.route('/sup/pedidos', methods=['GET'])
 def pedidosTemplate():
+    _desde = "2022-01-01"
+    _hasta = "9999-12-31"
     usuario = session['hash']
 
     usuarioEntero = int(usuario)
@@ -1484,7 +1486,7 @@ def pedidosTemplate():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
-    return render_template('/sup/pedidos.html', lospedidos=pedidosDC, usuario=usuario)
+    return render_template('/sup/pedidos.html', lospedidos=pedidosDC, usuario=usuario, desde=_desde, hasta=_hasta)
 
 
 # guardamos el pedido del usuario.
@@ -2674,7 +2676,8 @@ def admin_productos_editar():
 
 @ app.route('/apms/pedidos')
 def apms_pedidos():
-
+    _desde = "2022-01-01"
+    _hasta = "9999-12-31"
     usuario = session['hash']
     usuarioEntero = int(usuario)
     conexion = mysql.connect()
@@ -2710,7 +2713,7 @@ def apms_pedidos():
 
     pedidosDC = pedidosClientes
 
-    return render_template('/apms/pedidos.html', lospedidos=pedidosDC)
+    return render_template('/apms/pedidos.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
 
 
 @ app.route('/apms/clientes/guardar', methods=['POST'])
