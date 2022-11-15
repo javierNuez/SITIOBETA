@@ -100,7 +100,7 @@
                                 <input class="inputs" type="number" style="width:70px; text-align: center;"
                                     id="{{i[0]}}"
                                     oninput="ponerMinimo({{i[0]}}, {{i[13]}},{{salida[1][0][1]}},{{salida[1][0][7]}})"
-                                    value="0" name="{{i[0]}}">
+                                    value="0" name="{{i[0]}}" onkeypress="apretarTeclado({{i[0]}})">
                                 <!--min="{{i[13]}}" -->
                             </td>
                         </tr>
@@ -152,6 +152,21 @@
         {% endif %}
 
         <script>
+            function apretarTeclado(inputEntrada) {
+                var input = document.getElementById(inputEntrada);
+
+                input.addEventListener("keypress", function (event) {
+
+                    if (event.key === "Enter") {
+
+                        event.preventDefault();
+
+                        event.key = "09";
+
+                    }
+
+                });
+            }
             enviarDocumento = true;
             function verificarObligatorio(modulo, minimo) {
 

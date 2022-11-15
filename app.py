@@ -1454,7 +1454,7 @@ def pedidosTemplate():
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario BETWEEN %s AND %s;"
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario BETWEEN %s AND %s order by id_pedidoa desc;"
     datos = (desdeU, hastaU)
     cursor.execute(sql, datos)
     pedidosTotales = cursor.fetchall()
@@ -2289,9 +2289,49 @@ def sup_clientes_guardar(usuario):
 
 @ app.route('/admin/pedidos', methods=['GET'])
 def pedidosTemplateA():
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `pedidosaaprobar`;")
+    cursor.execute("SELECT * FROM `pedidosaaprobar` order by id_pedidoa desc;")
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/admin/pedidos.html', lospedidos=pedidosDC)
+
+
+@ app.route('/admin/pedidosf', methods=['POST'])
+def pedidosfTemplateA():
+    _desde = request.form['pedidosDesde']
+    _hasta = request.form['pedidosHasta']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00"))
     lospedidos = cursor.fetchall()
     conexion.commit()
     pedidosDrogueria = []
@@ -2553,11 +2593,12 @@ def admin_productos_editar():
 
 @ app.route('/apms/pedidos')
 def apms_pedidos():
+
     usuario = session['hash']
     usuarioEntero = int(usuario)
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario = %s;"
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario = %s order by id_pedidoa desc;"
     datos = (usuarioEntero)
     cursor.execute(sql, datos)
     pedidosTotales = cursor.fetchall()
