@@ -2290,6 +2290,9 @@ def sup_clientes_guardar(usuario):
 @ app.route('/admin/pedidos', methods=['GET'])
 def pedidosTemplateA():
 
+    _desde = "2022-01-01"
+    _hasta = "9999-12-31"
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `pedidosaaprobar` order by id_pedidoa desc;")
@@ -2320,7 +2323,7 @@ def pedidosTemplateA():
 
     pedidosDC = pedidosClientes
 
-    return render_template('/admin/pedidos.html', lospedidos=pedidosDC)
+    return render_template('/admin/pedidos.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
 
 
 @ app.route('/admin/pedidosf', methods=['POST'])
@@ -2359,7 +2362,85 @@ def pedidosfTemplateA():
 
     pedidosDC = pedidosClientes
 
-    return render_template('/admin/pedidos.html', lospedidos=pedidosDC)
+    return render_template('/admin/pedidos.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
+
+
+@ app.route('/sup/pedidosf', methods=['POST'])
+def suppedidosfTemplateA():
+    _desde = request.form['pedidosDesde']
+    _hasta = request.form['pedidosHasta']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00"))
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/sup/pedidos.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
+
+
+@ app.route('/apms/pedidosf', methods=['POST'])
+def apmspedidosfTemplateA():
+    _desde = request.form['pedidosDesde']
+    _hasta = request.form['pedidosHasta']
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00"))
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/apms/pedidos.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
 
 
 @ app.route('/admin/usuarios')
