@@ -58,12 +58,78 @@ def apms_index():
 
 @app.route('/apms/inicio')
 def apms_inicio():
-    return render_template('apms/inicio.html')
+    _desde = "2022-01-01"
+    _hasta = "9999-12-31"
+    usuario = session['hash']
+    usuarioEntero = int(usuario)
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario = %s order by id_pedidoa desc;"
+    datos = (usuarioEntero)
+    cursor.execute(sql, datos)
+    pedidosTotales = cursor.fetchall()
+    lospedidos = pedidosTotales
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+
+    return render_template('/apms/inicio.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
 
 
 @app.route('/admin/inicio')
 def admin_inicio():
-    return render_template('admin/inicio.html')
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `pedidosaaprobar` order by id_pedidoa desc;")
+    lospedidos = cursor.fetchall()
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+    return render_template('admin/inicio.html', lospedidos=pedidosDC)
 
 
 @app.route('/admin/mensaje')
@@ -73,7 +139,52 @@ def admin_mensaje():
 
 @app.route('/sup/inicio')
 def sup_inicio():
-    return render_template('sup/inicio.html')
+    _desde = "2022-01-01"
+    _hasta = "9999-12-31"
+    usuario = session['hash']
+
+    usuarioEntero = int(usuario)
+    listaRegionMetro = [1200, 1300, 1400, 1500]
+    listaRegionNacional = [4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000]
+    desdeU = usuarioEntero
+    if desdeU in listaRegionMetro:
+        hastaU = usuarioEntero + 99
+    elif desdeU in listaRegionNacional:
+        hastaU = usuarioEntero + 999
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    sql = "SELECT * FROM `pedidosaaprobar` WHERE pa_usuario BETWEEN %s AND %s order by id_pedidoa desc;"
+    datos = (desdeU, hastaU)
+    cursor.execute(sql, datos)
+    pedidosTotales = cursor.fetchall()
+    lospedidos = pedidosTotales
+    conexion.commit()
+    pedidosDrogueria = []
+    pedidosClientes = []
+    for i in lospedidos:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `droguerias`;")
+        drogueria = cursor.fetchall()
+        for x in drogueria:
+            if i[2] == x[1]:
+                lista = list(i)
+                lista.append(x[2])
+                pedidosDrogueria.append(lista)
+    for y in pedidosDrogueria:
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM `clientes`;")
+        clientes = cursor.fetchall()
+        for z in clientes:
+            if y[3] == z[4]:
+                lista2 = list(y)
+                lista2.append(z[5])
+                pedidosClientes.append(lista2)
+
+    pedidosDC = pedidosClientes
+    return render_template('/sup/inicio.html', lospedidos=pedidosDC, usuario=usuario, desde=_desde, hasta=_hasta)
 
 
 @ app.route('/admin/conformarOferta00')
