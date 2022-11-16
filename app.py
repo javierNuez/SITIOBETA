@@ -2293,7 +2293,7 @@ def sup_clientes_guardar(usuario):
 def pedidosTemplateA():
 
     _desde = "2022-01-01"
-    _hasta = "9999-12-31"
+    _hasta = "9999-12-31 23:59:59"
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -2332,7 +2332,10 @@ def pedidosTemplateA():
 def pedidosfTemplateA():
     _desde = request.form['pedidosDesde']
     _hasta = request.form['pedidosHasta']
-
+    if _desde == _hasta or _hasta == "":
+        _hasta = _desde+" 23:59:59"
+    else:
+        _hasta = _hasta+" 23:59:59"
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -2371,7 +2374,10 @@ def pedidosfTemplateA():
 def suppedidosfTemplateA():
     _desde = request.form['pedidosDesde']
     _hasta = request.form['pedidosHasta']
-
+    if _desde == _hasta or _hasta == "":
+        _hasta = _desde+" 23:59:59"
+    else:
+        _hasta = _hasta+" 23:59:59"
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
@@ -2410,6 +2416,10 @@ def suppedidosfTemplateA():
 def apmspedidosfTemplateA():
     _desde = request.form['pedidosDesde']
     _hasta = request.form['pedidosHasta']
+    if _desde == _hasta or _hasta == "":
+        _hasta = _desde+" 23:59:59"
+    else:
+        _hasta = _hasta+" 23:59:59"
 
     conexion = mysql.connect()
     cursor = conexion.cursor()

@@ -20,7 +20,7 @@
 {% endif %}
 {% endwith %}
 <div class="card-body" style="min-width: 1200px;">
-    {% include 'admin/pedidosf.html' %}
+    {% include 'apms/pedidosf.html' %}
 </div>
 <div class="card-body" style="min-width: 1200px;">
     <div class="card border-info">
@@ -69,7 +69,7 @@
                         {{i[10]}}
                     </td>
                     <td style="text-align: center;" scope="col" class="table-light">
-
+                        <input class="unidad" type="number" value="{{i[7]}}" hidden>
                         {{i[7]}}
 
                     </td>
@@ -79,23 +79,23 @@
                     </td>
                     <td style="text-align: center;" scope="col" class="table-light">
                         {% if i[6]=="Aprobado" %}
-
-                        <h6 style="color: rgb(23, 120, 14);">Aprobado</h6>
+                        <h6 style="color: rgb(0, 0, 0);">Aprobado</h6>
+                        <!--<h6 style="color: rgb(23, 120, 14);">Aprobado</h6>-->
 
                         {% endif %}
                         {% if i[6]=="Sin aprobar" %}
-
-                        <h6 style="color: rgb(226, 55, 55);">Sin aprobar</h6>
+                        <h6 style="color: rgb(0, 0, 0);">Sin aprobar</h6>
+                        <!--<h6 style="color: rgb(226, 55, 55);">Sin aprobar</h6>-->
 
                         {% endif %}
                         {% if i[6]=="Procesado" %}
-
-                        <h6 style="color: rgb(28, 145, 223);">Procesado</h6>
+                        <h6 style="color: rgb(0, 0, 0);">Procesado</h6>
+                        <!--<h6 style="color: rgb(28, 145, 223);">Procesado</h6>-->
 
                         {% endif %}
                         {% if i[6]=="Revisar" %}
-
-                        <h6 style="color: rgb(230, 156, 60);">Revisar</h6>
+                        <h6 style="color: rgb(0, 0, 0);">Revisar</h6>
+                        <!--<h6 style="color: rgb(230, 156, 60);">Revisar</h6>-->
 
                         {% endif %}
 
@@ -158,30 +158,20 @@
             </table>
 
         </div>
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2">
-                <h4>Unidades</h4>
-            </div>
-            <div class="col-2">
-                <h3 id="tot">u.</h3>
-            </div>
-            <div class="col-4">
 
-            </div>
-            <script>
-                let tot = document.getElementById("tot");
-                let total = 0;
-                let unidades = document.getElementsByClassName("unidad");
+        <script>
+            let tot = document.getElementById("tot");
+            let total = 0;
+            let unidades = document.getElementsByClassName("unidad");
 
-                for (let i of unidades) total += parseInt(i.value);
-                tot.innerHTML = total;
-                console.log(total)
+            for (let i of unidades) total += parseInt(i.value);
+            tot.innerHTML = total + " unidades pendientes.";
+            console.log(total)
 
-            </script>
+        </script>
 
-        </div>
     </div>
+</div>
 </div>
 <script>
     function finestraSecundaria(url) {

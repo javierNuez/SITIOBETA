@@ -212,31 +212,21 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-2">
-                <h4>Unidades</h4>
-            </div>
-            <div class="col-2">
-                <h3 id="tot">u.</h3>
-            </div>
-            <div class="col-4">
 
-            </div>
-            <script>
-                let tot = document.getElementById("tot");
-                let total = 0;
-                let unidades = document.getElementsByClassName("unidad");
+        <script>
+            let tot = document.getElementById("tot");
+            let total = 0;
+            let unidades = document.getElementsByClassName("unidad");
 
-                for (let i of unidades) total += parseInt(i.value);
-                tot.innerHTML = total;
-                console.log(total)
+            for (let i of unidades) total += parseInt(i.value);
+            tot.innerHTML = total + " unidades pendientes.";
+            console.log(total)
 
-            </script>
-
-        </div>
+        </script>
 
     </div>
+
+</div>
 </div>
 <script>
     function finestraSecundaria(url) {
