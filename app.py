@@ -94,6 +94,9 @@ def apms_inicio():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
+    for i in pedidosDC:
+        fecha = i[5].date()
+        i[5] = fecha
 
     return render_template('/apms/inicio.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
 
@@ -129,6 +132,11 @@ def admin_inicio():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
+
+    for i in pedidosDC:
+        fecha = i[5].date()
+        i[5] = fecha
+
     return render_template('admin/inicio.html', lospedidos=pedidosDC)
 
 
@@ -184,6 +192,10 @@ def sup_inicio():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
+    for i in pedidosDC:
+        fecha = i[5].date()
+        i[5] = fecha
+
     return render_template('/sup/inicio.html', lospedidos=pedidosDC, usuario=usuario, desde=_desde, hasta=_hasta)
 
 
