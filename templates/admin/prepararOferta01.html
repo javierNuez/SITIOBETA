@@ -17,27 +17,28 @@
 <br>
 <div class="card border-info">
     <div class="card-header">
+        <h3>Agregar oferta comercial:</h3>
         <h4>Módulos:</h4>
     </div>
     <div class="card-body">
-        <form action="/admin/prepararOferta" method="post" enctype="multipart/form-data">
-            <select class="form-select form-select-sm" aria-label="Oferta comercial vigente" name="txtModulos"
-                id="txtModulos" onchange="this.form.submit()" autofocus>
-                <option selected>Seleccione</option>
-                {% for modulo in modulos %}
-                <option value="{{modulo[0]}}">
-                    {{modulo[1]}}
-                </option>
-                {% endfor %}
-            </select>
-        </form>
+
+        <select class="form-select form-select-sm" aria-label="Oferta comercial vigente" name="txtModulos"
+            id="txtModulos" disabled>
+            {% for modulo in modulos %}
+            <option
+                value="{{modulo[0]}}#{{modulo[1]}}#{{modulo[2]}}#{{modulo[3]}}#{{modulo[4]}}#{{modulo[5]}}#{{modulo[6]}}#{{modulo[7]}}">
+                {{modulos[0][1]}}
+            </option>
+            {% endfor %}
+        </select>
+
     </div>
 </div>
 
 <br>
 <div class="card border-info">
     <div class="card-header">
-        <h4>Agregar oferta comercial:</h4>
+        <h4>Productos:</h4>
     </div>
     <div class="card-body">
 
@@ -50,7 +51,7 @@
                     <th style="text-align: center;" scope="col" class="table-info">Cant. Min.</th>
                     <th style="text-align: center;" scope="col" class="table-info">Descuento %</th>
                     <th style="text-align: center;" scope="col" class="table-info">Obligatorio</th>
-                    <th style="text-align: center;" scope="col" class="table-info">Acciones</th>
+
                 </tr>
             </thead>
             {% for producto in productos %}
@@ -76,19 +77,16 @@
 
                         </select>
                     </td>
-                    <td id="acciones">
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                            <button type="submit" class="btn btn-dark btn-sm" style="margin: auto;"
-                                disabled>Agregar</button>
-                        </div>
-                    </td>
+
                 </tr>
 
             </tbody>
 
             {% endfor %}
         </table>
-
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="submit" class="btn btn-dark btn-sm" style="margin: auto;" disabled>Agregar</button>
+        </div>
     </div>
 </div>
 

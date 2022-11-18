@@ -192,7 +192,9 @@ def sup_inicio():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
+
     for i in pedidosDC:
+
         fecha = i[5].date()
         i[5] = fecha
 
@@ -1082,6 +1084,36 @@ def admin_ofertas_guardar():
     conexion.commit()
 
     return redirect('/admin/ofertas')
+
+
+@ app.route("/admin/prepararOferta", methods=['POST'])
+def prepararOferta():
+    now = datetime.now()
+    _modulos = request.form['txtModulos']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos` where id_m=%s;", (_modulos))
+    modulos = cursor.fetchall()
+    listaModuloVigente = []
+    for i in modulos:
+        desdeM = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        hastaM = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        if desdeM <= now and hastaM > now:
+            listaModuloVigente.append(i)
+
+    cursor.execute("SELECT * FROM `productos`;")
+    productos = cursor.fetchall()
+    listaProductoVigente = []
+    for i in productos:
+        desdeP = datetime.strptime(f"{i[3]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaProductoVigente.append(i)
+
+    conexion.commit()
+
+    return render_template('admin/prepararOferta01.html', modulos=listaModuloVigente, productos=listaProductoVigente)
+
 
 # ofertas control
 
@@ -2501,10 +2533,22 @@ def suppedidosfTemplateA():
         _hasta = _desde+" 23:59:59"
     else:
         _hasta = _hasta+" 23:59:59"
+
+    usuario = session['hash']
+
+    usuarioEntero = int(usuario)
+    listaRegionMetro = [1200, 1300, 1400, 1500]
+    listaRegionNacional = [4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000]
+    desdeU = usuarioEntero
+    if desdeU in listaRegionMetro:
+        hastaU = usuarioEntero + 99
+    elif desdeU in listaRegionNacional:
+        hastaU = usuarioEntero + 999
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00"))
+        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s AND pa_usuario BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00", desdeU, hastaU))
     lospedidos = cursor.fetchall()
     conexion.commit()
     pedidosDrogueria = []
@@ -2539,6 +2583,8 @@ def suppedidosfTemplateA():
 def apmspedidosfTemplateA():
     _desde = request.form['pedidosDesde']
     _hasta = request.form['pedidosHasta']
+    usuario = session['hash']
+    usuarioEntero = int(usuario)
     if _desde == _hasta or _hasta == "":
         _hasta = _desde+" 23:59:59"
     else:
@@ -2547,7 +2593,7 @@ def apmspedidosfTemplateA():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00"))
+        "SELECT * FROM `pedidosaaprobar` WHERE pa_fecha BETWEEN %s AND %s AND pa_usuario = %s order by id_pedidoa desc;", (_desde+" 00:00:00", _hasta+" 00:00:00", usuarioEntero))
     lospedidos = cursor.fetchall()
     conexion.commit()
     pedidosDrogueria = []
@@ -2734,7 +2780,7 @@ def admin_usuarios_guardar():
 def admin_productos():
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `productos`;")
+    cursor.execute("SELECT * FROM `productos` order by `p_descripcion`;")
     productos = cursor.fetchall()
     conexion.commit()
 
@@ -2759,6 +2805,17 @@ def admin_productos_guardar():
     _desc = request.form['p_descripcion']
     _desde = request.form['p_desde']
     _hasta = request.form['p_hasta']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    sql = "SELECT * FROM `productos` WHERE p_cod = %s ;"
+    datos = _codigo
+    cursor.execute(sql, datos)
+    productos = cursor.fetchall()
+    conexion.commit()
+    existe = len(productos)
+    if existe > 0:
+        flash('El producto ya existe!.')
+        return redirect('/admin/productos')
 
     sql = "INSERT INTO `productos` (`id_p`, `p_cod`, `p_descripcion`, p_desde, p_hasta, p_restringido) VALUES (NULL, %s,%s,%s,%s,%s);"
     datos = (_codigo, _desc, _desde, _hasta, _restringido)
