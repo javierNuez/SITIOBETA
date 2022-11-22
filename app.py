@@ -1056,32 +1056,47 @@ def admin_ofertas_borrar():
     cursor.execute("DELETE FROM ofertas where id_o=%s;", (_id))
     pedido = cursor.fetchall()
     conexion.commit()
-    return redirect('/admin/ofertas')
+    return redirect('/admin/verOfertas')
 
 
 @app.route('/admin/ofertas/guardar', methods=['POST'])
 def admin_ofertas_guardar():
-
-    _modulo = request.form['txtModulo']
-    _producto = request.form['txtProducto']
-    _minima = request.form['txtMinima']
-    _descuento = request.form['txtDescuento']
-    datos_modulo = [_modulo.split('#')]
-    datos_producto = [_producto.split('#')]
-    _obligatorio = request.form['txtObligatorio']
-
-    if _modulo == '' or _producto == '' or _minima == '' or _descuento == '':
-        flash('¡Por favor llenar todos los campos!')
-        return redirect('/admin/ofertas')
-    _restringido = datos_producto[0][5]
-    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
-             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
-
+    now = datetime.now()
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute(sql, datos)
+    cursor.execute("SELECT * FROM `productos`;")
+    productos = cursor.fetchall()
+    listaProductoVigente = []
+    for i in productos:
+        desdeP = datetime.strptime(f"{i[3]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaProductoVigente.append(i)
+
     conexion.commit()
+
+    for i in listaProductoVigente:
+        _modulo = request.form['txtModulo']
+        idProducto = i[0]
+        idProducto = str(idProducto)
+        _producto = request.form['txtProducto'+idProducto]
+        _minima = request.form['txtMinima'+idProducto]
+        _descuento = request.form['txtDescuento'+idProducto]
+        datos_modulo = [_modulo.split('#')]
+        datos_producto = [_producto.split('#')]
+        _obligatorio = request.form['txtObligatorio'+idProducto]
+        _restringido = datos_producto[0][5]
+        _minima = int(_minima)
+        _descuento = int(_descuento)
+        if _minima > 0 and _descuento > 0:
+            sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+            datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
+                     datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
+
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(sql, datos)
+            conexion.commit()
 
     return redirect('/admin/ofertas')
 
@@ -1101,7 +1116,7 @@ def prepararOferta():
         if desdeM <= now and hastaM > now:
             listaModuloVigente.append(i)
 
-    cursor.execute("SELECT * FROM `productos`;")
+    cursor.execute("SELECT * FROM `productos` order by p_descripcion;")
     productos = cursor.fetchall()
     listaProductoVigente = []
     for i in productos:
@@ -1111,11 +1126,30 @@ def prepararOferta():
             listaProductoVigente.append(i)
 
     conexion.commit()
-
+    print(listaModuloVigente)
     return render_template('admin/prepararOferta01.html', modulos=listaModuloVigente, productos=listaProductoVigente)
 
 
 # ofertas control
+
+@ app.route('/admin/verOfertas')
+def admin_ver_ofertas():
+    now = datetime.now()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
+    ofertas = cursor.fetchall()
+    listaOfertaVigente = []
+    conexion.commit()
+    for i in ofertas:
+        desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now:
+            if desdeP <= now and hastaP > now:
+                listaOfertaVigente.append(i)
+    return render_template('admin/verOfertas.html', ofertas=listaOfertaVigente)
 
 
 @ app.route('/admin/ofertas')
@@ -1144,7 +1178,7 @@ def admin_ofertas():
         if desdeM <= now and hastaM > now:
             listaModuloVigente.append(i)
 
-    cursor.execute("SELECT * FROM `productos`;")
+    cursor.execute("SELECT * FROM `productos` order by p_descripcion;")
     productos = cursor.fetchall()
     listaProductoVigente = []
     for i in productos:
