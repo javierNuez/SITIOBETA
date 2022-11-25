@@ -1248,22 +1248,19 @@ def prepararOferta():
             listaProductoVigente.append(i)
     conexion.commit()
     listaProductosModificados = []
-    for x in listaOfertasVigente:
-        for i in listaProductoVigente:
-            listaPM = list(i)
+
+    for i in listaProductoVigente:
+        listaPM = list(i)
+        listaPM.append(0)
+        listaPM.append(0)
+        listaPM.append('no')
+        for x in listaOfertasVigente:
             ofertasProductos = int(x[8])
             if i[0] == ofertasProductos:
-                listaPM.append(x[13])
-                listaPM.append(x[14])
-                listaPM.append(x[16])
-
-            else:
-                listaPM.append(0)
-                listaPM.append("0")
-                listaPM.append("no")
-            listaProductosModificados.append(listaPM)
-
-    print(listaProductosModificados)
+                listaPM[6] = x[13]
+                listaPM[7] = x[14]
+                listaPM[8] = x[16]
+        listaProductosModificados.append(listaPM)
 
     return render_template('admin/prepararOferta01.html', modulos=listaModuloVigente, productos=listaProductosModificados)
 
