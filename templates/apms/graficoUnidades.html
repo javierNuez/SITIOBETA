@@ -2,8 +2,8 @@
     <div class="container">
         {% for i in lospedidos%}
         <div hidden>
-            <input type="datetime" class="parametro" value="{{i[5]}}"><input type="number" class="valor"
-                value="{{i[7]}}">
+            <input type="datetime" class="parametro" value="{{i[0]}}" hidden>
+            <input type="number" class="valor" value="{{i[1]}}" hidden>
         </div>
         {% endfor %}
     </div>

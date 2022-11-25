@@ -72,13 +72,19 @@
 
 
                         </td>
-                        <td id=""><input type="text" class="form-control" name="txtMinima{{producto[0]}}" id="#"
-                                aria-describedby="helpId" value="0" style="max-width: 100px;margin:auto;"></td>
+                        <td id=""><input type="number" class="form-control" name="txtMinima{{producto[0]}}" id="#"
+                                aria-describedby="helpId" value="{{producto[6]}}" style="max-width: 100px;margin:auto;"
+                                min="0"></td>
                         <td id=""><input type="text" class="form-control" name="txtDescuento{{producto[0]}}" id="#"
-                                aria-describedby="helpId" style="max-width: 100px;margin:auto;" value="0"></td>
+                                aria-describedby="helpId" style="max-width: 100px;margin:auto;" value="{{producto[7]}}"
+                                pattern="[0-9]+([\.][0-9]+)?" title="Ingrese solo números con punto decimal."
+                                formnovalidate />
+
+                        </td>
                         <td id="">
                             <select class="form-select" name="txtObligatorio{{producto[0]}}" id="txtObligatorio">
-                                <option value="no">No</option>
+
+                                <option value="{{producto[8]}}">No</option>
                                 <option value="si">Si</option>
 
                             </select>

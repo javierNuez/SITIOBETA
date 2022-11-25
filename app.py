@@ -94,11 +94,37 @@ def apms_inicio():
                 pedidosClientes.append(lista2)
 
     pedidosDC = pedidosClientes
+
     for i in pedidosDC:
         fecha = i[5].date()
         i[5] = fecha
+    conta = 0
+    listaFechas = []
+    listaValores = []
+    for x in pedidosDC:
+        llave = x[5]
 
-    return render_template('/apms/inicio.html', lospedidos=pedidosDC, desde=_desde, hasta=_hasta)
+        valor = x[7]
+
+        if conta == 0:
+            listaFechas.append(llave)
+            listaValores.append(valor)
+            conta = conta+1
+        else:
+            if llave == pedidosDC[conta-1][5]:
+                valorViejo = listaValores.pop()
+                valorViejo = int(valorViejo)
+
+                valor = int(valor)
+
+                listaValores.append(valorViejo+valor)
+            else:
+                listaFechas.append(llave)
+                listaValores.append(valor)
+            conta = conta+1
+    graficoLista = list(zip(listaFechas, listaValores))
+
+    return render_template('/apms/inicio.html', lospedidos=graficoLista, desde=_desde, hasta=_hasta)
 
 
 @app.route('/admin/inicio')
@@ -136,8 +162,33 @@ def admin_inicio():
     for i in pedidosDC:
         fecha = i[5].date()
         i[5] = fecha
+    conta = 0
+    listaFechas = []
+    listaValores = []
+    for x in pedidosDC:
+        llave = x[5]
 
-    return render_template('admin/inicio.html', lospedidos=pedidosDC)
+        valor = x[7]
+
+        if conta == 0:
+            listaFechas.append(llave)
+            listaValores.append(valor)
+            conta = conta+1
+        else:
+            if llave == pedidosDC[conta-1][5]:
+                valorViejo = listaValores.pop()
+                valorViejo = int(valorViejo)
+
+                valor = int(valor)
+
+                listaValores.append(valorViejo+valor)
+            else:
+                listaFechas.append(llave)
+                listaValores.append(valor)
+            conta = conta+1
+    graficoLista = list(zip(listaFechas, listaValores))
+
+    return render_template('admin/inicio.html', lospedidos=graficoLista)
 
 
 @app.route('/admin/mensaje')
@@ -194,11 +245,34 @@ def sup_inicio():
     pedidosDC = pedidosClientes
 
     for i in pedidosDC:
-
         fecha = i[5].date()
         i[5] = fecha
+    conta = 0
+    listaFechas = []
+    listaValores = []
+    for x in pedidosDC:
+        llave = x[5]
 
-    return render_template('/sup/inicio.html', lospedidos=pedidosDC, usuario=usuario, desde=_desde, hasta=_hasta)
+        valor = x[7]
+
+        if conta == 0:
+            listaFechas.append(llave)
+            listaValores.append(valor)
+            conta = conta+1
+        else:
+            if llave == pedidosDC[conta-1][5]:
+                valorViejo = listaValores.pop()
+                valorViejo = int(valorViejo)
+
+                valor = int(valor)
+
+                listaValores.append(valorViejo+valor)
+            else:
+                listaFechas.append(llave)
+                listaValores.append(valor)
+            conta = conta+1
+    graficoLista = list(zip(listaFechas, listaValores))
+    return render_template('/sup/inicio.html', lospedidos=graficoLista, usuario=usuario, desde=_desde, hasta=_hasta)
 
 
 @ app.route('/admin/conformarOferta00')
@@ -1074,7 +1148,54 @@ def admin_ofertas_guardar():
             listaProductoVigente.append(i)
 
     conexion.commit()
+    # verificar valores:
+    for i in listaProductoVigente:
+        idProducto = i[0]
+        idProducto = str(idProducto)
+        _minima = request.form['txtMinima'+idProducto]
+        _descuento = request.form['txtDescuento'+idProducto]
+        _minimav = int(_minima)
+        _descuentov = int(float(_descuento))
 
+        if _minimav < 0 or _descuentov < 0 or _descuentov > 100:
+            flash('Verifique, el descuento, debe ser numérico entre 0 y 100.')
+            return redirect('/admin/ofertas')
+
+    # -----------------------------------------------------------------
+
+    try:
+        for i in listaProductoVigente:
+
+            _modulo = request.form['txtModulo']
+            idProducto = i[0]
+            idProducto = str(idProducto)
+            _producto = request.form['txtProducto'+idProducto]
+            _minima = request.form['txtMinima'+idProducto]
+            _descuento = request.form['txtDescuento'+idProducto]
+            datos_modulo = [_modulo.split('#')]
+            datos_producto = [_producto.split('#')]
+            _obligatorio = request.form['txtObligatorio'+idProducto]
+            _restringido = datos_producto[0][5]
+            _minima = int(_minima)
+            _descuento = float(_descuento)
+            if _minima > 0 and _descuento > 0 and _descuento < 101:
+                sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+                datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
+                         datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
+
+                conexion = mysql.connect()
+                cursor = conexion.cursor()
+                cursor.execute(sql, datos)
+                conexion.commit()
+
+        return redirect('/admin/ofertas')
+    except ValueError:
+        flash('Verifique, el descuento con decimales debe ser con "punto".')
+        return redirect('/admin/ofertas')
+
+
+"""
+#otra validacion.
     for i in listaProductoVigente:
         _modulo = request.form['txtModulo']
         idProducto = i[0]
@@ -1086,19 +1207,11 @@ def admin_ofertas_guardar():
         datos_producto = [_producto.split('#')]
         _obligatorio = request.form['txtObligatorio'+idProducto]
         _restringido = datos_producto[0][5]
-        _minima = int(_minima)
-        _descuento = int(_descuento)
-        if _minima > 0 and _descuento > 0:
-            sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-            datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
-                     datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
 
-            conexion = mysql.connect()
-            cursor = conexion.cursor()
-            cursor.execute(sql, datos)
-            conexion.commit()
-
-    return redirect('/admin/ofertas')
+        if _minima < 0:
+            flash('Verifique, el mínimo, no puede ser negativo.')
+            return redirect('/admin/ofertas')
+"""
 
 
 @ app.route("/admin/prepararOferta", methods=['POST'])
@@ -1118,16 +1231,41 @@ def prepararOferta():
 
     cursor.execute("SELECT * FROM `productos` order by p_descripcion;")
     productos = cursor.fetchall()
+    cursor.execute("SELECT * FROM `ofertas` where o_modulo=%s;",
+                   (modulos[0][0]))
+    ofertas = cursor.fetchall()
+    listaOfertasVigente = []
+    for i in ofertas:
+        desdeP = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaOfertasVigente.append(i)
     listaProductoVigente = []
     for i in productos:
         desdeP = datetime.strptime(f"{i[3]}", "%Y-%m-%d")
         hastaP = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
         if desdeP <= now and hastaP > now:
             listaProductoVigente.append(i)
-
     conexion.commit()
-    print(listaModuloVigente)
-    return render_template('admin/prepararOferta01.html', modulos=listaModuloVigente, productos=listaProductoVigente)
+    listaProductosModificados = []
+    for x in listaOfertasVigente:
+        for i in listaProductoVigente:
+            listaPM = list(i)
+            ofertasProductos = int(x[8])
+            if i[0] == ofertasProductos:
+                listaPM.append(x[13])
+                listaPM.append(x[14])
+                listaPM.append(x[16])
+
+            else:
+                listaPM.append(0)
+                listaPM.append("0")
+                listaPM.append("no")
+            listaProductosModificados.append(listaPM)
+
+    print(listaProductosModificados)
+
+    return render_template('admin/prepararOferta01.html', modulos=listaModuloVigente, productos=listaProductosModificados)
 
 
 # ofertas control
