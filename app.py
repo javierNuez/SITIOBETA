@@ -1275,7 +1275,7 @@ def admin_ver_ofertas():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas` ORDER BY 'o_mod_nom', 'o_prod_des';")
+        "SELECT * FROM `ofertas` ORDER BY `o_mod_nom` , `o_prod_des`;")
     ofertas = cursor.fetchall()
     listaOfertaVigente = []
     conexion.commit()
@@ -1296,7 +1296,7 @@ def admin_ofertas():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(
-        "SELECT * FROM `ofertas` ORDER BY 'o_mod_nom', 'o_prod_des';")
+        "SELECT * FROM `ofertas` ORDER BY `o_mod_nom`, `o_prod_des`;")
     ofertas = cursor.fetchall()
     listaOfertaVigente = []
     for i in ofertas:
