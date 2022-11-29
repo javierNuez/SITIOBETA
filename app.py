@@ -1164,11 +1164,12 @@ def admin_ofertas_guardar():
     # -----------------------------------------------------------------
 
     try:
-        for i in listaProductoVigente:
 
+        for i in listaProductoVigente:
             _modulo = request.form['txtModulo']
             idProducto = i[0]
             idProducto = str(idProducto)
+
             _producto = request.form['txtProducto'+idProducto]
             _minima = request.form['txtMinima'+idProducto]
             _descuento = request.form['txtDescuento'+idProducto]
@@ -1178,40 +1179,41 @@ def admin_ofertas_guardar():
             _restringido = datos_producto[0][5]
             _minima = int(_minima)
             _descuento = float(_descuento)
+            # verificar modulo si existe:
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(
+                "SELECT * FROM `ofertas` where o_modulo=%s and o_producto=%s;", (datos_modulo[0][0], datos_producto[0][0]))
+            ofertasPorModulos = cursor.fetchall()
+
             if _minima > 0 and _descuento > 0 and _descuento < 101:
-                sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
-                datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
-                         datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
+                if len(ofertasPorModulos) == 0:
+                    sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,o_especial, o_restringido) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+                    datos = (datos_modulo[0][0], datos_modulo[0][1], datos_modulo[0][2], datos_modulo[0][3], datos_modulo[0][4], datos_modulo[0][5], datos_modulo[0][6],
+                             datos_producto[0][0], datos_producto[0][1], datos_producto[0][2], datos_producto[0][3], datos_producto[0][4], _minima, _descuento, _obligatorio, datos_modulo[0][7], _restringido)
 
-                conexion = mysql.connect()
-                cursor = conexion.cursor()
-                cursor.execute(sql, datos)
-                conexion.commit()
+                    conexion = mysql.connect()
+                    cursor = conexion.cursor()
+                    cursor.execute(sql, datos)
+                    conexion.commit()
+                    print(
+                        f"Se agrego el modulo {datos_modulo[0][0]} con el producto {datos_producto[0][0]} 1")
 
-        return redirect('/admin/ofertas')
+                else:
+                    sql = "UPDATE ofertas SET o_minima=%s,o_descuento=%s, o_obligatorio=%s WHERE o_modulo=%s and o_producto=%s;"
+                    datos = (_minima, _descuento,
+                             _obligatorio, _modulo, int(idProducto))
+                    conexion = mysql.connect()
+                    cursor = conexion.cursor()
+                    cursor.execute(sql, datos)
+                    conexion.commit()
+                    print(
+                        f"Se actualizó el modulo {datos_modulo[0][0]} con el producto {datos_producto[0][0]}")
+
     except ValueError:
         flash('Verifique, el descuento con decimales debe ser con "punto".')
-        return redirect('/admin/ofertas')
 
-
-"""
-#otra validacion.
-    for i in listaProductoVigente:
-        _modulo = request.form['txtModulo']
-        idProducto = i[0]
-        idProducto = str(idProducto)
-        _producto = request.form['txtProducto'+idProducto]
-        _minima = request.form['txtMinima'+idProducto]
-        _descuento = request.form['txtDescuento'+idProducto]
-        datos_modulo = [_modulo.split('#')]
-        datos_producto = [_producto.split('#')]
-        _obligatorio = request.form['txtObligatorio'+idProducto]
-        _restringido = datos_producto[0][5]
-
-        if _minima < 0:
-            flash('Verifique, el mínimo, no puede ser negativo.')
-            return redirect('/admin/ofertas')
-"""
+    return redirect('/admin/verOfertas')
 
 
 @ app.route("/admin/prepararOferta", methods=['POST'])
@@ -1272,7 +1274,8 @@ def admin_ver_ofertas():
     now = datetime.now()
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
+    cursor.execute(
+        "SELECT * FROM `ofertas` ORDER BY 'o_mod_nom', 'o_prod_des';")
     ofertas = cursor.fetchall()
     listaOfertaVigente = []
     conexion.commit()
@@ -1292,7 +1295,8 @@ def admin_ofertas():
     now = datetime.now()
     conexion = mysql.connect()
     cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM `ofertas` ORDER BY 'o_mod_nom';")
+    cursor.execute(
+        "SELECT * FROM `ofertas` ORDER BY 'o_mod_nom', 'o_prod_des';")
     ofertas = cursor.fetchall()
     listaOfertaVigente = []
     for i in ofertas:
@@ -1354,7 +1358,7 @@ def admin_ofertas_editar():
     cursor.execute(sql, datos)
     conexion.commit()
 
-    return redirect('/admin/ofertas')
+    return redirect('/admin/verOfertas')
 # funciones de usuarios:
 # Aca esta la magia para devolver la pantalla segun el usuario----------------------------
 
