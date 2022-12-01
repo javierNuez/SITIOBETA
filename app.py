@@ -4,7 +4,7 @@ from http.client import BAD_REQUEST
 from locale import normalize
 from random import randint
 from audioop import add
-from datetime import datetime
+from datetime import datetime, timedelta
 from lib2to3.pytree import convert
 from tokenize import Number
 from unicodedata import numeric
@@ -1281,11 +1281,13 @@ def admin_ver_ofertas():
     conexion.commit()
     for i in ofertas:
         desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
-        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(
+            f"{i[6]}", "%Y-%m-%d")
         desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
-        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
-        if desdeO <= now and hastaO > now:
-            if desdeP <= now and hastaP > now:
+        hastaP = datetime.strptime(
+            f"{i[12]}", "%Y-%m-%d")
+        if desdeO <= now and hastaO > now+timedelta(days=-1):
+            if desdeP <= now and hastaP > now+timedelta(days=-1):
                 listaOfertaVigente.append(i)
     return render_template('admin/verOfertas.html', ofertas=listaOfertaVigente)
 
@@ -1304,8 +1306,8 @@ def admin_ofertas():
         hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
         desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
         hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
-        if desdeO <= now and hastaO > now:
-            if desdeP <= now and hastaP > now:
+        if desdeO <= now and hastaO > now+timedelta(days=-1):
+            if desdeP <= now and hastaP > now+timedelta(days=-1):
                 listaOfertaVigente.append(i)
 
     cursor.execute("SELECT * FROM `modulos`;")
