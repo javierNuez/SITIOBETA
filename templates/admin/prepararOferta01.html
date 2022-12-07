@@ -62,8 +62,13 @@
                 </thead>
                 {% for producto in productos %}
                 <tbody>
-
+                    {% if producto[6] > 0 %}
+                    <tr style="background-color:rgb(235, 237, 238)">
+                        {% endif %}
+                        {% if producto[6] == 0 %}
                     <tr>
+                        {% endif %}
+
                         <td id="">
                             <input type="text" name="txtProducto{{producto[0]}}" id="txtProducto{{producto[0]}}"
                                 value="{{producto[0]}}#{{producto[1]}}#{{producto[2]}}#{{producto[3]}}#{{producto[4]}}#{{producto[5]}}"
