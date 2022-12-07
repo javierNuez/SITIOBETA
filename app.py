@@ -1281,11 +1281,9 @@ def admin_ver_ofertas():
     conexion.commit()
     for i in ofertas:
         desdeO = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
-        hastaO = datetime.strptime(
-            f"{i[6]}", "%Y-%m-%d")
+        hastaO = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
         desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
-        hastaP = datetime.strptime(
-            f"{i[12]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
         if desdeO <= now and hastaO > now+timedelta(days=-1):
             if desdeP <= now and hastaP > now+timedelta(days=-1):
                 listaOfertaVigente.append(i)
@@ -1343,6 +1341,81 @@ def admin_ofertas_update(id):
     conexion.commit()
 
     return render_template('admin/editarOferta.html', ofertas=ofertas)
+
+
+@app.route('/admin/copiarOferta')
+def admin_copiar_oferta():
+    now = datetime.now()
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos`;")
+    modulos = cursor.fetchall()
+    listaModuloVigente = []
+    for i in modulos:
+        desdeM = datetime.strptime(f"{i[4]}", "%Y-%m-%d")
+        hastaM = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        if desdeM <= now and hastaM > now:
+            listaModuloVigente.append(i)
+
+    return render_template('admin/copiarOferta.html', modulos=listaModuloVigente)
+# copiar
+
+
+@app.route('/admin/guardar/copiaOferta', methods=['POST'])
+def admin_copiarOferta():
+
+    now = datetime.now()
+    _modulos = request.form['txtOrigen']
+    _destino = request.form['txtDestino']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `ofertas` where o_modulo=%s;", (_modulos))
+    ofertas = cursor.fetchall()
+    listaModulosVigente = []
+    for i in ofertas:
+        desdeP = datetime.strptime(f"{i[5]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[6]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaModulosVigente.append(i)
+    listaProductoVigente = []
+    for i in listaModulosVigente:
+        desdeP = datetime.strptime(f"{i[11]}", "%Y-%m-%d")
+        hastaP = datetime.strptime(f"{i[12]}", "%Y-%m-%d")
+        if desdeP <= now and hastaP > now:
+            listaProductoVigente.append(i)
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `modulos` where id_m=%s;", (_destino))
+    modulos = cursor.fetchall()
+    conexion.commit()
+
+    _destino = request.form['txtDestino']
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute("SELECT * FROM `ofertas` where o_modulo=%s;", (_destino))
+    ofertasD = cursor.fetchall()
+    conexion.commit()
+    if len(ofertasD) == 0:
+        conta = 0
+
+        for i in listaProductoVigente:
+
+            sql = "INSERT INTO `ofertas` (`id_o`, `o_modulo`,`o_mod_nom`,`o_mod_tit`,`o_mod_pie`,`o_mod_d`,`o_mod_h`, `o_mod_minima`, `o_producto`,`o_prod_cod`,`o_prod_des`,`o_prod_d`,`o_prod_h`, `o_minima`, `o_descuento`, `o_obligatorio`,`o_especial`, `o_restringido`) VALUES (NULL, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+            datos = (modulos[0][0], modulos[0][1], modulos[0][2], modulos[0][3], modulos[0][4], modulos[0][5], modulos[0][6], i[8], i[9],
+                     i[10], i[11], i[12], i[13], i[14], i[15], i[16], i[17])
+
+            conexion = mysql.connect()
+            cursor = conexion.cursor()
+            cursor.execute(sql, datos)
+            conexion.commit()
+            conta = conta+1
+        flash(
+            f"Se han copiado {conta} productos a la oferta {_destino} - {modulos[0][1]}.")
+
+    else:
+        flash('La oferta destino ya posee productos asignados, no se ha podido copiar..')
+    return redirect('/admin/verOfertas')
 
 
 @app.route('/admin/editarOfertas/editar', methods=['POST'])
