@@ -10,6 +10,7 @@ from tokenize import Number
 from unicodedata import numeric
 from flask import Flask, jsonify, session
 from flask import render_template, request, redirect, flash
+from flask import send_file
 import requests
 from flaskext.mysql import MySQL
 from datetime import date
@@ -1416,6 +1417,32 @@ def admin_copiarOferta():
     else:
         flash('La oferta destino ya posee productos asignados, no se ha podido copiar..')
     return redirect('/admin/verOfertas')
+
+
+@app.route('/admin/procesarOfertas', methods=['POST'])
+def admin_ofertas_procesar():
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT * FROM `pedidosaaprobar` WHERE `pa_estado`='Aprobado';")
+    aprobados = cursor.fetchall()
+    try:
+        archivo_texto = open("Procesados.txt", "x")
+    except FileExistsError:
+        archivo_texto = open("Procesados.txt", "w")
+    for i in aprobados:
+        archivo_texto.write(str(i)+"\n")
+    archivo_texto.close()
+
+    path = "Procesados.txt"
+
+    sql = "UPDATE `pedidosaaprobar` SET `pa_estado`='Procesado' WHERE `pa_estado`='Aprobado';"
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+    cursor.execute(sql)
+    conexion.commit()
+
+    return send_file(path, as_attachment=True)
 
 
 @app.route('/admin/editarOfertas/editar', methods=['POST'])
