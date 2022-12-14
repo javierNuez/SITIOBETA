@@ -1435,8 +1435,28 @@ def admin_ofertas_procesar():
         archivo_texto = open("Procesados.txt", "x")
     except FileExistsError:
         archivo_texto = open("Procesados.txt", "w")
+    conta = 1
+    tope = len(aprobados)
+
     for i in aprobados:
-        archivo_texto.write(str(i)+"\n")
+        aprobado = {}
+        aprobado["id_pedido"] = i[0]
+        aprobado["usuario"] = i[1]
+        aprobado["drogueria"] = i[2]
+        aprobado["cliente"] = i[3]
+        aprobado["pedidos"] = i[4]
+        aprobado["fecha"] = str(i[5])
+        aprobado["estado"] = i[6]
+        aprobado["total_unidades"] = i[7]
+        aprobado["detalle"] = i[8]
+
+        if conta == 1:
+            archivo_texto.write('['+str(aprobado)+',')
+        elif tope != conta:
+            archivo_texto.write(str(aprobado)+",")
+        else:
+            archivo_texto.write(str(aprobado)+']')
+        conta = conta+1
     archivo_texto.close()
 
     path = "Procesados.txt"
@@ -1445,8 +1465,9 @@ def admin_ofertas_procesar():
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute(sql)
-    conexion.commit()
 
+    conexion.commit()
+    flash(f'Se procesaron {tope} registros correctamente.')
     return send_file(path, as_attachment=True)
 
 

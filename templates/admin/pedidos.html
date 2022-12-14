@@ -11,11 +11,16 @@
 
 </script>
 {% with messages= get_flashed_messages() %}
-
-{% if messages %}
+{% if messages == 'No se encontraron pedidos "Aprobados"' %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <strong>¡Cuidado!</strong> {% for message in messages %}{{ message }}{% endfor %}
+</div>
+{% endif %}
+{% if messages != 'No se encontraron pedidos "Aprobados"' and messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <strong>¡Ok!</strong> {% for message in messages %}{{ message }}{% endfor %}
 </div>
 {% endif %}
 {% endwith %}
