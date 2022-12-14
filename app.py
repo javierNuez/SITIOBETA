@@ -1426,6 +1426,10 @@ def admin_ofertas_procesar():
     cursor.execute(
         "SELECT * FROM `pedidosaaprobar` WHERE `pa_estado`='Aprobado';")
     aprobados = cursor.fetchall()
+    if len(aprobados) < 1:
+        flash('No se encontraron pedidos "Aprobados"')
+        return redirect("/admin/pedidos")
+
     try:
         archivo_texto = open("Procesados.txt", "x")
     except FileExistsError:
