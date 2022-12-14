@@ -1427,6 +1427,7 @@ def admin_ofertas_procesar():
         "SELECT * FROM `pedidosaaprobar` WHERE `pa_estado`='Aprobado';")
     aprobados = cursor.fetchall()
     if len(aprobados) < 1:
+        conexion.commit()
         flash('No se encontraron pedidos "Aprobados"')
         return redirect("/admin/pedidos")
 
