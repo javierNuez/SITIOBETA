@@ -28,7 +28,11 @@
 <body>
   {% if usuarioStorage %}
   <input type="text" id="hashUsuario" value="{{usuarioStorage}}" name="hashUsuario" hidden>
-  <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
+  <script>
+    var hashUsuario = document.getElementById("hashUsuario").value;
+    var hash = "hash";
+    sessionStorage.setItem(hash, hashUsuario);
+  </script>
   {% endif %}
 
 
