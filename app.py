@@ -1,5 +1,3 @@
-
-
 from http.client import BAD_REQUEST
 from locale import normalize
 from random import randint
