@@ -1,10 +1,9 @@
 {% include 'admin/cabecera.html' %}
+{% if usuarioStorage == "" %}
 <script>
-    var hashUsuario = sessionStorage.getItem("hash");
-    if (!(hashUsuario)) {
         window.location.href = "/";
-    }
 </script>
+{% endif %}
 <div>
     {% if usuarioStorage %}
     <strong>Bienvenido usuario: {{ usuarioStorage[-5:].capitalize() }}</strong>
