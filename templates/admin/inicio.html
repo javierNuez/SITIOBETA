@@ -1,7 +1,8 @@
 {% include 'admin/cabecera.html' %}
 <script>
-    var hashUsuario = sessionStorage.getItem("hash");
+    
     function cambio(){
+        var hashUsuario = sessionStorage.getItem("hash");
         if (!(hashUsuario)) {
         window.location.href = "/";
         }
