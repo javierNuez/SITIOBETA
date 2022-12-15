@@ -1,9 +1,12 @@
 {% include 'admin/cabecera.html' %}
 <script>
     var hashUsuario = sessionStorage.getItem("hash");
-    if (!(hashUsuario)) {
+    function cambio(){
+        if (!(hashUsuario)) {
         window.location.href = "/";
+        }
     }
+    setTimeout(cambio, 3000);
 </script>
 <div class="p-5 bg-light">
     <div class="container">

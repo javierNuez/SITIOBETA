@@ -128,7 +128,7 @@ def apms_inicio():
 
 @app.route('/admin/inicio')
 def admin_inicio():
-    usuario = session['hash']
+
     conexion = mysql.connect()
     cursor = conexion.cursor()
     cursor.execute("SELECT * FROM `pedidosaaprobar` order by id_pedidoa desc;")
@@ -188,7 +188,7 @@ def admin_inicio():
             conta = conta+1
     graficoLista = list(zip(listaFechas, listaValores))
 
-    return render_template('admin/inicio.html', lospedidos=graficoLista, usuario = usuario)
+    return render_template('admin/inicio.html', lospedidos=graficoLista)
 
 
 @app.route('/admin/mensaje')
@@ -1081,7 +1081,7 @@ def admin_index():
     cursor.execute(
         "select * FROM usuarios where u_rrdzz =%s and u_pass =%s;", (usuario, contraseña))
     _usuario = cursor.fetchall()
-    # print(_usuario)
+    
     conexion.commit()
     no = 'no'
 
