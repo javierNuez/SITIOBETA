@@ -33,10 +33,10 @@ app.secret_key = "vigoray"
 mysql = MySQL()
 
 
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
-app.config['MYSQL_DATABASE_DB'] = 'sitiobeta'
+app.config['MYSQL_DATABASE_HOST'] = 'sql10.freesqldatabase.com'
+app.config['MYSQL_DATABASE_USER'] = 'sql10584916'
+app.config['MYSQL_DATABASE_PASSWORD'] = '4If8hrNRGL'
+app.config['MYSQL_DATABASE_DB'] = 'sql10584916'
 mysql.init_app(app)
 
 
