@@ -1073,6 +1073,7 @@ def admin_index():
     now = datetime.now()
     usuario = request.form['txtUsuario']
     traerUsuario(usuario)
+
     contraseña = request.form['txtPassword']
     conexion = mysql.connect()
     cursor = conexion.cursor()
