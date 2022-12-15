@@ -45,7 +45,7 @@ def inicio():
 
     return render_template('sitio/index.html')
 
-
+# prueba
 # @app.route('/admin/')
 # def open():
 
