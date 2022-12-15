@@ -4156,6 +4156,6 @@ def pagina_no_encontrada(error):
 
 if __name__ == '__main__':
     app.register_error_handler(404, pagina_no_encontrada)
-    app.run(host="89.0.0.28", port=8000, debug=True)
+    app.run(debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
