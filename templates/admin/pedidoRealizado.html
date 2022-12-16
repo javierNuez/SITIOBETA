@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body style="min-width: 992px;">
     {% if usuarioStorage %}
     <input type="text" id="hashUsuario" value="{{usuarioStorage}}" name="hashUsuario" hidden>
     <script src="{{ url_for( 'static', filename='js/javalogin.js' ) }}"></script>
