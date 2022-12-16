@@ -132,12 +132,18 @@
                                         style="height: 20px;width:20px;" title="Revisar"></a>
                             </div>
                             <div class="col-3">
-                                <a href="#"><img src="{{ url_for( 'static', filename='img/cuidado3.png' ) }}"
+                                <a href="#">
+                                    <img src="{{ url_for( 'static', filename='img/cuidado3.png' ) }}"
                                         style="height: 20px;width:20px;opacity: 25%;" title="Sin aprobar"></a>
                             </div>
                             <div class="col-3">
-                                <a href="#"><img src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
+                                <a href="#">
+                                    <img src="{{ url_for( 'static', filename='img/tachito.svg' ) }}"
                                         style="height: 20px;width:20px;opacity: 25%;" title="Eliminar"></a>
+                                <img src="{{ url_for( 'static', filename='img/tachito.png' ) }}"
+                                    style="height: 20px;width:20px;opacity: 25%;" title="Eliminar"></a>
+                                <img src="{{ url_for( 'static', filename='img/basura2.svg' ) }}"
+                                    style="height: 20px;width:20px;opacity: 25%;" title="Eliminar"></a>
                             </div>
 
                             {% endif %}
