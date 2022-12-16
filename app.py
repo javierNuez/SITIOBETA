@@ -30,11 +30,17 @@ app = Flask(__name__)
 app.secret_key = "vigoray"
 mysql = MySQL()
 
-
+"""
+#conección con freesqldatabase
 app.config['MYSQL_DATABASE_HOST'] = 'sql10.freesqldatabase.com'
 app.config['MYSQL_DATABASE_USER'] = 'sql10584916'
 app.config['MYSQL_DATABASE_PASSWORD'] = '4If8hrNRGL'
 app.config['MYSQL_DATABASE_DB'] = 'sql10584916'
+"""
+app.config['MYSQL_DATABASE_HOST'] = 'cwe1u6tjijexv3r6.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
+app.config['MYSQL_DATABASE_USER'] = 'aprlqldwou6m6rq8'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'h9ccobar4zksde8u'
+app.config['MYSQL_DATABASE_DB'] = 'vadkr0lhidlmu22x'
 mysql.init_app(app)
 
 
@@ -1081,7 +1087,7 @@ def admin_index():
     cursor.execute(
         "select * FROM usuarios where u_rrdzz =%s and u_pass =%s;", (usuario, contraseña))
     _usuario = cursor.fetchall()
-    
+
     conexion.commit()
     no = 'no'
 
