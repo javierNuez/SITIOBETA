@@ -544,7 +544,15 @@ def ofer02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/admin/clientes')
+
+        conexion = mysql.connect()
+        cursor = conexion.cursor()
+        cursor.execute(
+            "SELECT * FROM `clientes` where c_id_drogueria = %s;", (droguerias[0][0]))
+        clientes = cursor.fetchall()
+        conexion.commit()
+
+        return render_template('/admin/clientes.html', droguerias=droguerias, clientes=clientes)
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
