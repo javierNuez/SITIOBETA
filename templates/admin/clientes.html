@@ -31,18 +31,10 @@
 					<tr>
 						<td id="c_cod">
 							<select name="c_cod">
-								{% if droguerias %}
 								{% for drogueria in droguerias %}<option
 									value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
 									{{drogueria[1]}}-{{drogueria[2]}}</option>
 								{% endfor %}
-								{% endif %}
-								{% if drogueria %}
-								{% for drogueria in droguerias %}<option
-									value="{{drogueria[0]}}#{{drogueria[1]}}#{{drogueria[2]}}">
-									{{drogueria[1]}}-{{drogueria[2]}}</option>
-								{% endfor %}
-								{% endif %}
 							</select>
 						</td>
 						<td id="c_cuenta"><input type="text" class="form-control form-control-sm" name="c_cuenta" id="#"
