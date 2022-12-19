@@ -69,7 +69,7 @@
                                         <select class="form-select form-select-sm" aria-label="" name="txtCliente"
                                             onchange="this.form.submit()">
                                             <option>Seleccione</option>
-                                            <option>Nuevo</option>
+                                            <option value="Nuevo">Crear nuevo cliente</option>
                                             {% for cliente in clientes %}
                                             <option value="{{cliente[4]}}">
                                                 {{cliente[4]}}-{{cliente[5]}}
