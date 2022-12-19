@@ -544,15 +544,7 @@ def ofer02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-
-        conexion = mysql.connect()
-        cursor = conexion.cursor()
-        cursor.execute(
-            "SELECT * FROM `clientes` where c_id_drogueria = %s;", (droguerias[0][0]))
-        clientes = cursor.fetchall()
-        conexion.commit()
-
-        return render_template('/admin/clientes.html', droguerias=droguerias, clientes=clientes)
+        return render_template('/admin/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -589,7 +581,7 @@ def apmsofer02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/admin/clientes')
+        return render_template('/apms/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -626,7 +618,7 @@ def especial02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/admin/clientes')
+        return render_template('/admin/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -663,7 +655,7 @@ def supEspecial02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/sup/clientes')
+        return render_template('/sup/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -700,7 +692,7 @@ def apmsEspecial02():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/apms/clientes')
+        return render_template('/apms/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1698,7 +1690,7 @@ def sup_cargaOferta02_droguerias():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/sup/clientes/')
+        return render_template('/sup/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
@@ -1735,7 +1727,7 @@ def apms_cargaOferta02_droguerias():
     conexion.commit()
 
     if _cliente == "Nuevo":
-        return redirect('/apms/clientes/')
+        return render_template('/apms/clientes.html', droguerias=droguerias, clientes="no")
 
     conexion = mysql.connect()
     cursor = conexion.cursor()
