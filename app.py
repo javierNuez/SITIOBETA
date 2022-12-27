@@ -36,11 +36,17 @@ app.config['MYSQL_DATABASE_HOST'] = 'sql10.freesqldatabase.com'
 app.config['MYSQL_DATABASE_USER'] = 'sql10584916'
 app.config['MYSQL_DATABASE_PASSWORD'] = '4If8hrNRGL'
 app.config['MYSQL_DATABASE_DB'] = 'sql10584916'
-"""
+
+#conección con lanube
 app.config['MYSQL_DATABASE_HOST'] = 'cwe1u6tjijexv3r6.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
 app.config['MYSQL_DATABASE_USER'] = 'aprlqldwou6m6rq8'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'h9ccobar4zksde8u'
 app.config['MYSQL_DATABASE_DB'] = 'vadkr0lhidlmu22x'
+"""
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_DB'] = 'sitiobeta'
 mysql.init_app(app)
 
 
@@ -4162,6 +4168,6 @@ def pagina_no_encontrada(error):
 
 if __name__ == '__main__':
     app.register_error_handler(404, pagina_no_encontrada)
-    app.run(debug=True)
+    app.run(host="89.0.0.28", port=8000, debug=True)
 # host="192.168.0.117", port=8000,
 # host="89.0.0.28", port=8000,
